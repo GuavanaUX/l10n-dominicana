@@ -3,3 +3,4 @@ zeep
 #python-stdnum
 python-stdnum @ git+https://github.com/arthurdejong/python-stdnum.git@master
 pycountry
+openupgradelib
