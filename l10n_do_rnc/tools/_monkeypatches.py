@@ -1,5 +1,5 @@
 import logging
-from odoo.odoo.tools._monkeypatches import new_get_soap_client
+from odoo.tools._monkeypatches import new_get_soap_client
 
 
 _logger = logging.getLogger(__name__)
