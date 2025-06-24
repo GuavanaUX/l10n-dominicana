@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_l10n_do_rnc" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_do_rnc</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='feedback_motivate_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="rnc_data_fallback" groups="base.group_no_one">
+                    <div class="o_setting_left_pane">
+                        <field name="rnc_data_fallback"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="rnc_data_fallback"/>
+                        <div class="text-muted">
+                            Enable the RNC offline query function in case the DGII does not provide a result.
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
