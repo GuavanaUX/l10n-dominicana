@@ -5,13 +5,13 @@
 # © 2018 Eneldo Serrata <eneldo@marcos.do>
 
 {
-    'name': "Declaraciones DGII",
-
-    'summary': """
-        Este módulo extiende las funcionalidades del l10n_do_accounting,
-        integrando los reportes de declaraciones fiscales""",
-
-    'author': "Indexa, SRL, Iterativo SRL",
+    'name': "DGII taxes declarations (Dominican Republic)",
+    'summary': 
+    """       
+        This module extends the functionalities of l10n_do_accounting,
+        integrating the fiscal declaration reports.
+    """,
+    'author': "Indexa, SRL, Iterativo SRL, UnlimitSoft",
     'license': 'LGPL-3',
     'category': 'Accounting',
     'version': '18.0.0.0.0',
@@ -28,7 +28,6 @@
             'pycountry',
         ],
     },
-
     # always loaded
     'data': [
         'data/invoice_service_type_detail_data.xml',
@@ -42,14 +41,11 @@
         'views/account_tax_views.xml',
         'wizard/dgii_report_regenerate_wizard_views.xml',
     ],
-
     'assets':{
         'web.assets_backend': [
             '/dgii_reports/static/src/scss/dgii_reports.scss',
             '/dgii_reports/static/src/js/widget.js'
         ]
     },
-
     'post_init_hook': 'update_taxes'
-
 }

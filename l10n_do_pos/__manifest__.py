@@ -1,7 +1,10 @@
 {
-    'name': "Fiscal POS (Rep. Dominicana)",
-    'summary': """Incorpora funcionalidades de facturación con NCF al POS.""",
-    'author': "Guavana, Indexa, Iterativo SRL",
+    'name': "Fiscal POS (Dominican Republic)",
+    'summary': 
+    """
+        This module adds NCF invoicing functionalities to the POS.
+    """,
+    'author': "Guavana, Indexa, Iterativo SRL, UnlimitSoft",
     'license': 'LGPL-3',
     'website': "https://github.com/odoo-dominicana",
     'category': 'Localization',
