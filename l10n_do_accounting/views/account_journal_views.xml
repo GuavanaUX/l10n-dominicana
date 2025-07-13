@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    
     <record id="l10n_do_accounting_view_account_journal_form" model="ir.ui.view">
         <field name="name">l10n.do.accounting.view.account.journal.form</field>
         <field name="model">account.journal</field>
-        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='type']" position="after">
-                <field name="l10n_do_fiscal_journal"
-                       widget="boolean_toggle"
-                       attrs="{'invisible':[('type', 'in', ('cash','bank','general'))]}"/>
+
+                <field name="l10n_do_fiscal_journal" widget="boolean_toggle"
+                    invisible="type in ('cash','bank','general')" />
+
                 <field name="payment_form"
-                       attrs="{'invisible':[('type', 'in', ('sale','purchase','general'))]}"/>
+                    invisible="type in ('sale','purchase','general')" />
 
             </xpath>
 
         </field>
     </record>
 
-    <record id="inherit_view_account_journal_tree" model="ir.ui.view">
-        <field name="name">inherit.view.account.journal.tree</field>
+    <record id="inherit_view_account_journal_list" model="ir.ui.view">
+        <field name="name">inherit.view.account.journal.list</field>
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_tree" />
         <field name="arch" type="xml">
-            
+
             <xpath expr="//field[@name='type']" position="after">
-                <field name="l10n_do_fiscal_journal" widget="boolean_toggle" attrs="{
-                    'invisible':[
-                        ('type', 'in', ('cash','bank','general'))
-                    ]
-                }"/>
+                <field name="l10n_do_fiscal_journal" widget="boolean_toggle"
+                    invisible="type in ('cash','bank','general')" />
             </xpath>
-            
+
         </field>
     </record>
-
 </odoo>

@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    
+
     <record id="view_account_move_reversal_inherited" model="ir.ui.view">
         <field name="name">view.account.move.reversal.inherited</field>
         <field name="model">account.move.reversal</field>
-        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="inherit_id" ref="account.view_account_move_reversal" />
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='refund_method']" position="before">
-                <field name="is_fiscal_refund" invisible="1"/>
+            <xpath expr="//field[@name='available_journal_ids']" position="before">
+                <field name="is_fiscal_refund" invisible="1" />
             </xpath>
-            
+
             <xpath expr="//field[@name='reason']" position="after">
-                <field name="is_vendor_refund" invisible="1"/>
-                <field name="refund_ref" attrs="{
-                    'invisible': [
-                        ('is_vendor_refund', '=', False)
-                    ], 
-                    'required': [
-                        ('is_fiscal_refund', '=', True), 
-                        ('is_vendor_refund', '=', True)
-                    ]
-                }"/>
-                <field name="ncf_expiration_date" attrs="{
-                    'invisible': [
-                        ('is_vendor_refund', '=', False)
-                    ],
-                }"/>
+                
+                <field name="is_vendor_refund" invisible="1" />
+
+                <field name="refund_ref" invisible="not is_vendor_refund"
+                    required="is_vendor_refund and is_fiscal_refund" />
+
+                <field name="ncf_expiration_date" invisible="not is_vendor_refund" />
+
             </xpath>
 
         </field>
@@ -58,7 +51,8 @@
                          <field name="description"/>
                          <field name="is_vendor_refund" invisible="1"/>
                          <field name="refund_ref" string="Debit Note ref"
-                                attrs="{'invisible': [('is_vendor_refund', '=', False)], 'required': [('is_vendor_refund', '=', True), ('is_fiscal_refund', '=', True)]}"/>
+                                attrs="{'invisible': [('is_vendor_refund', '=', False)], 'required': [('is_vendor_refund', '=',
+    True), ('is_fiscal_refund', '=', True)]}"/>
                      </group>
                      <group>
                          <field name="date_invoice" string="Debit Note Date"/>
@@ -81,5 +75,5 @@
        <field name="view_id" ref="view_account_invoice_debit"/>
        <field name="target">new</field>
     </record> -->
-    
+
 </odoo>

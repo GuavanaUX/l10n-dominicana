@@ -12,7 +12,7 @@
     "license": "LGPL-3",
     "website": "https://github.com/odoo-dominicana",
     "category": "Localization",
-    "version": "18.0.0.0.0",
+    "version": "18.0.0.0.8",
     # any module necessary for this one to work correctly
     "depends": [
         "base",
@@ -45,7 +45,9 @@
         "views/account_journal_views.xml",
         "views/res_partner_views.xml",
         "views/account_fiscal_sequence_views.xml",
-        'views/res_company_views.xml',
+        # Odoo 18 uses RNC as default string for the field display name.
+        # If you want to add another field, you can uncomment the next line.
+        #'views/res_company_views.xml',
         'views/account_invoice_cancel_views.xml',
         # "views/backend_js.xml",
 
