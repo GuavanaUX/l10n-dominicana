@@ -8,21 +8,21 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="invisible">country_id == ref('base.do')</attribute>
+                <attribute name="invisible">country_code == 'DO'</attribute>
             </xpath>
             
             <xpath expr="//field[@name='vat']" position="after">
 
                 <field name="is_fiscal_info_required" invisible="1"/>
 
-                <field name="vat" placeholder="ej. 123456789" string="RNC"
-                       readonly="not parent_id"
-                       invisible="country_id != ref('base.do') or not is_company"
+                <field name="vat" placeholder="e.g. 123456789" string="RNC"
+                       readonly="parent_id"
+                       invisible="country_code != 'DO' or not is_company"
                        required="is_fiscal_info_required" />
 
-                <field name="vat" placeholder="ej. 00112345678" string="Cédula"
-                       readonly="not parent_id"
-                       invisible="country_id != ref('base.do') or is_company"
+                <field name="vat" placeholder="e.g. 00112345678" string="Cédula"
+                       readonly="parent_id"
+                       invisible="country_code != 'DO' or is_company"
                        required="is_fiscal_info_required" />
 
             </xpath>

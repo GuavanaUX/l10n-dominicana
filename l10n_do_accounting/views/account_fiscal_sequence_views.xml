@@ -31,16 +31,18 @@
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Eg : 8001695033" />
+                            <field name="name" placeholder="e.g. 8001695033"
+                                readonly="state != 'draft'" />
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="fiscal_type_id" widget="selection"
+                                readonly="state != 'draft'"
                                 domain="[('assigned_sequence', '=', True)]" />
-                            <field name="sequence_start" />
-                            <field name="sequence_end" />
-                            <field name="expiration_date" />
+                            <field name="sequence_start" readonly="state != 'draft'" />
+                            <field name="sequence_end" readonly="state != 'draft'" />
+                            <field name="expiration_date" readonly="state != 'draft'" />
                         </group>
                         <group>
                             <field name="warning_gap" invisible="1" />
@@ -56,7 +58,8 @@
                                 invisible="state in ('draft', 'cancelled')" />
                             <field name="type" invisible="1" />
                             <field name="sequence_id" invisible="1" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="company_id" readonly="state != 'draft'"
+                                groups="base.group_multi_company" />
                         </group>
                     </group>
                 </sheet>

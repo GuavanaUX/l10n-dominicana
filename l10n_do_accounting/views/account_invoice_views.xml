@@ -70,7 +70,7 @@
                 <attribute name="invisible">is_l10n_do_fiscal_invoice</attribute>
             </xpath>
 
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
                 <field name="fiscal_type_id" domain="[('id', 'in', available_fiscal_type_ids)]"
                     invisible="move_type not in ('in_invoice', 'out_invoice', 'in_refund', 'out_refund') or not is_l10n_do_fiscal_invoice"
                     required="is_l10n_do_fiscal_invoice"
