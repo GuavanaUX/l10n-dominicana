@@ -4,13 +4,18 @@
     <record id="view_partner_form_inherited" model="ir.ui.view">
         <field name="name">view.partner.form.inherited</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
+            
+            <!-- TODO: Identify what this can be used for -->
+             
             <xpath expr="//field[@name='company_type']" position="after">
-                <br/><field name="related" widget="radio" class="oe_edit_only"
-                            options="{'horizontal': true}"
-                            attrs="{'invisible': [('country_id', '=', %(base.do)d)]}"/>
+                <br />
+                <field name="related" widget="radio" class="oe_edit_only"
+                    options="{'horizontal': true}"
+                    invisible="country_id != ref('base.do')" />
             </xpath>
+
         </field>
     </record>
 
