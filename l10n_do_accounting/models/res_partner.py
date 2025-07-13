@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 import logging
 import json
 import re
+from lxml import etree
 _logger = logging.getLogger(__name__)
 
 try:
@@ -167,3 +168,13 @@ class Partner(models.Model):
             "sale_fiscal_type_list": self.sale_fiscal_type_list,
             "sale_fiscal_type_vat": self.sale_fiscal_type_vat
         }
+        
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        result = super().get_view(view_id=view_id, view_type=view_type, **options)
+        if view_type == 'form' and self.env.company.country_id.code == 'DO':
+            doc = etree.XML(result['arch'])
+            for node in doc.xpath("//field[@name='vat']"):
+                node.set('string', 'RNC/Cédula')
+            result['arch'] = etree.tostring(doc, encoding='unicode')
+        return result
