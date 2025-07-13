@@ -14,7 +14,7 @@
     'author': "Indexa, SRL, Iterativo SRL, UnlimitSoft",
     'license': 'LGPL-3',
     'category': 'Accounting',
-    'version': '18.0.0.0.0',
+    'version': '18.0.0.0.8',
     # any module necessary for this one to work correctly
     'depends': [
         'web',
@@ -34,7 +34,8 @@
         'data/account_tax_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'views/res_partner_views.xml',
+        # Identify what this can be uded for
+        # 'views/res_partner_views.xml',
         'views/account_account_views.xml',
         'views/account_invoice_views.xml',
         'views/dgii_report_views.xml',
