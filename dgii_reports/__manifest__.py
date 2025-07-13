@@ -14,7 +14,7 @@
     'author': "Indexa, SRL, Iterativo SRL, UnlimitSoft",
     'license': 'LGPL-3',
     'category': 'Accounting',
-    'version': '18.0.0.0.8',
+    'version': '18.0.0.1.1',
     # any module necessary for this one to work correctly
     'depends': [
         'web',
@@ -45,7 +45,7 @@
     'assets':{
         'web.assets_backend': [
             '/dgii_reports/static/src/scss/dgii_reports.scss',
-            '/dgii_reports/static/src/js/widget.js'
+            # '/dgii_reports/static/src/js/widget.js'
         ]
     },
     'post_init_hook': 'update_taxes'

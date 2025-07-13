@@ -1805,47 +1805,47 @@ class DgiiReport(models.Model):
             report._invoice_status_sent()
             report.state = 'sent'
 
-    def get_606_tree_view(self):
+    def get_606_list_view(self):
         return {
             'name': '606',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'res_model': 'dgii.reports.purchase.line',
             'type': 'ir.actions.act_window',
             'view_id':
-                self.env.ref('dgii_reports.dgii_report_purchase_line_tree').id,
+                self.env.ref('dgii_reports.dgii_report_purchase_line_list').id,
             'domain': [('dgii_report_id', '=', self.id)]
         }
 
-    def get_607_tree_view(self):
+    def get_607_list_view(self):
         return {
             'name': '607',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'res_model': 'dgii.reports.sale.line',
             'type': 'ir.actions.act_window',
             'view_id':
-                self.env.ref('dgii_reports.dgii_report_sale_line_tree').id,
+                self.env.ref('dgii_reports.dgii_report_sale_line_list').id,
             'domain': [('dgii_report_id', '=', self.id)]
         }
 
-    def get_608_tree_view(self):
+    def get_608_list_view(self):
         return {
             'name': '608',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'res_model': 'dgii.reports.cancel.line',
             'type': 'ir.actions.act_window',
             'view_id':
-                self.env.ref('dgii_reports.dgii_cancel_report_line_tree').id,
+                self.env.ref('dgii_reports.dgii_cancel_report_line_list').id,
             'domain': [('dgii_report_id', '=', self.id)]
         }
 
-    def get_609_tree_view(self):
+    def get_609_list_view(self):
         return {
             'name': '609',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'res_model': 'dgii.reports.exterior.line',
             'type': 'ir.actions.act_window',
             'view_id':
-                self.env.ref('dgii_reports.dgii_exterior_report_line_tree').id,
+                self.env.ref('dgii_reports.dgii_exterior_report_line_list').id,
             'domain': [('dgii_report_id', '=', self.id)]
         }
 

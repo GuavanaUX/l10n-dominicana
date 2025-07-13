@@ -44,7 +44,7 @@ class AccountInvoice(models.Model):
 
             inv.payment_date = payment_date
 
-    @api.constrains('line_ids',  'line_ids.tax_line_id')
+    @api.constrains('line_ids')
     def _check_isr_tax(self):
         """Restrict one ISR tax per invoice"""
         for inv in self:
