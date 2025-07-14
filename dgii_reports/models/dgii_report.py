@@ -104,7 +104,7 @@ class DgiiReport(models.Model):
 
     _sql_constraints = [
         ('name_unique', 'UNIQUE(name, company_id)', 
-        _("You cannot have more than one report by period."))
+        "You cannot have more than one report by period.")
     ]
 
 
