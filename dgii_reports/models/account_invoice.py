@@ -15,13 +15,15 @@ class InvoiceServiceTypeDetail(models.Model):
     code = fields.Char(size=2)
     parent_code = fields.Char()
 
-    _sql_constraints = [
-        (
-            "code_unique", 
-            "unique (code)", 
-            "Code must be unique",
-        )
-    ]
+    @api.constrains('code')
+    def _check_unique_code(self):
+        for rec in self:
+            if rec.code:
+                existing = self.env['invoice.service.type.detail'].search_count(
+                    [('code', '=', rec.code), ('id', '!=', rec.id)]
+                )
+                if existing:
+                    raise ValidationError(_("Code must be unique"))
 
 
 class AccountInvoice(models.Model):

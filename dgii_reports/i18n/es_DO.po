@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-14 03:29+0000\n"
-"PO-Revision-Date: 2025-07-14 03:29+0000\n"
+"POT-Creation-Date: 2025-07-14 14:11+0000\n"
+"PO-Revision-Date: 2025-07-14 14:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -551,8 +551,6 @@ msgid "Code"
 msgstr "Código"
 
 #. module: dgii_reports
-#. odoo-python
-#: code:addons/dgii_reports/models/account_invoice.py:0
 #: model:ir.model.constraint,message:dgii_reports.constraint_invoice_service_type_detail_code_unique
 msgid "Code must be unique"
 msgstr "El código debe ser único"
@@ -681,7 +679,7 @@ msgstr "TARJETA DÉBITO / CRÉDITO"
 #: model:ir.ui.menu,name:dgii_reports.dgii_report_menu
 #: model_terms:ir.ui.view,arch_db:dgii_reports.invoice_form_inherited
 msgid "DGII"
-msgstr "DGII"
+msgstr ""
 
 #. module: dgii_reports
 #: model:ir.model,name:dgii_reports.model_dgii_reports
@@ -2449,7 +2447,7 @@ msgstr "A INCLUIR EN ACTIVOS (CATEGORÍA I)"
 #. module: dgii_reports
 #: model_terms:ir.ui.view,arch_db:dgii_reports.dgii_report_form_view
 msgid "TOTAL"
-msgstr "TOTAL"
+msgstr ""
 
 #. module: dgii_reports
 #. odoo-python
@@ -2705,7 +2703,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:dgii_reports.dgii_report_purchase_line_list
 #: model_terms:ir.ui.view,arch_db:dgii_reports.dgii_report_sale_line_list
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
 #. module: dgii_reports
 #. odoo-python
@@ -2805,8 +2803,6 @@ msgid "You can create your DGII Tax Statements here."
 msgstr "Puedes crear tus declaraciones de la DGII aquí."
 
 #. module: dgii_reports
-#. odoo-python
-#: code:addons/dgii_reports/models/dgii_report.py:0
 #: model:ir.model.constraint,message:dgii_reports.constraint_dgii_reports_name_unique
 msgid "You cannot have more than one report by period."
 msgstr "No puede tener más de un reporte por periodo."

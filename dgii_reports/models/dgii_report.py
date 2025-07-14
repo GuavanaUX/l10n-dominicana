@@ -102,13 +102,19 @@ class DgiiReport(models.Model):
             report.start_date = start_date
             report.end_date = end_date
 
-    _sql_constraints = [
-        (
-            "name_unique", 
-            "UNIQUE (name, company_id)", 
-            "You cannot have more than one report by period.",
-        )
-    ]
+    @api.constrains('name', 'company_id')
+    def _check_unique_name_company(self):
+        for rec in self:
+            if rec.name and rec.company_id:
+                duplicates = self.env['dgii.reports'].search_count([
+                    ('name', '=', rec.name),
+                    ('company_id', '=', rec.company_id.id),
+                    ('id', '!=', rec.id)
+                ])
+                if duplicates:
+                    raise ValidationError(
+                        _("You cannot have more than one report by period.")
+                    )
 
 
     def _compute_606_fields(self):
