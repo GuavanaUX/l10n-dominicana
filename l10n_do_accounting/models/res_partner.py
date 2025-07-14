@@ -171,7 +171,7 @@ class Partner(models.Model):
         
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
+        arch, view = super()._get_view(view_id=view_id, view_type=view_type, **options)
         
         if view_type == 'form' and self.env.company.country_id.code == 'DO':
             for node in arch.xpath("//field[@name='vat']"):
