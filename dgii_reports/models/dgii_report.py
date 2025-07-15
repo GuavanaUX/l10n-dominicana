@@ -111,9 +111,9 @@ class DgiiReport(models.Model):
                     ('company_id', '=', rec.company_id.id),
                     ('id', '!=', rec.id)
                 ])
-                if duplicates:
+                if duplicates > 0:
                     raise ValidationError(
-                        _("You cannot have more than one report by period.")
+                        _('You cannot have more than one report by period.')
                     )
 
 

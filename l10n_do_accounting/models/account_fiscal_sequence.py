@@ -172,36 +172,35 @@ class AccountFiscalSequence(models.Model):
         """
         Validate an active sequence type uniqueness
         """
-        domain = [
-            ("state", "=", "active"),
-            ("fiscal_type_id", "=", self.fiscal_type_id.id),
-            ("company_id", "=", self.company_id.id),
-        ]
-        if self.search_count(domain) > 1:
-            raise ValidationError(_("Another sequence is active for this type."))
+        for rec in self.filtered(lambda r: r.state == "active"):
+            domain = [
+                ("state", "=", "active"),
+                ("fiscal_type_id", "=", rec.fiscal_type_id.id),
+                ("company_id", "=", rec.company_id.id),
+                ("id", "!=", rec.id),
+            ]
+            if self.search_count(domain) > 0:
+                raise ValidationError(
+                    _("Another sequence is active for this type.")
+                )
 
     @api.constrains("sequence_start", "sequence_end", "state", "fiscal_type_id", "company_id")
     def _validate_sequence_range(self):
         for rec in self.filtered(lambda s: s.state != "cancelled"):
-            if any(
-                [True for value in [rec.sequence_start, rec.sequence_end] if value <= 0]
-            ):
+            if rec.sequence_start <= 0 or rec.sequence_end <= 0:
                 raise ValidationError(_("Sequence values must be greater than zero."))
             if rec.sequence_start >= rec.sequence_end:
-                raise ValidationError(
-                    _("End sequence must be greater than start sequence.")
-                )
+                raise ValidationError(_("End sequence must be greater than start sequence."))
             domain = [
+                ("id", "!=", rec.id),
+                ("state", "in", ("active", "queue")),
+                ("fiscal_type_id", "=", rec.fiscal_type_id.id),
+                ("company_id", "=", rec.company_id.id),
                 ("sequence_start", ">=", rec.sequence_start),
                 ("sequence_end", "<=", rec.sequence_end),
-                ("fiscal_type_id", "=", rec.fiscal_type_id.id),
-                ("state", "in", ("active", "queue")),
-                ("company_id", "=", rec.company_id.id),
             ]
-            if self.search_count(domain) > 1:
-                raise ValidationError(
-                    _("You cannot use another Fiscal Sequence range.")
-                )
+            if self.search_count(domain) > 0:
+                raise ValidationError(_("You cannot use another Fiscal Sequence range."))
 
     def unlink(self):
         for rec in self:
@@ -420,14 +419,23 @@ class AccountFiscalType(models.Model):
         string="Requires a document?",
         help="If checked, this Fiscal Type will require a document to be generated.",
     )
-
-    _sql_constraints = [
-        (
-            "type_prefix_uniq",
-            "unique (type, prefix)",
-            "There must be only one Fiscal Type of this Type and Prefix",
-        )
-    ]
+    
+    @api.constrains("type", "prefix", "active")
+    def _check_type_prefix_uniq(self):
+        for rec in self.filtered("active"):
+            fiscal_type = [
+                ("id", "!=", rec.id),
+                ("active", "=", True),
+                ("type", "=", rec.type),
+                ("prefix", "=", rec.prefix or False),
+            ]
+            if self.search_count(fiscal_type):
+                raise ValidationError(
+                    _(
+                        "A Fiscal Type with Type '%s' and Prefix '%s' already exists.",
+                        rec.type, rec.prefix or "",
+                    )
+                )
 
     @api.depends("type")
     def _compute_journal_type(self):
