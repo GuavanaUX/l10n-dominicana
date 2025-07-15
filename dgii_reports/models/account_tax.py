@@ -8,9 +8,9 @@ class AccountTax(models.Model):
         selection=[
             ('itbis', 'ITBIS'),
             ('ritbis', 'ITBIS Withholding'),
-            # TODO: investigate Subject to proportionality and ITBIS carried to cost
+            # TODO: investigate Subject to proportionality
             #('prop', 'Subject to proportionality'),
-            #('itbis_cost', 'ITBIS carried to cost'),
+            ('itbis_cost', 'ITBIS carried to cost'),
             ('isr', 'ISR Withholding'),
             ('isc', 'Selective Consumption Tax (SCT)'),
             ('other', 'Other taxes'),

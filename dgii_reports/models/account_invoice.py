@@ -22,8 +22,8 @@ class InvoiceServiceTypeDetail(models.Model):
                 existing = self.env['invoice.service.type.detail'].search_count(
                     [('code', '=', rec.code), ('id', '!=', rec.id)]
                 )
-                if existing:
-                    raise ValidationError(_("Code must be unique"))
+                if existing > 0:
+                    raise ValidationError(_('Code must be unique'))
 
 
 class AccountInvoice(models.Model):
@@ -115,11 +115,11 @@ class AccountInvoice(models.Model):
                         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'tip').mapped('balance')
                 ))
 
-                # TODO: investigate Subject to proportionality and ITBIS carried to cost
-                # inv.cost_itbis = abs(sum(
-                #     tax_line_ids.filtered(
-                #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'itbis_cost').mapped('balance')
-                # ))
+                # TODO: investigate Subject to proportionality
+                inv.cost_itbis = abs(sum(
+                    tax_line_ids.filtered(
+                        lambda tax: tax.tax_line_id.l10n_do_tax_type == 'itbis_cost').mapped('balance')
+                ))
                 # inv.proportionality_tax = abs(sum(
                 #     tax_line_ids.filtered(
                 #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'prop').mapped('balance')

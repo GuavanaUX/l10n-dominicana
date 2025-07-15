@@ -38,7 +38,7 @@
         <field name="l10n_do_tax_type">itbis</field>
     </record>
     <record id="account.1_tax_18_property_cost" model="account.tax">
-        <field name="l10n_do_tax_type">itbis</field>
+        <field name="l10n_do_tax_type">itbis_cost</field>
     </record>
     <record id="account.1_ret_10_income_person" model="account.tax">
         <field name="l10n_do_tax_type">isr</field>
@@ -53,7 +53,7 @@
         <field name="tax_group_id" ref="account.1_tax_group_itbis_18"/>
     </record>
     <record id="account.1_tax_18_serv_cost" model="account.tax">
-        <field name="l10n_do_tax_type">itbis</field>
+        <field name="l10n_do_tax_type">itbis_cost</field>
     </record>
     <record id="account.1_ret_10_income_rent" model="account.tax">
         <field name="l10n_do_tax_type">isr</field>
