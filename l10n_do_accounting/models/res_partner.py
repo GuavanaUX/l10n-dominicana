@@ -2,7 +2,6 @@ from odoo import models, fields, api, _
 import logging
 import json
 import re
-from lxml import etree
 _logger = logging.getLogger(__name__)
 
 try:

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-14 04:45+0000\n"
-"PO-Revision-Date: 2025-07-14 04:45+0000\n"
+"POT-Creation-Date: 2025-07-15 21:50+0000\n"
+"PO-Revision-Date: 2025-07-15 21:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -308,6 +308,12 @@ msgstr "<strong>Nombre o Razón social:</strong>"
 #: model_terms:ir.ui.view,arch_db:l10n_do_accounting.report_invoice_document_inherit
 msgid "<strong>Shipping Address:</strong>"
 msgstr "<strong>Dirección de Envío</strong>"
+
+#. module: l10n_do_accounting
+#. odoo-python
+#: code:addons/l10n_do_accounting/models/account_fiscal_sequence.py:0
+msgid "A Fiscal Type with Type '%s' and Prefix '%s' already exists."
+msgstr ""
 
 #. module: l10n_do_accounting
 #. odoo-python
@@ -1269,11 +1275,6 @@ msgstr "No existe una Secuencia Fiscal para realizar esta acción."
 #: code:addons/l10n_do_accounting/models/account_invoice.py:0
 msgid "There is not active Fiscal Sequence for this type of document."
 msgstr "No existe Secuencia Fiscal activa para este tipo de documento."
-
-#. module: l10n_do_accounting
-#: model:ir.model.constraint,message:l10n_do_accounting.constraint_account_fiscal_type_type_prefix_uniq
-msgid "There must be only one Fiscal Type of this Type and Prefix"
-msgstr "Debe haber un solo Tipo Fiscal de este Tipo y Prefijo"
 
 #. module: l10n_do_accounting
 #. odoo-python
