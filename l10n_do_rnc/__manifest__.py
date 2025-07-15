@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Search RNC name',
-    'summary': """
+    'summary': 
+    """
         This module searches for the company name by entering a Taxpayer Registration Number (RNC), if the company is valid.
     """,
-
-    'description': """
+    'description': 
+    """
         This module searches for the company name by entering a Taxpayer Registration Number (RNC), if the company is valid.
     """,
     'author': "Guavana",
     'website': "https://www.guavana.com",
     'license': 'LGPL-3',
     'category': 'Localization',
-    'version': '16.0.2.0.0',
+    'version': '18.0.0.0.0',
     'depends': [
         'base',
         'contacts',

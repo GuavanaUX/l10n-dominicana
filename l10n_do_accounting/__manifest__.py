@@ -1,15 +1,18 @@
 {
-    "name": "Fiscal Accounting (Rep. Dominicana)",
-    "summary": """
-        Este módulo implementa la administración y gestión de los números de
-        comprobantes fiscales para el cumplimento de la norma 06-18 de la
-        Dirección de Impuestos Internos en la República Dominicana.
+    "name": "Fiscal Accounting (Dominican Republic)",
+    "summary": 
+    """    
+        Thits module implements the management of fiscal receipts numbers
+        for compliance with the 06-18 regulation of the Dirección General de 
+        Impuestos Internos in the Dominican Republic.
+        
+        It also includes the management of fiscal types and fiscal sequences.
     """,
-    "author": "Marcos, Guavana, Indexa, Iterativo SRL, Neotec",
+    "author": "Marcos, Guavana, Indexa, Iterativo SRL, Neotec, UnlimitSoft",
     "license": "LGPL-3",
     "website": "https://github.com/odoo-dominicana",
     "category": "Localization",
-    "version": "16.0.2.1.2",
+    "version": "18.0.0.1.1",
     # any module necessary for this one to work correctly
     "depends": [
         "base",
@@ -42,7 +45,9 @@
         "views/account_journal_views.xml",
         "views/res_partner_views.xml",
         "views/account_fiscal_sequence_views.xml",
-        'views/res_company_views.xml',
+        # Odoo 18 uses RNC as default string for the field display name.
+        # If you want to add another field, you can uncomment the next line.
+        #'views/res_company_views.xml',
         'views/account_invoice_cancel_views.xml',
         # "views/backend_js.xml",
 

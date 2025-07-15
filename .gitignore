@@ -102,3 +102,6 @@ ENV/
 # Emacs Backup Files
 *~
 .DS_Store
+
+# VS Code settings
+.vscode/

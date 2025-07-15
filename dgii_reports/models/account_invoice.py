@@ -15,9 +15,15 @@ class InvoiceServiceTypeDetail(models.Model):
     code = fields.Char(size=2)
     parent_code = fields.Char()
 
-    _sql_constraints = [
-        ('code_unique', 'unique(code)', _('Code must be unique')),
-    ]
+    @api.constrains('code')
+    def _check_unique_code(self):
+        for rec in self:
+            if rec.code:
+                existing = self.env['invoice.service.type.detail'].search_count(
+                    [('code', '=', rec.code), ('id', '!=', rec.id)]
+                )
+                if existing > 0:
+                    raise ValidationError(_('Code must be unique'))
 
 
 class AccountInvoice(models.Model):
@@ -44,7 +50,7 @@ class AccountInvoice(models.Model):
 
             inv.payment_date = payment_date
 
-    @api.constrains('line_ids',  'line_ids.tax_line_id')
+    @api.constrains('line_ids')
     def _check_isr_tax(self):
         """Restrict one ISR tax per invoice"""
         for inv in self:
@@ -109,11 +115,11 @@ class AccountInvoice(models.Model):
                         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'tip').mapped('balance')
                 ))
 
-                # TODO: investigate Subject to proportionality and ITBIS carried to cost
-                # inv.cost_itbis = abs(sum(
-                #     tax_line_ids.filtered(
-                #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'itbis_cost').mapped('balance')
-                # ))
+                # TODO: investigate Subject to proportionality
+                inv.cost_itbis = abs(sum(
+                    tax_line_ids.filtered(
+                        lambda tax: tax.tax_line_id.l10n_do_tax_type == 'itbis_cost').mapped('balance')
+                ))
                 # inv.proportionality_tax = abs(sum(
                 #     tax_line_ids.filtered(
                 #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'prop').mapped('balance')

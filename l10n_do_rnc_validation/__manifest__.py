@@ -1,11 +1,11 @@
 {
     "name": "Dominican Tax ID Validation",
-    "version": "16.0.1.0.0",
     "summary": "Validate RNC/Cédula from external service",
-    "category": "Extra Tools",
     "author": "Guavana," "Indexa," "Iterativo",
-    "website": "https://github.com/odoo-dominicana",
     "license": "LGPL-3",
+    "website": "https://github.com/odoo-dominicana",
+    "category": "Extra Tools",
+    "version": "18.0.0.0.0",
     "depends": [
         "base",
         "base_setup",

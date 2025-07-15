@@ -1,7 +1,7 @@
 simplejson
-zeep
-#python-stdnum
+# zeep
+# python-stdnum
 # python-stdnum==1.20
-python-stdnum
+# python-stdnum
 # python-stdnum @ git+https://github.com/arthurdejong/python-stdnum.git@6cbb9bc
 pycountry
