@@ -110,7 +110,8 @@ class Partner(models.Model):
         """ Compute the type of partner depending on soft decisions"""
 
         for partner in self:
-            vat = partner.name if partner.name and partner.name.isdigit() else partner.vat
+            name_srt = partner.name or ''
+            vat = name_srt if name_srt.isdigit() else partner.vat
             is_dominican_partner = bool(partner.country_id == self.env.ref('base.do'))
             new_fiscal_type = False
 
@@ -120,13 +121,13 @@ class Partner(models.Model):
             elif partner.parent_id:
                 new_fiscal_type = partner.parent_id.sale_fiscal_type_id
 
-            elif vat and not partner.name.isdigit() and not partner.sale_fiscal_type_id:
+            elif vat and not name_srt.isdigit() and not partner.sale_fiscal_type_id:
 
                 if vat.isdigit() and len(vat) == 9:
-                    if partner.name and 'MINISTERIO' in partner.name:
+                    if name_srt and 'MINISTERIO' in name_srt:
                         new_fiscal_type = self._get_fiscal_type_domain('B15')
 
-                    elif partner.name and any([n for n in ('IGLESIA', 'ZONA FRANCA') if n in partner.name]):
+                    elif name_srt and any([n for n in ('IGLESIA', 'ZONA FRANCA') if n in name_srt]):
                         new_fiscal_type = self._get_fiscal_type_domain('B14')
 
                     else:
