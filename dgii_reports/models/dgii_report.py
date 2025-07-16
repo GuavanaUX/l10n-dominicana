@@ -113,7 +113,7 @@ class DgiiReport(models.Model):
                 ])
                 if duplicates > 0:
                     raise ValidationError(
-                        _('You cannot have more than one report by period.')
+                        _('You cannot have more than one report per period.')
                     )
 
 
@@ -823,10 +823,8 @@ class DgiiReport(models.Model):
 
                 if str(values['fiscal_invoice_number'])[-10:-8] == '02':
                     csmr_dict['csmr_ncf_qty'] += 1
-                    csmr_dict['csmr_ncf_total_amount'] += \
-                        values['invoiced_amount']
-                    csmr_dict['csmr_ncf_total_itbis'] += \
-                        values['invoiced_itbis']
+                    csmr_dict['csmr_ncf_total_amount'] += values['invoiced_amount']
+                    csmr_dict['csmr_ncf_total_itbis'] += values['invoiced_itbis']
                     csmr_dict['csmr_ncf_total_isc'] += values['selective_tax']
                     csmr_dict['csmr_ncf_total_other'] += values['other_taxes']
                     csmr_dict['csmr_ncf_total_lgl_tip'] += values['legal_tip']
@@ -841,8 +839,7 @@ class DgiiReport(models.Model):
                 line += 1
                 values.update({'line': line})
                 SaleLine.create(values)
-                if str(values.get('fiscal_invoice_number'))[-10:-8] == \
-                        '02' and abs(inv.amount_untaxed_signed) < 250000:
+                if str(values.get('fiscal_invoice_number'))[-10:-8] == '02' and abs(inv.amount_untaxed_signed) < 250000:
                     excluded_line += 1
                     # Excluye las facturas de Consumo
                     # con monto menor a 250000 solo del txt
@@ -851,8 +848,7 @@ class DgiiReport(models.Model):
                     report_data += self.process_607_report_data(values) + '\n'
 
                 for k in payment_dict:
-                    payment_dict[k] += payments[k] * -1 if inv.move_type == \
-                        'out_refund' else payments[k]
+                    payment_dict[k] += payments[k] * -1 if inv.move_type == 'out_refund' else payments[k]
             
             self._set_csmr_fields_vals(csmr_dict)
             self._generate_607_txt(report_data, line - excluded_line)
@@ -898,8 +894,7 @@ class DgiiReport(models.Model):
             report_data = ''
             for inv in invoice_ids:
                 if inv.ref:
-                    inv.fiscal_status = 'blocked' if not inv.fiscal_status else \
-                        inv.fiscal_status
+                    inv.fiscal_status = 'blocked' if not inv.fiscal_status else inv.fiscal_status
                     line += 1
                     values = {
                         'dgii_report_id': rec.id,

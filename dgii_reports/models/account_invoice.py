@@ -23,7 +23,7 @@ class InvoiceServiceTypeDetail(models.Model):
                     [('code', '=', rec.code), ('id', '!=', rec.id)]
                 )
                 if existing > 0:
-                    raise ValidationError(_('Code must be unique'))
+                    raise ValidationError(_('The code must be unique'))
 
 
 class AccountInvoice(models.Model):

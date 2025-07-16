@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-15 21:48+0000\n"
-"PO-Revision-Date: 2025-07-15 21:48+0000\n"
+"POT-Creation-Date: 2025-07-16 00:32+0000\n"
+"PO-Revision-Date: 2025-07-16 00:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -549,12 +549,6 @@ msgstr "Cheque / Transferencia / Depósito"
 #: model:ir.model.fields,field_description:dgii_reports.field_invoice_service_type_detail__code
 msgid "Code"
 msgstr "Código"
-
-#. module: dgii_reports
-#. odoo-python
-#: code:addons/dgii_reports/models/account_invoice.py:0
-msgid "Code must be unique"
-msgstr ""
 
 #. module: dgii_reports
 #: model:ir.model.fields,field_description:dgii_reports.field_dgii_reports__company_id
@@ -1427,8 +1421,8 @@ msgstr "Retención ITBIS"
 
 #. module: dgii_reports
 #: model:ir.model.fields.selection,name:dgii_reports.selection__account_tax__l10n_do_tax_type__itbis_cost
-msgid "ITBIS carried to cost"
-msgstr ""
+msgid "ITBIS carried at cost"
+msgstr "ITBIS llevado al costo"
 
 #. module: dgii_reports
 #: model_terms:ir.ui.view,arch_db:dgii_reports.dgii_report_purchase_line_search
@@ -2670,6 +2664,12 @@ msgid "Technical field for UX purpose."
 msgstr "Campo técnico para propósitos UX."
 
 #. module: dgii_reports
+#. odoo-python
+#: code:addons/dgii_reports/models/account_invoice.py:0
+msgid "The code must be unique"
+msgstr "El código debe ser único"
+
+#. module: dgii_reports
 #: model_terms:ir.ui.view,arch_db:dgii_reports.dgii_report_form_view
 msgid "The previous report is still not marked as sent."
 msgstr "El reporte anterior no fue marcado como enviado."
@@ -2811,8 +2811,8 @@ msgstr "Puedes crear tus declaraciones de la DGII aquí."
 #. module: dgii_reports
 #. odoo-python
 #: code:addons/dgii_reports/models/dgii_report.py:0
-msgid "You cannot have more than one report by period."
-msgstr ""
+msgid "You cannot have more than one report per period."
+msgstr "No puede tener más de un informe por periodo."
 
 #. module: dgii_reports
 #: model:ir.model.fields,field_description:dgii_reports.field_dgii_reports_it1_line__section

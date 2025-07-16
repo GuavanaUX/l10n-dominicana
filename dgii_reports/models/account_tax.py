@@ -10,7 +10,7 @@ class AccountTax(models.Model):
             ('ritbis', 'ITBIS Withholding'),
             # TODO: investigate Subject to proportionality
             #('prop', 'Subject to proportionality'),
-            ('itbis_cost', 'ITBIS carried to cost'),
+            ('itbis_cost', 'ITBIS carried at cost'),
             ('isr', 'ISR Withholding'),
             ('isc', 'Selective Consumption Tax (SCT)'),
             ('other', 'Other taxes'),
