@@ -4,28 +4,26 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 19:32+0000\n"
-"PO-Revision-Date: 2024-03-26 15:33-0400\n"
+"POT-Creation-Date: 2025-07-16 22:53+0000\n"
+"PO-Revision-Date: 2025-07-16 22:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: l10n_do_rnc_validation
 #: model:ir.model,name:l10n_do_rnc_validation.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr "Empresas"
 
 #. module: l10n_do_rnc_validation
 #: model:ir.model,name:l10n_do_rnc_validation.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: l10n_do_rnc_validation
 #: model:ir.model,name:l10n_do_rnc_validation.model_res_partner
@@ -34,13 +32,12 @@ msgstr "Contacto"
 
 #. module: l10n_do_rnc_validation
 #: model_terms:ir.ui.view,arch_db:l10n_do_rnc_validation.res_config_settings_view_form_inherited
-msgid "Get Contact data from Indexa API"
-msgstr "Obtener datos de contacto de la API de Indexa"
-
-#. module: l10n_do_rnc_validation
-#: model_terms:ir.ui.view,arch_db:l10n_do_rnc_validation.res_config_settings_view_form_inherited
-msgid "Indexa API RNC data"
-msgstr "Datos de Indexa API RNC"
+msgid ""
+"Enable this option to allow the validation of RNC numbers using the Indexa "
+"API."
+msgstr ""
+"Active esta opción para permitir la validación de números de RNC "
+"mediante la API de Indexa."
 
 #. module: l10n_do_rnc_validation
 #: model_terms:ir.ui.view,arch_db:l10n_do_rnc_validation.l10n_do_external_validation_rnc_view_partner_form
@@ -50,19 +47,17 @@ msgstr "Nombre, RNC o Cédula"
 #. module: l10n_do_rnc_validation
 #. odoo-python
 #: code:addons/l10n_do_rnc_validation/models/res_partner.py:0
-#, python-format
 msgid "No serializable data from API response"
 msgstr "No hay datos serializables de la respuesta de la API"
 
 #. module: l10n_do_rnc_validation
 #: model_terms:ir.ui.view,arch_db:l10n_do_rnc_validation.l10n_do_external_validation_rnc_view_res_partner_filter
 msgid "RNC/Cédula"
-msgstr "RNC/Cédula"
+msgstr ""
 
 #. module: l10n_do_rnc_validation
 #. odoo-python
 #: code:addons/l10n_do_rnc_validation/models/res_partner.py:0
-#, python-format
 msgid "RNC/Cédula %s is already assigned to %s"
 msgstr "RNC/Cédula %s ya está asignado a %s"
 
