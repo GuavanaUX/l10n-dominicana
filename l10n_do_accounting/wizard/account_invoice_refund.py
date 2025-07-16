@@ -180,17 +180,17 @@ class AccountMoveReversal(models.TransientModel):
     #         return result
     #     return True
     
-    def reverse_moves(self):
+    @api.model
+    def reverse_moves(self, *args, **kwargs):
+        kwargs.pop('is_modify', None)
         self.ensure_one()
-
         if self.refund_ref and self.is_fiscal_refund:
-            
             self.env['account.fiscal.type'].check_format_fiscal_number(
                 self.refund_ref,
                 'in_refund'
             )
 
-        return super(AccountMoveReversal, self).reverse_moves()
+        return super(AccountMoveReversal, self).reverse_moves(*args, **kwargs)
     
     def _prepare_default_reversal(self, move):
         
