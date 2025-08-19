@@ -94,13 +94,25 @@ class DgiiReport(models.Model):
             end_date = False
             
             if report.name:
+                self._validate_date_format(report.name)
+                
                 month, year = report.name.split('/')
+                current_date = dt.today()
+                month_int = int(month.strip())
+                year_int = int(year.strip())
+                
+                if year_int > current_date.year or (year_int == current_date.year and month_int > current_date.month):
+                    raise ValidationError(
+                        _('The period cannot be in the future.')
+                    )
+                
                 last_day = calendar.monthrange(int(year), int(month))[1]
                 start_date = '{}-{}-01'.format(year, month)
                 end_date = '{}-{}-{}'.format(year, month, last_day)
 
             report.start_date = start_date
             report.end_date = end_date
+
 
     @api.constrains('name', 'company_id')
     def _check_unique_name_company(self):
@@ -1367,13 +1379,18 @@ class DgiiReport(models.Model):
                 'B01': 1,
                 'E31': 1,
                 'B02': 2,
+                'E32': 2,
                 'B03': 3,
+                'E33': 3,
                 'B04': 4,
                 'E34': 4,
                 'B12': 5,
                 'B14': 6,
+                'E44': 6,
                 'B15': 7,
+                'E45': 7,
                 'B16': 8,
+                'E46': 8,
             }
             box_income_type = {
                 '01': 20,
