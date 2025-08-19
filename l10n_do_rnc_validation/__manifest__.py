@@ -5,7 +5,7 @@
     "license": "LGPL-3",
     "website": "https://github.com/odoo-dominicana",
     "category": "Extra Tools",
-    "version": "18.0.0.0.0",
+    "version": "18.0.0.0.2",
     "depends": [
         "base",
         "base_setup",
