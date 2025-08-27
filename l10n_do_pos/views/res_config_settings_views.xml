@@ -10,18 +10,16 @@
             <xpath expr="//block[@id='pos_accounting_section']" position="inside">
                 <setting>
                     <field name="l10n_do_fiscal_journal" invisible="1" />
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <label string="Default customer" for="pos_partner_id"
-                                class="col-lg-3 o_light_label" options="{'no_create': True}" />
-                            <div>
-                                <field name="pos_partner_id" required="l10n_do_fiscal_journal" />
-                            </div>
-                        </div>
+                    <label string="Default customer" for="pos_partner_id"
+                        options="{'no_create': True}" />
+                    <div>
+                        <field name="pos_partner_id" required="l10n_do_fiscal_journal" />
                     </div>
                 </setting>
             </xpath>
 
+
+            <!--             
             <xpath expr="//block[@id='pos_technical_section']" position="inside">
                 <setting>
                     <div class="col-12 col-lg-6 o_setting_box" id="update_quantities_stock_setting"
@@ -49,6 +47,8 @@
                     </div>
                 </setting>
             </xpath>
+            -->
+
         </field>
     </record>
 </odoo>
