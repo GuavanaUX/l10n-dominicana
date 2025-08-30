@@ -376,6 +376,96 @@ class DgiiReport(models.Model):
         string='ConsumerOther Sale Forms', 
         copy=False
     )
+    
+    # IR-17 Withholding Summary
+    ir17_rentals = fields.Monetary(
+        string='Rentals',
+        copy=False
+    )
+    ir17_independent_fees = fields.Monetary(
+        string='Independent Service Fees',
+        copy=False
+    )
+    ir17_prizes_law_253_12 = fields.Monetary(
+        string='Prizes (Law 253-12)',
+        copy=False
+    )
+    ir17_title_transfer = fields.Monetary(
+        string='Title & Property Transfer',
+        copy=False
+    )
+    ir17_dividends_law_253_12 = fields.Monetary(
+        string='Dividends (Law 253-12)',
+        copy=False
+    )
+    ir17_interest_legal_nonres_253_12 = fields.Monetary(
+        string='Interest to Legal/Non-Resident Entities (Law 253-12)',
+        copy=False
+    )
+    ir17_interest_legal_nonres_57_2007 = fields.Monetary(
+        string='Interest to Legal/Non-Resident Entities (Law 57-2007)',
+        copy=False
+    )
+    ir17_interest_nonres_indiv_253_12 = fields.Monetary(
+        string='Interest to Non-Resident Individuals (Law 253-12)',
+        copy=False
+    )
+    ir17_interest_nonres_indiv_57_2007_253_12 = fields.Monetary(
+        string='Interest to Non-Resident Individuals (Laws 57-2007 & 253-12)',
+        copy=False
+    )
+    ir17_remittances_abroad = fields.Monetary(
+        string='Remittances Abroad (Law 253-12)',
+        copy=False
+    )
+    ir17_interest_nonfin_to_res_indiv = fields.Monetary(
+        string='Interest by Non-Financial Entities to Resident Individuals',
+        copy=False
+    )
+    ir17_state_suppliers = fields.Monetary(
+        string='Payments to State Suppliers (Law 253-12)',
+        copy=False
+    )
+    ir17_phone_games = fields.Monetary(
+        string='Telephone Games (Norm 08-2011)',
+        copy=False
+    )
+    ir17_capital_gain = fields.Monetary(
+        string='Capital Gain (Norm 07-2011)',
+        copy=False
+    )
+    ir17_internet_games = fields.Monetary(
+        string='Internet Games (Law 139-11, Art. 7)',
+        copy=False
+    )
+    ir17_other_income_11_92 = fields.Monetary(
+        string='Other Income (Law 11-92, Art. 309 f)',
+        copy=False
+    )
+    ir17_other_income_139_98 = fields.Monetary(
+        string='Other Income (Decree 139-98, Art. 70 a-b)',
+        copy=False
+    )
+    ir17_other_withholdings_07_2007 = fields.Monetary(
+        string='Other Withholdings (Norm 07-2007)',
+        copy=False
+    )
+    ir17_interest_fin_to_res_legal_13_2011 = fields.Monetary(
+        string='Interest by Financial Entities to Resident Legal Entities (Norm 13-2011)',
+        copy=False
+    )
+    ir17_interest_fin_to_res_indiv_253_12 = fields.Monetary(
+        string='Interest by Financial Entities to Resident Individuals (Law 253-12)',
+        copy=False
+    )
+    ir17_acquisition_cattle_goods_04_25 = fields.Monetary(
+        string='Acquisition of Cattle Goods from Individuals (Norm 04-25)',
+        copy=False
+    )
+    ir17_other_withholdings_total = fields.Monetary(
+        string='Other Withholdings (Boxes 1-21)',
+        copy=False
+    )
 
     def _get_csmr_vals_dict(self):
         return {
@@ -392,6 +482,32 @@ class DgiiReport(models.Model):
             'csmr_bond': 0,
             'csmr_swap': 0,
             'csmr_others': 0
+        }
+        
+    def _get_is17_vals_dict(self):
+        return {
+            'ir17_rentals': 0,
+            'ir17_independent_fees': 0,
+            'ir17_prizes_law_253_12': 0,
+            'ir17_title_transfer': 0,
+            'ir17_dividends_law_253_12': 0,
+            'ir17_interest_legal_nonres_253_12': 0,
+            'ir17_interest_legal_nonres_57_2007': 0,
+            'ir17_interest_nonres_indiv_253_12': 0,
+            'ir17_interest_nonres_indiv_57_2007_253_12': 0,
+            'ir17_remittances_abroad': 0,
+            'ir17_interest_nonfin_to_res_indiv': 0,
+            'ir17_state_suppliers': 0,
+            'ir17_phone_games': 0,
+            'ir17_capital_gain': 0,
+            'ir17_internet_games': 0,
+            'ir17_other_income_11_92': 0,
+            'ir17_other_income_139_98': 0,
+            'ir17_other_withholdings_07_2007': 0,
+            'ir17_interest_fin_to_res_legal_13_2011': 0,
+            'ir17_interest_fin_to_res_indiv_253_12': 0,
+            'ir17_acquisition_cattle_goods_04_25': 0,
+            'ir17_other_withholdings_total': 0
         }
     
     def _set_csmr_fields_vals(self, csmr_dict):

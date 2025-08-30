@@ -321,6 +321,36 @@
                                 </group>
                             </group>
                         </page>
+                        <page name="ir17" string="IR-17">
+                            <group string="Withholding Summary (IR-17)">
+                                <group col="3">
+                                    <field name="ir17_rentals" readonly="1" />
+                                    <field name="ir17_independent_fees" readonly="1" />
+                                    <field name="ir17_prizes_law_253_12" readonly="1" />
+                                    <field name="ir17_title_transfer" readonly="1" />
+                                    <field name="ir17_dividends_law_253_12" readonly="1" />
+                                    <field name="ir17_interest_legal_nonres_253_12" readonly="1" />
+                                    <field name="ir17_interest_legal_nonres_57_2007" readonly="1" />
+                                    <field name="ir17_interest_nonres_indiv_253_12" readonly="1" />
+                                    <field name="ir17_interest_nonres_indiv_57_2007_253_12" readonly="1" />
+                                    <field name="ir17_remittances_abroad" readonly="1" />
+                                    <field name="ir17_interest_nonfin_to_res_indiv" readonly="1" />
+                                </group>
+                                <group col="3">
+                                    <field name="ir17_state_suppliers" readonly="1" />
+                                    <field name="ir17_phone_games" readonly="1" />
+                                    <field name="ir17_capital_gain" readonly="1" />
+                                    <field name="ir17_internet_games" readonly="1" />
+                                    <field name="ir17_other_income_11_92" readonly="1" />
+                                    <field name="ir17_other_income_139_98" readonly="1" />
+                                    <field name="ir17_other_withholdings_07_2007" readonly="1" />
+                                    <field name="ir17_interest_fin_to_res_legal_13_2011" readonly="1" />
+                                    <field name="ir17_interest_fin_to_res_indiv_253_12" readonly="1" />
+                                    <field name="ir17_acquisition_cattle_goods_04_25" readonly="1" />
+                                    <field name="ir17_other_withholdings_total" readonly="1" />
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
 
                 </sheet>
