@@ -12,7 +12,6 @@
     'depends': [
         'base',
         'point_of_sale',
-        'pos_sms',
         'l10n_do_accounting',
     ],
     'data': [

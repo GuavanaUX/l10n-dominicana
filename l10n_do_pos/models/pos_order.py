@@ -46,12 +46,12 @@ class PosOrder(models.Model):
         Prepare the dict of values to create the new pos order.
         """
         fields = super(PosOrder, self)._order_fields(ui_order)
-        
-        fields['ncf'] = ui_order.get('ncf', False)
-        fields['ncf_origin_out'] = ui_order.get('ncf_origin_out', False)
-        fields['ncf_expiration_date'] = ui_order.get('ncf_expiration_date', False)
-        fields['fiscal_type_id'] = ui_order.get('fiscal_type_id', False)
-        fields['fiscal_sequence_id'] = ui_order.get('fiscal_sequence_id', False)
+        if ui_order.get('ncf', False):
+            fields['ncf'] = ui_order['ncf']
+            fields['ncf_origin_out'] = ui_order['ncf_origin_out']
+            fields['ncf_expiration_date'] = ui_order['ncf_expiration_date']
+            fields['fiscal_type_id'] = ui_order['fiscal_type_id']
+            fields['fiscal_sequence_id'] = ui_order['fiscal_sequence_id']
 
         return fields
 
@@ -147,8 +147,7 @@ class PosOrder(models.Model):
             self, 
             fiscal_type_id,
             company_id, 
-            payments,
-            order_json
+            payments
         ):
         """
         search active fiscal sequence dependent with fiscal type
@@ -187,20 +186,10 @@ class PosOrder(models.Model):
                     fiscal_type.name,
             ))
 
-        new_ncf = fiscal_sequence.get_fiscal_number()
-        
-        # This is the better way to identify problems with fiscal sequences 
-        ncf_log = self.env['pos.order.ncf.log'].sudo().create({
-            'l10n_do_ncf': new_ncf,
-            'order_json': order_json,
-            'company_id': company_id
-        })
-
         return {
-            'ncf': new_ncf,
+            'ncf': fiscal_sequence.get_fiscal_number(),
             'fiscal_sequence_id': fiscal_sequence.id,
-            'ncf_expiration_date': fiscal_sequence.expiration_date,
-            'ncf_log_id': ncf_log.id
+            'ncf_expiration_date': fiscal_sequence.expiration_date
         }
 
     def get_credit_note(self, ncf):
@@ -283,26 +272,3 @@ class PosOrder(models.Model):
             return {'ids': ids, 'totalCount': totalCount}
 
         return super(PosOrder, self).search_paid_order_ids(config_id, domain, limit, offset)
-
-
-class PosOrderNcfLog(models.Model):
-    _name = 'pos.order.ncf.log'
-    _description = 'Each time an NCF is generated, it is necessary to log the order in JSON so that the client can continue in case of an error.'
-    _rec_name = 'l10n_do_ncf'
-    
-    l10n_do_ncf = fields.Char(
-        string='NCF', 
-        required=True
-    )
-    order_json = fields.Text(
-        string='Order in JSON', 
-        required=True
-    )
-    company_id = fields.Many2one(
-        comodel_name='res.company', 
-        string='Company', 
-        required=True, 
-        default=lambda self: self.env.company
-    )
-
-    # TODO: CREATE METHOD create order FROM order_json

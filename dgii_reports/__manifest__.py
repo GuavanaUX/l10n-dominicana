@@ -32,12 +32,10 @@
     'data': [
         'data/invoice_service_type_detail_data.xml',
         'data/account_tax_data.xml',
-        'data/action_server.xml',
-
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         # Identify what this can be uded for
-        'views/res_partner_views.xml',
+        # 'views/res_partner_views.xml',
         'views/account_account_views.xml',
         'views/account_invoice_views.xml',
         'views/dgii_report_views.xml',
@@ -47,7 +45,7 @@
     'assets':{
         'web.assets_backend': [
             '/dgii_reports/static/src/scss/dgii_reports.scss',
-            '/dgii_reports/static/src/js/widget.js',
+            # '/dgii_reports/static/src/js/widget.js'
         ]
     },
     'post_init_hook': 'update_taxes'

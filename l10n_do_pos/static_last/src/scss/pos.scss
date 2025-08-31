@@ -164,29 +164,10 @@
     padding:10px 10px;
     text-align: center;
 }
-.do-pos-receipt-titles{
-    align-items: center;
-    justify-content: space-between;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+.pos-receipt-titles{
     border-style:dashed;
     border-width:2px;
     border-right:0px;
     border-left:0px;
-    padding:10px 0px;
-}
-.do-pos-receipt-titles .right {
-    text-align: right;
-    flex: 1; 
-}
-.do-pos-receipt-lines{
-    align-items: center;
-    justify-content: space-between;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    padding-bottom:6px;
-}
-.do-pos-receipt-lines .right {
-    text-align: right;
-    flex: 1; 
+    padding:10px 10px;
 }
