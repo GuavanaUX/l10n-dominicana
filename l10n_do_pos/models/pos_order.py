@@ -272,3 +272,26 @@ class PosOrder(models.Model):
             return {'ids': ids, 'totalCount': totalCount}
 
         return super(PosOrder, self).search_paid_order_ids(config_id, domain, limit, offset)
+
+
+class PosOrderNcfLog(models.Model):
+    _name = 'pos.order.ncf.log'
+    _description = 'Each time an NCF is generated, it is necessary to log the order in JSON so that the client can continue in case of an error.'
+    _rec_name = 'l10n_do_ncf'
+    
+    l10n_do_ncf = fields.Char(
+        string='NCF', 
+        required=True
+    )
+    order_json = fields.Text(
+        string='Order in JSON', 
+        required=True
+    )
+    company_id = fields.Many2one(
+        comodel_name='res.company', 
+        string='Company', 
+        required=True, 
+        default=lambda self: self.env.company
+    )
+
+    # TODO: CREATE METHOD create order FROM order_json

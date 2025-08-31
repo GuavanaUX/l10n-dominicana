@@ -84,6 +84,30 @@
         </xpath>
         
     </t>
+    
+    <t t-name="OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-qty-per-price')]" position="attributes">
+            <attribute name="t-if">!receipt.l10n_do_fiscal_journal</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('pos-receipt-qty-per-price')]" position="after">
+            <div class="do-pos-receipt-lines" t-if="receipt.l10n_do_fiscal_journal">
+                <div>
+                    <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
+                    <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
+                    x
+                    <t t-esc="env.pos.format_currency(line.price_display_one)" />
+                </div>
+                <div class="price_display right">
+                    <t t-esc="env.pos.format_currency_no_symbol(line.l10n_do_itbis)" />
+                </div>
+                <span class="price_display right">
+                    <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
+                </span>
+            </div>
+        </xpath>
+    </t>
+    
 
     <!--TODO: this part is for use posbox-->
     <!--<t t-extend="XmlReceipt">-->
