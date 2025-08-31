@@ -55,7 +55,8 @@ class DgiiReport(models.Model):
             ('sent', 'Sent')
         ],
         default='draft',
-        copy=False
+        copy=False,
+        tracking=True    
     )
     previous_balance = fields.Float(
         string='Previous balance', 
@@ -1218,6 +1219,7 @@ class DgiiReport(models.Model):
                     'services': 0,
                     'imports': 0,
                     'amount': 0,
+                    'invoice_ids': [(6, 0, [])],
                 }
             })
 
@@ -1992,7 +1994,11 @@ class DgiiReportPurchaseLine(models.Model):
     _description = "DGII Reports Purchase Line"
     _order = 'line asc'
 
-    dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
+    dgii_report_id = fields.Many2one(
+        comodel_name='dgii.reports', 
+        ondelete='cascade', 
+        index=True,
+    )
     line = fields.Integer()
 
     rnc_cedula = fields.Char(size=11)
@@ -2038,9 +2044,12 @@ class DgiiReportSaleLine(models.Model):
     _name = 'dgii.reports.sale.line'
     _description = "DGII Reports Sale Line"
 
-    dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
+    dgii_report_id = fields.Many2one(
+        comodel_name='dgii.reports', 
+        ondelete='cascade', 
+        index=True
+    )
     line = fields.Integer()
-
     rnc_cedula = fields.Char(size=11)
     identification_type = fields.Char(size=1)
     fiscal_invoice_number = fields.Char(size=19)
@@ -2086,7 +2095,11 @@ class DgiiCancelReportLine(models.Model):
     _name = 'dgii.reports.cancel.line'
     _description = "DGII Reports Cancel Line"
 
-    dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
+    dgii_report_id = fields.Many2one(
+        comodel_name='dgii.reports', 
+        ondelete='cascade', 
+        index=True
+    )
     line = fields.Integer()
 
     fiscal_invoice_number = fields.Char(size=19)
@@ -2111,7 +2124,11 @@ class DgiiExteriorReportLine(models.Model):
     _name = 'dgii.reports.exterior.line'
     _description = "DGII Reports Exterior Line"
 
-    dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
+    dgii_report_id = fields.Many2one(
+        comodel_name='dgii.reports', 
+        ondelete='cascade', 
+        index=True,
+    )
     line = fields.Integer()
 
     legal_name = fields.Char()
@@ -2201,3 +2218,12 @@ class DgiiReportsIt1(models.Model):
         default=False,
         help="Technical field for UX purpose.",
     )
+    move_line_ids = fields.Many2many(
+        comodel_name='account.move.line',
+        string='Move Lines',
+    )
+    invoice_ids = fields.Many2many(
+        comodel_name='account.move',
+        string='Invoices',
+    )
+

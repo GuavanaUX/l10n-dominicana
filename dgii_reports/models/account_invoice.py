@@ -78,7 +78,8 @@ class AccountInvoice(models.Model):
         'state', 
         'line_ids', 
         'line_ids.balance', 
-        'line_ids.tax_line_id'
+        'line_ids.tax_line_id',
+        'l10n_do_is_subject_to_proportionality'
     )
     def _compute_taxes_fields(self):
         
@@ -158,9 +159,10 @@ class AccountInvoice(models.Model):
     @api.depends(
         'state',
         'invoice_date',
-        'invoice_line_ids', 
+        'invoice_line_ids',
         'invoice_line_ids.product_id',
-        'invoice_line_ids.price_subtotal'
+        'invoice_line_ids.price_subtotal',
+        'invoice_line_ids.balance'
     )
     def _compute_amount_fields(self):
         
@@ -261,9 +263,15 @@ class AccountInvoice(models.Model):
     def _compute_in_invoice_payment_form(self):
         for inv in self:
             if inv.payment_state in ('paid', 'in_payment'):
-                payment_dict = {'cash': '01', 'bank': '02', 'card': '03',
-                                'credit': '04', 'swap': '05',
-                                'credit_note': '06', 'mixed': '07'}
+                payment_dict = {
+                    'cash': '01', 
+                    'bank': '02', 
+                    'card': '03',
+                    'credit': '04', 
+                    'swap': '05',
+                    'credit_note': '06', 
+                    'mixed': '07'
+                }
                 inv.payment_form = payment_dict.get(inv._get_payment_string())
             else:
                 inv.payment_form = '04'
@@ -296,62 +304,74 @@ class AccountInvoice(models.Model):
     service_total_amount = fields.Monetary(
         string="Service Total Amount",
         compute='_compute_amount_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     good_total_amount = fields.Monetary(
         string="Good Total Amount",
         compute='_compute_amount_fields',
         currency_field='company_currency_id',
+        store=True
     )
     invoiced_itbis = fields.Monetary(
         string="Invoiced ITBIS",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     proportionality_tax = fields.Monetary(
         string="Proportionality Tax",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     cost_itbis = fields.Monetary(
         string="Cost Itbis",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     advance_itbis = fields.Monetary(
         string="Advanced ITBIS",
         compute='_compute_taxes_fields',
         currency_field='company_currency_id',
+        store=True
     )
     isr_withholding_type = fields.Char(
         string="ISR Withholding Type",
         compute='_compute_isr_withholding_type',
-        size=2
+        size=2,
+        store=True
     )
     selective_tax = fields.Monetary(
         string="Selective Tax",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     other_taxes = fields.Monetary(
         string="Other taxes",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     legal_tip = fields.Monetary(
         string="Legal tip amount",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     ) 
     withholding_itbis = fields.Monetary(
         string="Withholding ITBIS",
         compute='_compute_withholding_taxes',
         currency_field='company_currency_id',
+        store=True
     )
     income_withholding = fields.Monetary(
         string="Income Withholding",
         compute='_compute_withholding_taxes',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     payment_date = fields.Date(
         string="Payment date",
@@ -419,3 +439,25 @@ class AccountInvoice(models.Model):
                 self.env.add_todo(self._fields[k], invoice_ids)
 
         self.recompute()
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    @api.constrains('tax_line_id', 'tax_ids')
+    def _check_isr_tax(self):
+        """Restrict one ISR tax per invoice"""
+
+        for line in self:
+            if line.tax_line_id and \
+                line.move_id.is_invoice() and \
+                line.move_id.is_l10n_do_fiscal_invoice:
+
+                isr_taxes = [
+                    tax_line.tax_line_id.isr_retention_type 
+                    for tax_line in line.move_id._get_tax_line_ids()
+                    if tax_line.tax_line_id.l10n_do_tax_type == 'isr'
+                ]
+                
+                if len(set(isr_taxes)) > 1:
+                    raise ValidationError(_('An invoice cannot have multiple withholding taxes.'))
+                
