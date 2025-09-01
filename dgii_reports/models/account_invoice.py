@@ -158,7 +158,7 @@ class AccountInvoice(models.Model):
     @api.depends(
         'state',
         'invoice_date',
-        'invoice_line_ids', 
+        'invoice_line_ids',
         'invoice_line_ids.product_id',
         'invoice_line_ids.price_subtotal'
     )
@@ -261,9 +261,15 @@ class AccountInvoice(models.Model):
     def _compute_in_invoice_payment_form(self):
         for inv in self:
             if inv.payment_state in ('paid', 'in_payment'):
-                payment_dict = {'cash': '01', 'bank': '02', 'card': '03',
-                                'credit': '04', 'swap': '05',
-                                'credit_note': '06', 'mixed': '07'}
+                payment_dict = {
+                    'cash': '01',  
+                    'bank': '02', 
+                    'card': '03',
+                    'credit': '04', 
+                    'swap': '05',
+                    'credit_note': '06', 
+                    'mixed': '07'
+                }
                 inv.payment_form = payment_dict.get(inv._get_payment_string())
             else:
                 inv.payment_form = '04'

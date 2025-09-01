@@ -1994,7 +1994,6 @@ class DgiiReportPurchaseLine(models.Model):
 
     dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
     line = fields.Integer()
-
     rnc_cedula = fields.Char(size=11)
     identification_type = fields.Char(size=1)
     expense_type = fields.Char(size=2)
@@ -2040,7 +2039,6 @@ class DgiiReportSaleLine(models.Model):
 
     dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
     line = fields.Integer()
-
     rnc_cedula = fields.Char(size=11)
     identification_type = fields.Char(size=1)
     fiscal_invoice_number = fields.Char(size=19)
@@ -2088,11 +2086,9 @@ class DgiiCancelReportLine(models.Model):
 
     dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
     line = fields.Integer()
-
     fiscal_invoice_number = fields.Char(size=19)
     invoice_date = fields.Date()
     annulation_type = fields.Char(size=2)
-
     invoice_partner_id = fields.Many2one('res.partner')
     invoice_id = fields.Many2one('account.move')
 
@@ -2113,7 +2109,6 @@ class DgiiExteriorReportLine(models.Model):
 
     dgii_report_id = fields.Many2one('dgii.reports', ondelete='cascade')
     line = fields.Integer()
-
     legal_name = fields.Char()
     tax_id_type = fields.Integer()
     tax_id = fields.Char()
