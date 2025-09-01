@@ -75,10 +75,11 @@ class AccountInvoice(models.Model):
         return self.line_ids.filtered(lambda l: l.tax_line_id)
 
     @api.depends(
-        'state', 
-        'line_ids', 
-        'line_ids.balance', 
-        'line_ids.tax_line_id'
+        'state',
+        'line_ids',
+        'line_ids.balance',
+        'line_ids.tax_line_id',
+        'l10n_do_is_subject_to_proportionality'
     )
     def _compute_taxes_fields(self):
         
@@ -124,6 +125,8 @@ class AccountInvoice(models.Model):
                 #     tax_line_ids.filtered(
                 #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'prop').mapped('balance')
                 # ))
+                
+                inv.proportionality_tax = inv.invoiced_itbis if inv.l10n_do_is_subject_to_proportionality else 0
                 inv.advance_itbis = inv.invoiced_itbis - inv.cost_itbis
 
     @api.depends(
@@ -160,7 +163,8 @@ class AccountInvoice(models.Model):
         'invoice_date',
         'invoice_line_ids',
         'invoice_line_ids.product_id',
-        'invoice_line_ids.price_subtotal'
+        'invoice_line_ids.price_subtotal',
+        'invoice_line_ids.balance'
     )
     def _compute_amount_fields(self):
         
@@ -302,62 +306,74 @@ class AccountInvoice(models.Model):
     service_total_amount = fields.Monetary(
         string="Service Total Amount",
         compute='_compute_amount_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     good_total_amount = fields.Monetary(
         string="Good Total Amount",
         compute='_compute_amount_fields',
         currency_field='company_currency_id',
+        store=True
     )
     invoiced_itbis = fields.Monetary(
         string="Invoiced ITBIS",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     proportionality_tax = fields.Monetary(
         string="Proportionality Tax",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     cost_itbis = fields.Monetary(
         string="Cost Itbis",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     advance_itbis = fields.Monetary(
         string="Advanced ITBIS",
         compute='_compute_taxes_fields',
         currency_field='company_currency_id',
+        store=True
     )
     isr_withholding_type = fields.Char(
         string="ISR Withholding Type",
         compute='_compute_isr_withholding_type',
-        size=2
+        size=2,
+        store=True
     )
     selective_tax = fields.Monetary(
         string="Selective Tax",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     other_taxes = fields.Monetary(
         string="Other taxes",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     legal_tip = fields.Monetary(
         string="Legal tip amount",
         compute='_compute_taxes_fields',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     ) 
     withholding_itbis = fields.Monetary(
         string="Withholding ITBIS",
         compute='_compute_withholding_taxes',
         currency_field='company_currency_id',
+        store=True
     )
     income_withholding = fields.Monetary(
         string="Income Withholding",
         compute='_compute_withholding_taxes',
-        currency_field='company_currency_id'
+        currency_field='company_currency_id',
+        store=True
     )
     payment_date = fields.Date(
         string="Payment date",
@@ -409,6 +425,25 @@ class AccountInvoice(models.Model):
         "* The \'Grey\' status means Has not yet been reported or was partially reported.",
         default='normal'
     )
+    l10n_do_is_subject_to_proportionality = fields.Boolean( 
+        string='Subject to proportionality',
+        help='Indicates if the invoice is subject to proportionality tax.',
+        # default=lambda self: self._default_l10n_do_is_subject_to_proportionality()
+    )
+
+    @api.onchange('move_type')
+    def _default_l10n_do_is_subject_to_proportionality(self):
+        """Determines the default value for the field based on the company and move type."""
+        for record in self:
+            if record.company_id.l10n_do_is_subject_to_proportionality and self.move_type in ('in_invoice', 'out_invoice'):
+                record.l10n_do_is_subject_to_proportionality = True
+
+    @api.constrains('l10n_do_is_subject_to_proportionality')
+    def l10n_do_is_subject_to_proportionality_constrains(self):
+        for inv in self:
+            if inv.fiscal_status == 'done':
+                raise ValidationError(
+                    _('You cannot change the proportionality status of a reported invoice.'))
 
     @api.model
     def norma_recompute(self):
