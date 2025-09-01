@@ -13,7 +13,7 @@
                 <br />
                 <field name="related" widget="radio" class="oe_edit_only"
                     options="{'horizontal': true}"
-                    invisible="country_id != ref('base.do')" />
+                    invisible="country_code != 'DO'" />
             </xpath>
 
         </field>

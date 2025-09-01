@@ -19,7 +19,7 @@ class PosPayment(models.Model):
             'partner_id': payment.partner_id.id if payment.partner_id else False,
             'currency_id': payment.currency_id.id,
             'pos_session_id': payment_session.id,
-            'ref': _('%s POS payments from %s') % (payment_method.name, payment_session.name),
+            'payment_reference': _('%s POS payments from %s') % (payment_method.name, payment_session.name),
             'pos_payment_method_id': payment_method.id,
             'journal_id': payment_method.journal_id.id,
         }
