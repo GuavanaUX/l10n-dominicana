@@ -460,3 +460,24 @@ class AccountInvoice(models.Model):
                 self.env.add_todo(self._fields[k], invoice_ids)
 
         self.recompute()
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    @api.constrains('tax_line_id', 'tax_ids')
+    def _check_isr_tax(self):
+        """Restrict one ISR tax per invoice"""
+
+        for line in self:
+            if line.tax_line_id and \
+                line.move_id.is_invoice() and \
+                line.move_id.is_l10n_do_fiscal_invoice:
+
+                isr_taxes = [
+                    tax_line.tax_line_id.isr_retention_type 
+                    for tax_line in line.move_id._get_tax_line_ids()
+                    if tax_line.tax_line_id.l10n_do_tax_type == 'isr'
+                ]
+                
+                if len(set(isr_taxes)) > 1:
+                    raise ValidationError(_('An invoice cannot have multiple withholding taxes.'))
