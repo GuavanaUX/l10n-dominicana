@@ -7,7 +7,16 @@
         <field name="type">out_invoice</field>
         <field name="sequence">1</field>
         <field name="padding">8</field>
-        <field name="requires_document" eval="True"/>
+        <field name="requires_document" eval="True" />
+    </record>
+    <record id="ecf_fiscal_client" model="account.fiscal.type">
+        <field name="name">Crédito Fiscal Electrónica</field>
+        <field name="prefix">E31</field>
+        <field name="type">out_invoice</field>
+        <field name="sequence">1</field>
+        <field name="padding">10</field>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_consumo" model="account.fiscal.type">
         <field name="name">Consumo</field>
@@ -15,6 +24,14 @@
         <field name="type">out_invoice</field>
         <field name="sequence">2</field>
         <field name="padding">8</field>
+    </record>
+    <record id="ecf_consumer_supplier" model="account.fiscal.type">
+        <field name="name">Consumo Electrónica</field>
+        <field name="prefix">E32</field>
+        <field name="type">out_invoice</field>
+        <field name="sequence">2</field>
+        <field name="padding">10</field>
+        <field name="assigned_sequence" eval="False" />
     </record>
     <record id="fiscal_type_unico" model="account.fiscal.type">
         <field name="name">Único Ingreso</field>
@@ -28,16 +45,33 @@
         <field name="prefix">B14</field>
         <field name="type">out_invoice</field>
         <field name="sequence">4</field>
-        <field name="requires_document" eval="True"/>
         <field name="padding">8</field>
+        <field name="requires_document" eval="True" />
+    </record>
+    <record id="ecf_special_client" model="account.fiscal.type">
+        <field name="name">Regimen Especial Electrónica</field>
+        <field name="prefix">E44</field>
+        <field name="type">out_invoice</field>
+        <field name="sequence">4</field>
+        <field name="padding">10</field>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_gubernamental" model="account.fiscal.type">
         <field name="name">Gubernamental</field>
         <field name="prefix">B15</field>
         <field name="type">out_invoice</field>
         <field name="sequence">5</field>
-        <field name="requires_document" eval="True"/>
         <field name="padding">8</field>
+        <field name="requires_document" eval="True" />
+    </record>
+    <record id="ecf_gov_client" model="account.fiscal.type">
+        <field name="name">Gubernamental Electrónica</field>
+        <field name="prefix">E45</field>
+        <field name="type">out_invoice</field>
+        <field name="sequence">5</field>
+        <field name="padding">10</field>
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_exportacion" model="account.fiscal.type">
         <field name="name">Exportación</field>
@@ -45,6 +79,13 @@
         <field name="type">out_invoice</field>
         <field name="sequence">6</field>
         <field name="padding">8</field>
+    </record>
+    <record id="ecf_export_client" model="account.fiscal.type">
+        <field name="name">Exportación Electrónica</field>
+        <field name="prefix">E46</field>
+        <field name="type">out_invoice</field>
+        <field name="sequence">6</field>
+        <field name="padding">10</field>
     </record>
 
     <!--special-->
@@ -54,6 +95,13 @@
         <field name="type">out_debit</field>
         <field name="sequence">7</field>
         <field name="padding">8</field>
+    </record>
+    <record id="ecf_debit_note_client" model="account.fiscal.type">
+        <field name="name">Nota de Débito Electrónica</field>
+        <field name="prefix">E33</field>
+        <field name="type">out_debit</field>
+        <field name="sequence">7</field>
+        <field name="padding">10</field>
     </record>
     <record id="fiscal_type_credit_note" model="account.fiscal.type">
         <field name="name">Nota de Crédito</field>
@@ -68,8 +116,8 @@
         <field name="type">in_debit</field>
         <field name="sequence">9</field>
         <field name="padding">8</field>
-        <field name="assigned_sequence" eval="False"/>
-        <field name="requires_document" eval="True"/>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_purchase_credit_note" model="account.fiscal.type">
         <field name="name">Nota de Crédito Compras Fiscales</field>
@@ -77,8 +125,8 @@
         <field name="type">in_refund</field>
         <field name="sequence">10</field>
         <field name="padding">8</field>
-        <field name="assigned_sequence" eval="False"/>
-        <field name="requires_document" eval="True"/>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_purchase_electronic_credit_note" model="account.fiscal.type">
         <field name="name">Nota de Crédito Compras Fiscales Electronicas</field>
@@ -86,8 +134,8 @@
         <field name="type">in_refund</field>
         <field name="sequence">10</field>
         <field name="padding">10</field>
-        <field name="assigned_sequence" eval="False"/>
-        <field name="requires_document" eval="True"/>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
 
     <!--purchase-->
@@ -97,8 +145,8 @@
         <field name="type">in_invoice</field>
         <field name="sequence">11</field>
         <field name="padding">8</field>
-        <field name="assigned_sequence" eval="False"/>
-        <field name="requires_document" eval="True"/>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_fiscal_electronic_purchase" model="account.fiscal.type">
         <field name="name">Compras Fiscales Electronicas</field>
@@ -106,8 +154,8 @@
         <field name="type">in_invoice</field>
         <field name="sequence">12</field>
         <field name="padding">10</field>
-        <field name="assigned_sequence" eval="False"/>
-        <field name="requires_document" eval="True"/>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_informal" model="account.fiscal.type">
         <field name="name">Proveedor Informal</field>
@@ -115,7 +163,16 @@
         <field name="type">in_invoice</field>
         <field name="sequence">13</field>
         <field name="padding">8</field>
-        <field name="requires_document" eval="True"/>
+        <field name="requires_document" eval="True" />
+    </record>
+    <record id="ecf_informal_supplier" model="account.fiscal.type">
+        <field name="name">Proveedor Informal Electrónica</field>
+        <field name="prefix">E41</field>
+        <field name="type">in_invoice</field>
+        <field name="sequence">13</field>
+        <field name="padding">10</field>
+        <field name="assigned_sequence" eval="False" />
+        <field name="requires_document" eval="True" />
     </record>
     <record id="fiscal_type_minor" model="account.fiscal.type">
         <field name="name">Gastos Menores</field>
@@ -124,6 +181,13 @@
         <field name="sequence">14</field>
         <field name="padding">8</field>
     </record>
+    <record id="ecf_minor_supplier" model="account.fiscal.type">
+        <field name="name">Gastos Menores Electrónica</field>
+        <field name="prefix">E43</field>
+        <field name="type">in_invoice</field>
+        <field name="sequence">14</field>
+        <field name="padding">10</field>
+    </record>
     <record id="fiscal_type_exterior" model="account.fiscal.type">
         <field name="name">Pagos al Exterior</field>
         <field name="prefix">B17</field>
@@ -131,12 +195,19 @@
         <field name="sequence">15</field>
         <field name="padding">8</field>
     </record>
+    <record id="ecf_exterior_supplier" model="account.fiscal.type">
+        <field name="name">Pagos al Exterior Electrónica</field>
+        <field name="prefix">E47</field>
+        <field name="type">in_invoice</field>
+        <field name="sequence">15</field>
+        <field name="padding">10</field>
+    </record>
     <record id="fiscal_type_fiscal_import" model="account.fiscal.type">
         <field name="name">Importaciones</field>
         <field name="type">in_invoice</field>
         <field name="sequence">16</field>
         <field name="padding">8</field>
-        <field name="assigned_sequence" eval="False"/>
+        <field name="assigned_sequence" eval="False" />
     </record>
 
 </odoo>
