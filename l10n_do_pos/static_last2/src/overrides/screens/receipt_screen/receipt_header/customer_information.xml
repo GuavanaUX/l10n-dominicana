@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_do_pos.CustomerInformation" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-set="partner" t-value="props.data.partner"/>
+            <div>Customer Info</div>
+            <!-- <t t-if="pos.config.l10n_do_fiscal_journal"> -->
+                <div class="pos-receipt-font-75" t-if="partner">
+                    <br/>
+                    <div>
+                        Customer: <t t-esc="partner.name"/>
+                    </div>
+                    <div t-if="partner.vat">
+                        RNC / Cedula: <t t-esc="partner.vat"/>
+                    </div>
+                    <div t-if="partner.street">
+                        <t t-esc="partner.street"/><t t-if="partner.street2" t-esc="', ' + partner.street2"/>
+                    </div>
+                    <div t-if="partner.city">
+                        <t t-esc="partner.city"/>
+                    </div>
+                    <div t-if="partner.state_id">
+                        <t t-esc="partner.state_id[1]"/>
+                    </div>
+                    <div t-if="partner.zip">
+                        <t t-esc="partner.zip"/>
+                    </div>
+                    <div t-if="partner.country_id and partner.street">
+                        <t t-esc="partner.country_id[1]"/>
+                    </div>
+                </div>
+            <!-- </t> -->
+        </xpath>
+    </t>
+
+</templates>
