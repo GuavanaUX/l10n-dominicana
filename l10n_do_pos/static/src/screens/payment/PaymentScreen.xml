@@ -22,13 +22,13 @@
 
     <t t-name="l10n_do_pos.PaymentScreenMethods" t-inherit="point_of_sale.PaymentScreenMethods" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('paymentmethods-container')]" position="attributes">
-            <attribute name="t-att-class">this.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
+            <attribute name="t-att-class">this.pos.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
         </xpath>
     </t>
 
     <t t-name="l10n_do_pos.Numpad" t-inherit="point_of_sale.Numpad" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[@t-attf-class('numpad')]" position="attributes">
-            <attribute name="t-att-class">this.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
+            <attribute name="t-att-class">this.pos.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
         </xpath>
     </t>
 
