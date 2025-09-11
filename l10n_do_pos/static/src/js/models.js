@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { usePos } from "@point_of_sale/app/store/pos_store";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
+import { Component, useState } from "@odoo/owl";
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
@@ -11,12 +11,12 @@ import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 // ----------------------------
 // 🔹 usePos (antes PosGlobalState)
 // ----------------------------
-patch(usePos.prototype, {
+export class L10nDoPosPosGlobalState extends Component {
     async setup() {
         await super.setup();
         this.dialog = useService("dialog");
         this.fiscal_types = this.models["account.fiscal.type"] || [];
-    },
+    }
 
     get_fiscal_type_by_id(id) {
         let res_fiscal_type = this.fiscal_types.find(ft => ft.id === id);
@@ -24,7 +24,7 @@ patch(usePos.prototype, {
             res_fiscal_type = this.get_fiscal_type_by_prefix("B02");
         }
         return res_fiscal_type;
-    },
+    }
 
     get_fiscal_type_by_prefix(prefix) {
         let res_fiscal_type = this.fiscal_types.find(ft => ft.prefix === prefix);
@@ -37,7 +37,7 @@ patch(usePos.prototype, {
         });
         console.error("Fiscal type not found");
         return false;
-    },
+    }
 
     async get_fiscal_data(order) {
         return this.env.services.rpc({
@@ -50,7 +50,7 @@ patch(usePos.prototype, {
                 [],
             ],
         });
-    },
+    }
 
     isCreditNoteMode() {
         const current_order = this.get_order();
@@ -59,11 +59,11 @@ patch(usePos.prototype, {
             current_order &&
             current_order._isRefundAndSaleOrder()
         );
-    },
+    }
 
     get_credit_note_payment_method() {
         return this.payment_methods.find(pm => pm.is_credit_note) || false;
-    },
+    }
 
     async get_credit_note(ncf) {
         return this.env.services.rpc({
@@ -71,7 +71,7 @@ patch(usePos.prototype, {
             method: "get_credit_note",
             args: [false, ncf],
         });
-    },
+    }
 
     async get_credit_notes(partner_id) {
         return this.env.services.rpc({
@@ -79,8 +79,8 @@ patch(usePos.prototype, {
             method: "get_credit_notes",
             args: [false, partner_id],
         });
-    },
-});
+    }
+}
 
 // ----------------------------
 // 🔹 PosOrder
