@@ -3,11 +3,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list_screen";
-import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_details_edit";
+import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_list";
+//import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_details_edit";
 import { isConnectionError } from "@point_of_sale/utils";
 
-patch(PartnerListScreen.prototype, {
+patch(PartnerList.prototype, {
     async saveChanges(event) {
         try {
             const rpc = useService("rpc");
@@ -48,23 +48,24 @@ patch(PartnerListScreen.prototype, {
     },
 });
 
-patch(PartnerDetailsEdit.prototype, {
-    saveChanges() {
-        const $partner_name = document.querySelector(".partner-name");
-        const $vat = document.querySelector(".vat");
+// patch(PartnerDetailsEdit.prototype, {
+//     saveChanges() {
+//         const $partner_name = document.querySelector(".partner-name");
+//         const $vat = document.querySelector(".vat");
 
-        if ($partner_name && $partner_name.value !== this.changes.name) {
-            this.changes.name = $partner_name.value;
-        }
+//         if ($partner_name && $partner_name.value !== this.changes.name) {
+//             this.changes.name = $partner_name.value;
+//         }
 
-        if ($vat && $vat.value !== this.changes.vat) {
-            this.changes.vat = $vat.value;
-        }
+//         if ($vat && $vat.value !== this.changes.vat) {
+//             this.changes.vat = $vat.value;
+//         }
 
-        super.saveChanges();
-    },
-});
+//         super.saveChanges();
+//     },
+// });
 
+// OLD CODE
 
 // odoo.define('l10n_do_pos.PartnerListScreen', function (require) {
 //     'use strict';
