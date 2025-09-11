@@ -1,106 +1,198 @@
-odoo.define('l10n_do_pos.SetFiscalTypeButton', function(require) {
-    'use strict';
+/** @odoo-module **/
 
-    const { useListener } = require("@web/core/utils/hooks");
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { _t } from "@web/core/l10n/translation";
+import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/store/pos_store";
+import { patch } from "@web/core/utils/patch";
 
-    class SetFiscalTypeButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
-        }
 
-        get currentOrder() {
-            return this.env.pos.get_order();
-        }
+class SetFiscalTypeButton extends Component {
+    static template = "l10n_do_pos.SetFiscalTypeButton";
+    setup() {
+        super.setup();
+        this.pos = usePos();               // accedemos al PosStore reactivo
+        this.popup = useService("popup");  // servicio de popups
+        this.action = useService("action");
+        useListener("click", this.onClick);
+    }
 
-        get currentFiscalTypeName() {
-            return this.currentOrder && this.currentOrder.fiscal_type
-                ? this.currentOrder.fiscal_type.name
-                : this.env._t('Select Fiscal Type');
-        }
+    get currentOrder() {
+        return this.pos.get_order();
+    }
 
-        async onClick() {
-            const currentFiscalType = this.currentOrder.fiscal_type;
-            const fiscalPosList = [];
+    get currentFiscalTypeName() {
+        return this.currentOrder?.fiscal_type?.name || this.env._t("Select Fiscal Type");
+    }
 
-            for (let fiscalPos of this.env.pos.fiscal_types) {
-                if (fiscalPos.type !== 'out_invoice') continue;
-                fiscalPosList.push({
-                    id: fiscalPos.id,
-                    label: fiscalPos.name,
-                    isSelected: currentFiscalType
-                        ? fiscalPos.id === currentFiscalType.id
-                        : false,
-                    item: fiscalPos,
-                });
-            }
+    async onClick() {
+        const currentFiscalType = this.currentOrder?.fiscal_type;
+        const fiscalPosList = [];
 
-            const { confirmed, payload: selectedFiscalType } = await this.showPopup(
-                'SelectionPopup',
-                {
-                    title: this.env._t('Select Fiscal Type'),
-                    list: fiscalPosList,
-                }
-            );
-            
-            if (confirmed) {
-                var partner = this.currentOrder.get_partner();
-
-                if (selectedFiscalType.requires_document && (!partner || !partner.vat))
-                    await this.open_vat_popup();
-                
-                this.currentOrder.set_fiscal_type(selectedFiscalType);
-            }
-        }
-
-        async open_vat_popup() {
-            var self = this;
-
-            const { confirmed, payload: vat } = await this.showPopup('TextInputPopup', {
-                startingValue: '',
-                title: this.env._t('You need to select a customer with RNC or Cedula for this fiscal type.'),
-                placeholder: this.env._t('RNC or Cedula'),
+        for (let fiscalPos of this.pos.fiscal_types) {
+            if (fiscalPos.type !== "out_invoice") continue;
+            fiscalPosList.push({
+                id: fiscalPos.id,
+                label: fiscalPos.name,
+                isSelected: currentFiscalType ? fiscalPos.id === currentFiscalType.id : false,
+                item: fiscalPos,
             });
+        }
 
-            if (confirmed) {
-                if (!(vat.length === 9 || vat.length === 11) || Number.isNaN(Number(vat))) {
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t('This not RNC or Cedula'),
-                        body: this.env._t('Please ensure the RNC has exactly 9 digits or the Cedula has 11 digits'),
-                        cancel: function () {
-                            self.open_vat_popup();
-                        },
-                    });
+        const { confirmed, payload: selectedFiscalType } = await this.popup.add("SelectionPopup", {
+            title: this.env._t("Select Fiscal Type"),
+            list: fiscalPosList,
+        });
 
-                } else {
-                    // TODO: in future try optimize search partners like get_partner_by_id
-                    
-                    var partner = this.env.pos.db.get_partners_sorted().find(partner_obj => partner_obj.vat === vat);
-
-                    if (partner) {
-
-                        this.currentOrder.set_partner(partner);
-
-                    } else {
-                        // TODO: in future create automatic partner
-                        const { confirmed, payload: newPartner } = await this.showTempScreen(
-                            'PartnerListScreen',
-                            { partner: this.currentOrder.get_partner()}
-                        );
-                        if (confirmed) {
-                            this.currentOrder.set_partner(newPartner);
-                            this.currentOrder.updatePricelist(newPartner);
-                        }
-                    }
-                } 
+        if (confirmed) {
+            const partner = this.currentOrder.get_partner();
+            if (selectedFiscalType.requires_document && (!partner || !partner.vat)) {
+                await this.open_vat_popup();
             }
+            this.currentOrder.set_fiscal_type(selectedFiscalType);
         }
     }
 
-    SetFiscalTypeButton.template = 'SetFiscalTypeButton';
-    Registries.Component.add(SetFiscalTypeButton);
+    async open_vat_popup() {
+        const { confirmed, payload: vat } = await this.popup.add("TextInputPopup", {
+            startingValue: "",
+            title: this.env._t("You need to select a customer with RNC or Cedula for this fiscal type."),
+            placeholder: this.env._t("RNC or Cedula"),
+        });
 
-    return SetFiscalTypeButton;
+        if (confirmed) {
+            if (!(vat.length === 9 || vat.length === 11) || Number.isNaN(Number(vat))) {
+                this.popup.add("ErrorPopup", {
+                    title: this.env._t("This not RNC or Cedula"),
+                    body: this.env._t("Please ensure the RNC has exactly 9 digits or the Cedula has 11 digits"),
+                });
+                return this.open_vat_popup();
+            }
+
+            let partner = this.pos.db.get_partners_sorted().find(p => p.vat === vat);
+
+            if (partner) {
+                this.currentOrder.set_partner(partner);
+            } else {
+                const { confirmed, payload: newPartner } = await this.action.doAction("point_of_sale.partner_list_action", {
+                    additionalContext: { partner: this.currentOrder.get_partner() },
+                });
+                if (confirmed) {
+                    this.currentOrder.set_partner(newPartner);
+                    this.currentOrder.updatePricelist(newPartner);
+                }
+            }
+        }
+    }
+}
+
+// 🔹 Hacemos patch al PaymentScreenButtons para insertar nuestro botón
+patch(PaymentScreenButtons.prototype, {
+    components: { ...PaymentScreenButtons.components, SetFiscalTypeButton },
 });
+
+// odoo.define('l10n_do_pos.SetFiscalTypeButton', function(require) {
+//     'use strict';
+
+//     const { useListener } = require("@web/core/utils/hooks");
+//     const PosComponent = require('point_of_sale.PosComponent');
+//     const Registries = require('point_of_sale.Registries');
+
+//     class SetFiscalTypeButton extends PosComponent {
+//         setup() {
+//             super.setup();
+//             useListener('click', this.onClick);
+//         }
+
+//         get currentOrder() {
+//             return this.env.pos.get_order();
+//         }
+
+//         get currentFiscalTypeName() {
+//             return this.currentOrder && this.currentOrder.fiscal_type
+//                 ? this.currentOrder.fiscal_type.name
+//                 : this.env._t('Select Fiscal Type');
+//         }
+
+//         async onClick() {
+//             const currentFiscalType = this.currentOrder.fiscal_type;
+//             const fiscalPosList = [];
+
+//             for (let fiscalPos of this.env.pos.fiscal_types) {
+//                 if (fiscalPos.type !== 'out_invoice') continue;
+//                 fiscalPosList.push({
+//                     id: fiscalPos.id,
+//                     label: fiscalPos.name,
+//                     isSelected: currentFiscalType
+//                         ? fiscalPos.id === currentFiscalType.id
+//                         : false,
+//                     item: fiscalPos,
+//                 });
+//             }
+
+//             const { confirmed, payload: selectedFiscalType } = await this.showPopup(
+//                 'SelectionPopup',
+//                 {
+//                     title: this.env._t('Select Fiscal Type'),
+//                     list: fiscalPosList,
+//                 }
+//             );
+            
+//             if (confirmed) {
+//                 var partner = this.currentOrder.get_partner();
+
+//                 if (selectedFiscalType.requires_document && (!partner || !partner.vat))
+//                     await this.open_vat_popup();
+                
+//                 this.currentOrder.set_fiscal_type(selectedFiscalType);
+//             }
+//         }
+
+//         async open_vat_popup() {
+//             var self = this;
+
+//             const { confirmed, payload: vat } = await this.showPopup('TextInputPopup', {
+//                 startingValue: '',
+//                 title: this.env._t('You need to select a customer with RNC or Cedula for this fiscal type.'),
+//                 placeholder: this.env._t('RNC or Cedula'),
+//             });
+
+//             if (confirmed) {
+//                 if (!(vat.length === 9 || vat.length === 11) || Number.isNaN(Number(vat))) {
+//                     this.showPopup('ErrorPopup', {
+//                         title: this.env._t('This not RNC or Cedula'),
+//                         body: this.env._t('Please ensure the RNC has exactly 9 digits or the Cedula has 11 digits'),
+//                         cancel: function () {
+//                             self.open_vat_popup();
+//                         },
+//                     });
+
+//                 } else {
+//                     // TODO: in future try optimize search partners like get_partner_by_id
+                    
+//                     var partner = this.env.pos.db.get_partners_sorted().find(partner_obj => partner_obj.vat === vat);
+
+//                     if (partner) {
+
+//                         this.currentOrder.set_partner(partner);
+
+//                     } else {
+//                         // TODO: in future create automatic partner
+//                         const { confirmed, payload: newPartner } = await this.showTempScreen(
+//                             'PartnerListScreen',
+//                             { partner: this.currentOrder.get_partner()}
+//                         );
+//                         if (confirmed) {
+//                             this.currentOrder.set_partner(newPartner);
+//                             this.currentOrder.updatePricelist(newPartner);
+//                         }
+//                     }
+//                 } 
+//             }
+//         }
+//     }
+
+//     SetFiscalTypeButton.template = 'SetFiscalTypeButton';
+//     Registries.Component.add(SetFiscalTypeButton);
+
+//     return SetFiscalTypeButton;
+// });
