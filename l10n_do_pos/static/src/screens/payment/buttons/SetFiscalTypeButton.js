@@ -4,10 +4,11 @@ import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_store";
 import { patch } from "@web/core/utils/patch";
+import { registry } from "@web/core/registry";
+import { useListener } from "@web/core/utils/hooks";
 
 
-class SetFiscalTypeButton extends Component {
-    static template = "l10n_do_pos.SetFiscalTypeButton";
+export class SetFiscalTypeButton extends Component {
     setup() {
         super.setup();
         this.pos = usePos();               // accedemos al PosStore reactivo
@@ -85,10 +86,8 @@ class SetFiscalTypeButton extends Component {
     }
 }
 
-// 🔹 Hacemos patch al PaymentScreenButtons para insertar nuestro botón
-patch(PaymentScreenButtons.prototype, {
-    components: { ...PaymentScreenButtons.components, SetFiscalTypeButton },
-});
+SetFiscalTypeButton.template = "l10n_do_pos.SetFiscalTypeButton";
+registry.add(SetFiscalTypeButton);
 
 // odoo.define('l10n_do_pos.SetFiscalTypeButton', function(require) {
 //     'use strict';

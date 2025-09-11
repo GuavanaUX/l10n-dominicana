@@ -1,3 +1,71 @@
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
+import { useService } from "@web/core/utils/hooks";
+import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list_screen";
+import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_details_edit";
+import { isConnectionError } from "@point_of_sale/utils";
+
+patch(PartnerListScreen.prototype, {
+    async saveChanges(event) {
+        try {
+            const rpc = useService("rpc");
+
+            // Crear partner desde el UI
+            const partnerId = await rpc("/web/dataset/call_kw", {
+                model: "res.partner",
+                method: "create_from_ui",
+                args: [event.detail.processedChanges],
+            });
+
+            // Recargar partners en POS
+            await this.pos.load_new_partners();
+
+            const new_partner = this.pos.db.get_partner_by_id(partnerId);
+            this.editPartner(new_partner);
+
+            // Actualizar inputs (en caso de que existan en la vista)
+            const $partner_name = document.querySelector(".partner-name");
+            const $vat = document.querySelector(".vat");
+
+            if ($partner_name) $partner_name.value = new_partner.name;
+            if ($vat) $vat.value = new_partner.vat;
+
+            this.state.selectedPartner = new_partner;
+            this.props.partner = new_partner;
+
+        } catch (error) {
+            if (isConnectionError(error)) {
+                await this.popup.add("OfflineErrorPopup", {
+                    title: _t("Offline"),
+                    body: _t("Unable to save changes."),
+                });
+            } else {
+                throw error;
+            }
+        }
+    },
+});
+
+patch(PartnerDetailsEdit.prototype, {
+    saveChanges() {
+        const $partner_name = document.querySelector(".partner-name");
+        const $vat = document.querySelector(".vat");
+
+        if ($partner_name && $partner_name.value !== this.changes.name) {
+            this.changes.name = $partner_name.value;
+        }
+
+        if ($vat && $vat.value !== this.changes.vat) {
+            this.changes.vat = $vat.value;
+        }
+
+        super.saveChanges();
+    },
+});
+
+
 // odoo.define('l10n_do_pos.PartnerListScreen', function (require) {
 //     'use strict';
 
