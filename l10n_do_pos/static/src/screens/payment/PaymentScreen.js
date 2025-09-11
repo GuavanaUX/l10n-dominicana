@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import {SetFiscalTypeButton} from './buttons/SetFiscalTypeButton';
+import { SetFiscalTypeButton } from './buttons/SetFiscalTypeButton';
 
 patch(PaymentScreen.prototype, {
     setup() {

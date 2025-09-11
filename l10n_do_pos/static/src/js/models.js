@@ -1,43 +1,65 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
 
+import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
 
-// ----------------------------
-// 🔹 usePos (antes PosGlobalState)
-// ----------------------------
-export class L10nDoPosPosGlobalState extends Component {
+
+patch(PosStore.prototype, {
     async setup() {
-        await super.setup();
-        this.dialog = useService("dialog");
+        await super.setup(...arguments);
+        // Inicializar fiscal_types si no existe
         this.fiscal_types = this.models["account.fiscal.type"] || [];
-    }
+    },
 
     get_fiscal_type_by_id(id) {
+        if (!this.fiscal_types) {
+            console.warn("fiscal_types not initialized yet");
+            return null;
+        }
+        
         let res_fiscal_type = this.fiscal_types.find(ft => ft.id === id);
         if (!res_fiscal_type) {
             res_fiscal_type = this.get_fiscal_type_by_prefix("B02");
         }
         return res_fiscal_type;
-    }
+    },
 
     get_fiscal_type_by_prefix(prefix) {
+        if (!this.fiscal_types) {
+            console.warn("fiscal_types not initialized yet");
+            return this._getDefaultFiscalType();
+        }
+        
         let res_fiscal_type = this.fiscal_types.find(ft => ft.prefix === prefix);
         if (res_fiscal_type) {
             return res_fiscal_type;
         }
-        this.dialog.add(AlertDialog, {
-            title: _t("Fiscal type not found"),
-            body: _t("This fiscal type not exist."),
-        });
+        
+        // Usar el servicio dialog correctamente
+        if (this.env?.services?.dialog) {
+            this.env.services.dialog.add(AlertDialog, {
+                title: _t("Fiscal type not found"),
+                body: _t("This fiscal type does not exist."),
+            });
+        }
         console.error("Fiscal type not found");
-        return false;
-    }
+        return this._getDefaultFiscalType();
+    },
+
+    // ✅ Método auxiliar para tipo fiscal por defecto
+    _getDefaultFiscalType() {
+        return {
+            id: 0,
+            name: "Default Fiscal Type",
+            prefix: "B02",
+            fiscal_position_id: false
+        };
+    },
 
     async get_fiscal_data(order) {
         return this.env.services.rpc({
@@ -50,20 +72,21 @@ export class L10nDoPosPosGlobalState extends Component {
                 [],
             ],
         });
-    }
+    },
 
+    // ✅ Tu función principal
     isCreditNoteMode() {
         const current_order = this.get_order();
         return (
             this.config.l10n_do_fiscal_journal &&
             current_order &&
-            current_order._isRefundAndSaleOrder()
+            current_order._isRefundOrder()
         );
-    }
+    },
 
     get_credit_note_payment_method() {
-        return this.payment_methods.find(pm => pm.is_credit_note) || false;
-    }
+        return this.payment_methods?.find(pm => pm.is_credit_note) || false;
+    },
 
     async get_credit_note(ncf) {
         return this.env.services.rpc({
@@ -71,7 +94,7 @@ export class L10nDoPosPosGlobalState extends Component {
             method: "get_credit_note",
             args: [false, ncf],
         });
-    }
+    },
 
     async get_credit_notes(partner_id) {
         return this.env.services.rpc({
@@ -80,11 +103,8 @@ export class L10nDoPosPosGlobalState extends Component {
             args: [false, partner_id],
         });
     }
-}
+});
 
-// ----------------------------
-// 🔹 PosOrder
-// ----------------------------
 patch(PosOrder.prototype, {
     setup(obj, options) {
         super.setup(...arguments);
@@ -96,29 +116,62 @@ patch(PosOrder.prototype, {
             this.fiscal_type_id = false;
             this.fiscal_sequence_id = false;
 
-            const partner = this.get_partner();
+            // ✅ SOLUCIÓN: Diferir la configuración del fiscal type
+            this._initializeFiscalType();
+        }
+    },
 
-            if (partner && partner.sale_fiscal_type_id) {
-                this.set_fiscal_type(
-                    this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0])
-                );
-            } else {
-                this.set_fiscal_type(this.pos.get_fiscal_type_by_prefix("B02"));
+    // ✅ Método separado para inicializar fiscal type
+    _initializeFiscalType() {
+        // Verificar que pos esté disponible
+        if (!this.pos) {
+            console.warn("POS not available during order initialization, deferring fiscal type setup");
+            // Intentar de nuevo en el siguiente tick
+            setTimeout(() => this._initializeFiscalType(), 0);
+            return;
+        }
+
+        // Verificar que los métodos del pos estén disponibles
+        if (typeof this.pos.get_fiscal_type_by_id !== 'function') {
+            console.warn("Fiscal type methods not available yet, deferring setup");
+            setTimeout(() => this._initializeFiscalType(), 100);
+            return;
+        }
+
+        const partner = this.get_partner();
+
+        if (partner && partner.sale_fiscal_type_id) {
+            const fiscalType = this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]);
+            if (fiscalType) {
+                this.set_fiscal_type(fiscalType);
+            }
+        } else {
+            // ✅ FIX: Acceso seguro al PosStore
+            const defaultFiscalType = this.pos.get_fiscal_type_by_prefix("B02");
+            if (defaultFiscalType) {
+                this.set_fiscal_type(defaultFiscalType);
             }
         }
     },
 
     set_fiscal_type(fiscal_type) {
+        if (!fiscal_type) {
+            console.warn("Attempting to set null fiscal type");
+            return;
+        }
+        
         this.fiscal_type = fiscal_type;
         this.fiscal_type_id = fiscal_type.id;
+        
         if (fiscal_type && fiscal_type.fiscal_position_id) {
-            this.set_fiscal_position(
-                this.pos.fiscal_positions.find(
-                    fp => fp.id === fiscal_type.fiscal_position_id[0]
-                )
+            const fiscalPosition = this.pos?.fiscal_positions?.find(
+                fp => fp.id === fiscal_type.fiscal_position_id[0]
             );
-            for (let line of this.get_orderlines()) {
-                line.set_quantity(line.quantity);
+            if (fiscalPosition) {
+                this.set_fiscal_position(fiscalPosition);
+                for (let line of this.get_orderlines()) {
+                    line.set_quantity(line.quantity);
+                }
             }
         }
     },
@@ -129,19 +182,30 @@ patch(PosOrder.prototype, {
 
     set_partner(partner) {
         super.set_partner(partner);
+        
+        // ✅ Verificar que pos esté disponible
+        if (!this.pos || typeof this.pos.get_fiscal_type_by_id !== 'function') {
+            console.warn("POS not ready for fiscal type operations");
+            return;
+        }
+        
         if (partner && partner.sale_fiscal_type_id) {
-            this.set_fiscal_type(
-                this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0])
-            );
+            const fiscalType = this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]);
+            if (fiscalType) {
+                this.set_fiscal_type(fiscalType);
+            }
         } else {
-            this.set_fiscal_type(this.pos.get_fiscal_type_by_prefix("B02"));
+            const defaultFiscalType = this.pos.get_fiscal_type_by_prefix("B02");
+            if (defaultFiscalType) {
+                this.set_fiscal_type(defaultFiscalType);
+            }
         }
     },
 
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
 
-        if (this.pos.config.l10n_do_fiscal_journal) {
+        if (this.pos?.config?.l10n_do_fiscal_journal) {
             json.ncf = this.ncf;
             json.ncf_origin_out = this.ncf_origin_out;
             json.ncf_expiration_date = this.ncf_expiration_date;
@@ -154,15 +218,19 @@ patch(PosOrder.prototype, {
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
 
-        if (this.pos.config.l10n_do_fiscal_journal) {
+        if (this.pos?.config?.l10n_do_fiscal_journal) {
             this.ncf = json.ncf || "";
             this.ncf_origin_out = json.ncf_origin_out || "";
             this.ncf_expiration_date = json.ncf_expiration_date || "";
             this.fiscal_type_id = json.fiscal_type_id || false;
             this.fiscal_sequence_id = json.fiscal_sequence_id || false;
 
-            if (json.fiscal_type_id) {
-                this.set_fiscal_type(this.pos.get_fiscal_type_by_id(json.fiscal_type_id));
+            // ✅ Verificar disponibilidad antes de usar
+            if (json.fiscal_type_id && this.pos && typeof this.pos.get_fiscal_type_by_id === 'function') {
+                const fiscalType = this.pos.get_fiscal_type_by_id(json.fiscal_type_id);
+                if (fiscalType) {
+                    this.set_fiscal_type(fiscalType);
+                }
             }
             if (json.fiscal_type) {
                 this.set_fiscal_type(json.fiscal_type);
@@ -175,9 +243,6 @@ patch(PosOrder.prototype, {
     },
 });
 
-// ----------------------------
-// 🔹 PosPayment
-// ----------------------------
 patch(PosPayment.prototype, {
     setup(obj, options) {
         super.setup(...arguments);

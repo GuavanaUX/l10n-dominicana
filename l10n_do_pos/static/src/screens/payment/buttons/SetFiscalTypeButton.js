@@ -8,7 +8,7 @@ import { useListener } from "@web/core/utils/hooks";
 
 
 export class SetFiscalTypeButton extends Component {
-    //static template = "l10n_do_pos.SetFiscalTypeButton";
+    static template = "l10n_do_pos.SetFiscalTypeButton";
     setup() {
         super.setup();
         this.pos = usePos();               // accedemos al PosStore reactivo
@@ -86,6 +86,6 @@ export class SetFiscalTypeButton extends Component {
     }
 }
 
-SetFiscalTypeButton.template = "l10n_do_pos.SetFiscalTypeButton";
+//SetFiscalTypeButton.template = "l10n_do_pos.SetFiscalTypeButton";
 //registry.add(SetFiscalTypeButton);
 registry.category("components").add("SetFiscalTypeButton", SetFiscalTypeButton);

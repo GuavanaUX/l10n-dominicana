@@ -24,7 +24,7 @@
             <span class="label" t-if="!this.env.pos.config.l10n_do_fiscal_journal">Tax ID</span>
             <span class="label" t-if="this.env.pos.config.l10n_do_fiscal_journal">RNC / Cedula</span>
         </xpath>
-    </t>
+    </t> 
     -->
 
 </templates>
