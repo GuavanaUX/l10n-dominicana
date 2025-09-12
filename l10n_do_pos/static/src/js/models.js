@@ -21,7 +21,7 @@ patch(PosStore.prototype, {
             console.warn("fiscal_types not initialized yet");
             return null;
         }
-        
+
         let res_fiscal_type = this.fiscal_types.find(ft => ft.id === id);
         if (!res_fiscal_type) {
             res_fiscal_type = this.get_fiscal_type_by_prefix("B02");
@@ -34,12 +34,12 @@ patch(PosStore.prototype, {
             console.warn("fiscal_types not initialized yet");
             return this._getDefaultFiscalType();
         }
-        
+
         let res_fiscal_type = this.fiscal_types.find(ft => ft.prefix === prefix);
         if (res_fiscal_type) {
             return res_fiscal_type;
         }
-        
+
         // Usar el servicio dialog correctamente
         if (this.env?.services?.dialog) {
             this.env.services.dialog.add(AlertDialog, {
@@ -116,6 +116,9 @@ patch(PosOrder.prototype, {
             this.fiscal_type_id = false;
             this.fiscal_sequence_id = false;
 
+            // Limitar los intentos de inicialización
+            this._fiscalTypeInitAttempts = 0;
+
             // ✅ SOLUCIÓN: Diferir la configuración del fiscal type
             this._initializeFiscalType();
         }
@@ -123,6 +126,12 @@ patch(PosOrder.prototype, {
 
     // ✅ Método separado para inicializar fiscal type
     _initializeFiscalType() {
+        if (this._fiscalTypeInitAttempts > 10) {
+            console.error("No se pudo inicializar el fiscal type después de varios intentos.");
+            return;
+        }
+        this._fiscalTypeInitAttempts++;
+
         // Verificar que pos esté disponible
         if (!this.pos) {
             console.warn("POS not available during order initialization, deferring fiscal type setup");
@@ -159,10 +168,10 @@ patch(PosOrder.prototype, {
             console.warn("Attempting to set null fiscal type");
             return;
         }
-        
+
         this.fiscal_type = fiscal_type;
         this.fiscal_type_id = fiscal_type.id;
-        
+
         if (fiscal_type && fiscal_type.fiscal_position_id) {
             const fiscalPosition = this.pos?.fiscal_positions?.find(
                 fp => fp.id === fiscal_type.fiscal_position_id[0]
@@ -182,13 +191,13 @@ patch(PosOrder.prototype, {
 
     set_partner(partner) {
         super.set_partner(partner);
-        
+
         // ✅ Verificar que pos esté disponible
         if (!this.pos || typeof this.pos.get_fiscal_type_by_id !== 'function') {
             console.warn("POS not ready for fiscal type operations");
             return;
         }
-        
+
         if (partner && partner.sale_fiscal_type_id) {
             const fiscalType = this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]);
             if (fiscalType) {
