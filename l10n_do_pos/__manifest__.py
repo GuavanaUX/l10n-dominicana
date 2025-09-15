@@ -24,9 +24,11 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'l10n_do_pos/static/src/**/*.js',
-            'l10n_do_pos/static/src/**/*.scss',
-            'l10n_do_pos/static/src/**/*.xml',
+            'l10n_do_pos/static/src/js/pos_store.js',
+            'l10n_do_pos/static/src/js/pos_order.js',
+            
+            #'l10n_do_pos/static/src/**/*.scss',
+            #'l10n_do_pos/static/src/**/*.xml',
         ],
     },
     'installable': True,

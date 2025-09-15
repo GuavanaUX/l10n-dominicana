@@ -86,6 +86,4 @@ export class SetFiscalTypeButton extends Component {
     }
 }
 
-//SetFiscalTypeButton.template = "l10n_do_pos.SetFiscalTypeButton";
-//registry.add(SetFiscalTypeButton);
-registry.category("components").add("SetFiscalTypeButton", SetFiscalTypeButton);
+registry.category("public_components").add("l10n_do_pos.SetFiscalTypeButton", SetFiscalTypeButton);

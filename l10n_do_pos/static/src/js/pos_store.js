@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { Component, useState, onWillStart } from "@odoo.owl";
+import { registry } from "@web/core/registry";
 
 patch(PosStore.prototype, {
     // @Override
