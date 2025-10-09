@@ -147,7 +147,6 @@ class AccountInvoice(models.Model):
         "move_type",
         "is_debit_note",
     )
-
     def _compute_fiscal_sequence(self):
         """ Compute the sequence and fiscal position to be used depending on
             the fiscal type that has been set on the invoice (or partner).

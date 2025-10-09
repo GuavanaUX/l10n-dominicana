@@ -1,15 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
-import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useState, onMounted } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 
 patch(PosOrder.prototype, {
-    setup() {
+    async setup() {
         super.setup(...arguments);
-        this.pos = PosStore;
-        console.log("PosOrder ", this);
 
         this.ncf = '';
         this.ncf_origin_out = '';
@@ -17,13 +13,25 @@ patch(PosOrder.prototype, {
         this.fiscal_type_id = false;
         this.fiscal_sequence_id = false;
 
-        var partner = this.get_partner();
+        onMounted(async () => {
+            // Si env.pos todavía no existe, espera hasta que esté listo
+            while (!this.env.pos) {
+                await new Promise(r => setTimeout(r, 10));
+            }
 
-        if (partner && partner.sale_fiscal_type_id) {
-            this.set_fiscal_type(this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]));
-        } else {
-            this.set_fiscal_type(this.pos.prototype.get_fiscal_type_by_prefix('B02'))
-        }
+            await this.env.pos.wait_fiscal_types_ready();
+
+            const partner = this.get_partner();
+            if (partner?.sale_fiscal_type_id) {
+                this.set_fiscal_type(
+                    this.env.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0])
+                );
+            } else {
+                this.set_fiscal_type(
+                    this.env.pos.get_fiscal_type_by_prefix('B02')
+                );
+            }
+        });
     },
 
     set_fiscal_type(fiscal_type) {
@@ -46,9 +54,9 @@ patch(PosOrder.prototype, {
     set_partner(partner) {
         super.set_partner(partner);
         if (partner && partner.sale_fiscal_type_id) {
-            this.set_fiscal_type(this.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]));
+            this.set_fiscal_type(this.env.pos.get_fiscal_type_by_id(partner.sale_fiscal_type_id[0]));
         } else {
-            this.set_fiscal_type(this.pos.prototype.get_fiscal_type_by_prefix('B02'));
+            this.set_fiscal_type(this.env.pos.prototype.get_fiscal_type_by_prefix('B02'));
         }
     },
 
