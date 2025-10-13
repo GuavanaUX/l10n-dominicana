@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('js_invoice')]" position="after">
+            <t t-if="this.pos.config.l10n_do_fiscal_journal">
+                <SetFiscalTypeButton/>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('js_invoice')]" position="attributes">
+            <attribute name="t-if">!this.pos.config.l10n_do_fiscal_journal</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('payment-buttons')]" position="attributes">
+            <attribute name="t-att-class">this.pos.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
+        </xpath>
+    </t>
+    <t t-name="PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension">
+        <xpath expr="//Numpad" position="attributes">
+            <attribute name="class">this.pos.isCreditNoteMode() ? 'py-2 no-clickeable' : 'py-2' </attribute>
+        </xpath>
+    </t>
+    <t t-name="PaymentScreenMethods" t-inherit="point_of_sale.PaymentScreenMethods" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('paymentmethod')]" position="attributes">
+            <attribute name="t-att-class">this.pos.isCreditNoteMode() ? 'no-clickeable' : '' </attribute>
+        </xpath>
+    </t>
+</templates>
