@@ -129,7 +129,7 @@ class PosOrder(models.Model):
                     and order.state != 'invoiced' \
                     and order.amount_total != 0 \
                     and order.ncf:
-                
+
                 if not order.partner_id:
                     if not order.config_id.pos_partner_id:
                         raise UserError(_('This point of sale not have default customer, please set default customer in config POS'))
@@ -143,12 +143,7 @@ class PosOrder(models.Model):
         return order_ids
 
 
-    def get_next_fiscal_sequence(
-            self, 
-            fiscal_type_id,
-            company_id, 
-            payments
-        ):
+    def get_next_fiscal_sequence(self, fiscal_type_id, company_id, payments):
         """
         search active fiscal sequence dependent with fiscal type
         :param order:[fiscal_type_id, company_id, mode, lines,]
@@ -246,9 +241,11 @@ class PosOrder(models.Model):
     def search_paid_order_ids(self, config_id, domain, limit, offset):
         """Search for 'paid' orders that satisfy the given domain, limit and offset."""
         pos_config = self.env['pos.config'].browse(config_id)
-        
+
         if pos_config.invoice_journal_id.l10n_do_fiscal_journal:
-            config_ids = self.env['pos.config'].search([('invoice_journal_id.l10n_do_fiscal_journal', '=', True)]).ids 
+            config_ids = self.env['pos.config'].search([
+                ('invoice_journal_id.l10n_do_fiscal_journal', '=', True)
+            ]).ids
 
             default_domain = [
                 '&', '&', '&',

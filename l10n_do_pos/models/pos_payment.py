@@ -25,7 +25,6 @@ class PosPayment(models.Model):
         }
 
     def _create_payment_moves(self, is_reverse=False):
-        
         if self and not self.mapped('session_id.config_id')[0].l10n_do_fiscal_journal:
             return super(PosPayment, self)._create_payment_moves(is_reverse)
 
@@ -33,36 +32,24 @@ class PosPayment(models.Model):
         for payment in self.filtered(lambda p: not p.payment_method_id.is_cash_count and not p.payment_method_id.is_credit_note):
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
-            
             if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
                 continue
 
-            account_payment = self.env['account.payment'].create(
-                self._get_payment_values(payment)
-            )
+            account_payment = self.env['account.payment'].create(self._get_payment_values(payment))
             account_payment.action_post()
-            account_payment.move_id.write({
-                'pos_payment_ids': payment.ids,
-            })
-            payment.write({
-                'account_move_id': account_payment.move_id.id
-            })
+
+            account_payment.move_id.write({'pos_payment_ids': payment.ids})
+            payment.write({'account_move_id': account_payment.move_id.id})
             result |= account_payment.move_id
 
         
         pos_payment_cash = self.filtered(lambda p: p.payment_method_id.is_cash_count and not p.payment_method_id.is_credit_note)
-        
         if pos_payment_cash:
-            account_payment_cash = self.env['account.payment'].create(
-                self._get_payment_values(pos_payment_cash)
-            )
+            account_payment_cash = self.env['account.payment'].create(self._get_payment_values(pos_payment_cash))
             account_payment_cash.action_post()
-            account_payment_cash.move_id.write({
-                'pos_payment_ids': pos_payment_cash.ids,
-            })
-            pos_payment_cash.write({
-                'account_move_id': account_payment_cash.move_id.id
-            })
+
+            account_payment_cash.move_id.write({'pos_payment_ids': pos_payment_cash.ids})
+            pos_payment_cash.write({'account_move_id': account_payment_cash.move_id.id})
             result |= account_payment_cash.move_id
                 
         for credit_note in self.filtered(lambda p: p.payment_method_id.is_credit_note and p.name):
