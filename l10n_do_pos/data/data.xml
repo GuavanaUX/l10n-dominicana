@@ -10,6 +10,5 @@
             <field name="split_transactions">True</field>
             <field name="is_credit_note">True</field>
         </record>
-
     </data>
 </odoo>

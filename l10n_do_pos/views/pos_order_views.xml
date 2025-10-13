@@ -18,8 +18,8 @@
         </field>
     </record>
 
-    <record id="l10n_do_pos_view_pos_order_tree" model="ir.ui.view">
-        <field name="name">l10n.do.pos.view.pos.order.tree</field>
+    <record id="l10n_do_pos_view_pos_order_list" model="ir.ui.view">
+        <field name="name">l10n.do.pos.view.pos.order.list</field>
         <field name="model">pos.order</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
         <field name="arch" type="xml">
