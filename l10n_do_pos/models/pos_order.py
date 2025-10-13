@@ -31,30 +31,6 @@ class PosOrder(models.Model):
         default=False
     )
 
-    def _export_for_ui(self, order):
-        result = super(PosOrder, self)._export_for_ui(order)
-        result['ncf'] = order.ncf
-        result['ncf_origin_out'] = order.ncf_origin_out
-        result['ncf_expiration_date'] = order.ncf_expiration_date
-        result['fiscal_type_id'] = order.fiscal_type_id.id if order.fiscal_type_id else False
-        result['fiscal_sequence_id'] = order.fiscal_sequence_id.id if order.fiscal_sequence_id else False
-        return result
-
-    @api.model
-    def _order_fields(self, ui_order):
-        """
-        Prepare the dict of values to create the new pos order.
-        """
-        fields = super(PosOrder, self)._order_fields(ui_order)
-        if ui_order.get('ncf', False):
-            fields['ncf'] = ui_order['ncf']
-            fields['ncf_origin_out'] = ui_order['ncf_origin_out']
-            fields['ncf_expiration_date'] = ui_order['ncf_expiration_date']
-            fields['fiscal_type_id'] = ui_order['fiscal_type_id']
-            fields['fiscal_sequence_id'] = ui_order['fiscal_sequence_id']
-
-        return fields
-
     def _prepare_invoice_vals(self):
         """
         Prepare the dict of values to create the new invoice for a pos order.
@@ -70,61 +46,48 @@ class PosOrder(models.Model):
 
         return invoice_vals
 
-    @api.model
-    def _payment_fields(self, order, ui_paymentline):
-
-        fields = super(PosOrder, self)._payment_fields(order, ui_paymentline)
-
-        fields.update({
-            'name': ui_paymentline.get('credit_note_ncf'),
-        })
-
-        return fields
-
     # @api.model
-    # def _process_order(self, order, draft, existing_order):
-    #     """
-    #     this part is using for eliminate cash return
-    #     :param pos_order:
-    #     :return pos_order:
-    #     """
-    #     if pos_order['amount_return'] > 0:
+    # def _process_order(self, order, existing_order):
+        # """
+        # this part is using for eliminate cash return
+        # :param pos_order:
+        # :return pos_order:
+        # """
+        # if order['amount_return'] > 0:
 
-    #         pos_session_obj = self.env['pos.session'].browse(
-    #             pos_order['pos_session_id']
-    #         )
-    #         cash_journal_id = pos_session_obj.cash_journal_id.id
-    #         if not cash_journal_id:
-    #             # If none, select for change one of the cash journals of the PO
-    #             # This is used for example when a customer pays by credit card
-    #             # an amount higher than total amount of the order and gets cash
-    #             # back
-    #             cash_journal = [statement.journal_id
-    #                             for statement in pos_session_obj.statement_ids
-    #                             if statement.journal_id.type == 'cash']
-    #             if not cash_journal:
-    #                 raise UserError(
-    #                     _("No cash statement found for this session. "
-    #                       "Unable to record returned cash."))
+        #     pos_session_obj = self.env['pos.session'].browse(
+        #         order['pos_session_id']
+        #     )
+        #     cash_journal_id = pos_session_obj.cash_journal_id.id
+        #     if not cash_journal_id:
+        #         # If none, select for change one of the cash journals of the PO
+        #         # This is used for example when a customer pays by credit card
+        #         # an amount higher than total amount of the order and gets cash
+        #         # back
+        #         cash_journal = [statement.journal_id
+        #                         for statement in pos_session_obj.statement_ids
+        #                         if statement.journal_id.type == 'cash']
+        #         if not cash_journal:
+        #             raise UserError(
+        #                 _("No cash statement found for this session. "
+        #                   "Unable to record returned cash."))
 
-    #             cash_journal_id = cash_journal[0].id
+        #         cash_journal_id = cash_journal[0].id
 
-    #         for index, statement in enumerate(pos_order['statement_ids']):
+        #     for index, statement in enumerate(order['statement_ids']):
+        #         if statement[2]['journal_id'] == cash_journal_id:
+        #             order['statement_ids'][index][2]['amount'] = \
+        #                 statement[2]['amount'] - order['amount_return']
 
-    #             if statement[2]['journal_id'] == cash_journal_id:
-    #                 pos_order['statement_ids'][index][2]['amount'] = \
-    #                     statement[2]['amount'] - pos_order['amount_return']
+        #     order['amount_return'] = 0
 
-    #         pos_order['amount_return'] = 0
-
-    #     return super(PosOrder, self)._process_order(pos_order)
+        # return super(PosOrder, self)._process_order(order, existing_order)
 
     @api.model
-    def create_from_ui(self, orders, draft=False):
-        order_ids = super(PosOrder, self).create_from_ui(orders, draft)
-        
+    def sync_from_ui(self, orders):
+        pos_data = super(PosOrder, self).sync_from_ui(orders)
+        order_ids = pos_data['pos.order']
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            
             if order.config_id.invoice_journal_id.l10n_do_fiscal_journal \
                     and order.state != 'invoiced' \
                     and order.amount_total != 0 \
@@ -140,8 +103,7 @@ class PosOrder(models.Model):
 
                 order._generate_pos_order_invoice()
 
-        return order_ids
-
+        return pos_data
 
     def get_next_fiscal_sequence(self, fiscal_type_id, company_id, payments):
         """
@@ -160,7 +122,7 @@ class PosOrder(models.Model):
             if payment.get('returned_ncf', False):
                 cn_invoice = self.env['account.move'].search([
                     ('ref', '=', payment['returned_ncf']),
-                    ('type', '=', 'out_refund'),
+                    ('move_type', '=', 'out_refund'),
                     ('is_l10n_do_fiscal_invoice', '=', True),
                 ])
                 if cn_invoice.residual != cn_invoice.amount_total:
@@ -183,7 +145,7 @@ class PosOrder(models.Model):
 
         return {
             'ncf': fiscal_sequence.get_fiscal_number(),
-            'fiscal_sequence_id': fiscal_sequence.id,
+            'fiscal_sequence_id': fiscal_sequence.read()[0],
             'ncf_expiration_date': fiscal_sequence.expiration_date
         }
 
@@ -247,25 +209,20 @@ class PosOrder(models.Model):
                 ('invoice_journal_id.l10n_do_fiscal_journal', '=', True)
             ]).ids
 
-            default_domain = [
-                '&', '&', '&',
+            custom_filters = [
                 ('config_id', 'in', config_ids), 
                 ('ncf', '!=', False),
                 ('amount_total', '>', 0),
-                '!', '|', 
-                ('state', '=', 'draft'), 
-                ('state', '=', 'cancelled')
             ]
-            
             if pos_config.l10n_do_type_limit_order_history == 'days':
-                default_domain.insert(3, '&')
-                default_domain.insert(4, 
-                    ('create_date', '>=', fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=pos_config.l10n_do_type_limit_order_history_days))))
+                custom_filters.append((
+                    'create_date',
+                    '>=',
+                    fields.Datetime.to_string(
+                        fields.Datetime.now() - timedelta(days=pos_config.l10n_do_type_limit_order_history_days)
+                    )
+                ))
 
-            real_domain = AND([domain, default_domain])
-            ids = self.search(AND([domain, default_domain]), limit=limit, offset=offset).ids
-            totalCount = self.search_count(real_domain)
-            
-            return {'ids': ids, 'totalCount': totalCount}
+            domain = AND([domain or [], custom_filters])
 
         return super(PosOrder, self).search_paid_order_ids(config_id, domain, limit, offset)

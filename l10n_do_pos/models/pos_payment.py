@@ -1,6 +1,5 @@
-from odoo import api, fields, models, _
+from odoo import models, _
 from odoo.tools import float_is_zero
-from odoo.exceptions import ValidationError
 
 
 class PosPayment(models.Model):
@@ -29,6 +28,8 @@ class PosPayment(models.Model):
             return super(PosPayment, self)._create_payment_moves(is_reverse)
 
         result = self.env['account.move']
+        credit_line_ids = []
+
         for payment in self.filtered(lambda p: not p.payment_method_id.is_cash_count and not p.payment_method_id.is_credit_note):
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
@@ -42,7 +43,9 @@ class PosPayment(models.Model):
             payment.write({'account_move_id': account_payment.move_id.id})
             result |= account_payment.move_id
 
-        
+            # Track credit lines for reconciliation
+            credit_line_ids += account_payment.move_id.line_ids.filtered(lambda l: l.credit > 0).ids
+
         pos_payment_cash = self.filtered(lambda p: p.payment_method_id.is_cash_count and not p.payment_method_id.is_credit_note)
         if pos_payment_cash:
             account_payment_cash = self.env['account.payment'].create(self._get_payment_values(pos_payment_cash))
@@ -51,26 +54,23 @@ class PosPayment(models.Model):
             account_payment_cash.move_id.write({'pos_payment_ids': pos_payment_cash.ids})
             pos_payment_cash.write({'account_move_id': account_payment_cash.move_id.id})
             result |= account_payment_cash.move_id
-                
+
+            credit_line_ids += account_payment_cash.move_id.line_ids.filtered(lambda l: l.credit > 0).ids
+
         for credit_note in self.filtered(lambda p: p.payment_method_id.is_credit_note and p.name):
-            account_move_credit_note = self.env['account.move'].search([                    
-                    ('partner_id', '=', credit_note.partner_id.id),
-                    ('ref', '=', credit_note.name),
-                    ('move_type', '=', 'out_refund'),
-                    ('is_l10n_do_fiscal_invoice', '=', True),
-                    ('company_id', '=', self.env.company.id),
-                    ('state', '=', 'posted')
-                ], limit=1
-            )
-            
+            account_move_credit_note = self.env['account.move'].search([
+                ('partner_id', '=', credit_note.partner_id.id),
+                ('ref', '=', credit_note.name),
+                ('move_type', '=', 'out_refund'),
+                ('is_l10n_do_fiscal_invoice', '=', True),
+                ('company_id', '=', self.env.company.id),
+                ('state', '=', 'posted')
+            ], limit=1)
+
             if account_move_credit_note and credit_note.amount > 0:
-                account_move_credit_note.write({
-                    'pos_payment_ids': credit_note.ids,
-                })
-                credit_note.write({
-                    'account_move_id': account_move_credit_note.id
-                })
+                account_move_credit_note.write({'pos_payment_ids': credit_note.ids})
+                credit_note.write({'account_move_id': account_move_credit_note.id})
                 result |= account_move_credit_note
+                credit_line_ids += account_move_credit_note.line_ids.filtered(lambda l: l.credit > 0).ids
 
-        return result
-
+        return result.with_context(credit_line_ids=credit_line_ids)
