@@ -68,8 +68,12 @@ class PosPayment(models.Model):
             ], limit=1)
 
             if account_move_credit_note and credit_note.amount > 0:
-                account_move_credit_note.write({'pos_payment_ids': credit_note.ids})
-                credit_note.write({'account_move_id': account_move_credit_note.id})
+                account_move_credit_note.write({
+                    'pos_payment_ids': credit_note.ids,
+                })
+                credit_note.write({
+                    'account_move_id': account_move_credit_note.id
+                })
                 result |= account_move_credit_note
                 credit_line_ids += account_move_credit_note.line_ids.filtered(lambda l: l.credit > 0).ids
 
