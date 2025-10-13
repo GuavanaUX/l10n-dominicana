@@ -4,33 +4,29 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 21:19+0000\n"
-"PO-Revision-Date: 2024-07-22 17:21-0400\n"
+"POT-Creation-Date: 2025-10-03 07:12+0000\n"
+"PO-Revision-Date: 2025-10-03 07:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: l10n_do_pos
 #: model:ir.model.fields,help:l10n_do_pos.field_pos_config__l10n_do_type_limit_order_history
 #: model:ir.model.fields,help:l10n_do_pos.field_res_config_settings__l10n_do_type_limit_order_history
 msgid ""
 "\n"
-"        This field allows you to limit the number of orders that are showed "
-"in the POS:\n"
+"        This field allows you to limit the number of orders that are showed in the POS:\n"
 "            - All orders: All orders will be showed.\n"
 "            - Days: Only the orders of the amount of day will be showed.\n"
 "        "
 msgstr ""
 "\n"
-"        Este campo permite limitar el número de pedidos que se muestran en "
-"el TPV:\n"
+"        Este campo permite limitar el número de pedidos que se muestran en el TPV:\n"
 "            - Todos los pedidos: Se mostrarán todos los pedidos.\n"
 "            - Días: Sólo se mostrarán los pedidos del importe del día.\n"
 "        "
@@ -38,14 +34,17 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_payment.py:0
-#, python-format
 msgid "%s POS payments from %s"
 msgstr "%s Pagos TPV de %s"
 
 #. module: l10n_do_pos
+#: model:ir.model,name:l10n_do_pos.model_account_fiscal_type
+msgid "Account Fiscal Type"
+msgstr "Tipo de Cuenta Fiscal"
+
+#. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "Affect:"
 msgstr "Afecta a:"
 
@@ -61,36 +60,37 @@ msgstr "Todas las órdenes"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "Autorized by DGII"
 msgstr "Autorizado por la DGII"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Card and cash payment"
 msgstr "Tarjeta y pago en efectivo"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Card payment"
 msgstr "Pago con tarjeta"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Card payments cannot exceed the total order"
 msgstr "Los pagos con tarjeta no pueden exceder el total del pedido"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
+
+#. module: l10n_do_pos
+#: model:ir.model,name:l10n_do_pos.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: l10n_do_pos
 #: model:ir.model.fields,field_description:l10n_do_pos.field_pos_payment_method__is_credit_note
@@ -100,28 +100,24 @@ msgstr "Nota de Crédito"
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
-msgid "Credit note %s has no available amount."
-msgstr "El abono %s no tiene importe disponible."
+msgid "Credit note ${credit_note.ncf} has no available amount."
+msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#, python-format
 msgid "Credit note not found"
 msgstr "No se encuentra la nota de crédito"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "Customer:"
 msgstr "Cliente:"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/order_receipt.xml:0
 msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓN"
 
@@ -147,28 +143,24 @@ msgstr "Empresa predeterminado"
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
 #: code:addons/l10n_do_pos/static/src/js/TicketScreen.js:0
-#, python-format
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Error in credit note"
 msgstr "Error en Nota de Crédito"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
-msgid "Error with Fiscal Type %s"
-msgstr "Error con tipo fiscal %s"
+msgid "Error with Fiscal Type ${fiscal_type.name}"
+msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "Expiration date NCF:"
 msgstr "Fecha de vencimiento de NCF:"
 
@@ -198,55 +190,44 @@ msgid "Fiscal type"
 msgstr "Tipo Fiscal"
 
 #. module: l10n_do_pos
-#. odoo-javascript
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#: code:addons/l10n_do_pos/static/src/js/models.js:0
-#, python-format
 msgid "Fiscal type not found"
 msgstr "Tipo fiscal no encontrado"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"For invoice fiscal type %s it is necessary for the customer have RNC or "
-"Cedula"
+"For invoice fiscal type ${fiscal_type.name} it is necessary for the customer"
+" have RNC or Cedula"
 msgstr ""
-"Para facturas de tipo fiscal %s, es necesario que el cliente tenga un RNC o "
-"Cédula"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"For invoice fiscal type %s it is necessary for the customer have correct "
-"RNC or Cedula without dashes or spaces"
+"For invoice fiscal type ${fiscal_type.name} it is necessary for the customer"
+" have correct RNC or Cedula without dashes or spaces"
 msgstr ""
-"Para facturas de tipo fiscal %s, es necesario que el cliente tenga un RNC o "
-"Cédula correcto, sin guiones o espacios en blanco"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"For invoice fiscal type %s its necessary customer, please select customer"
-msgstr "Para facturas fiscales %s, es necesario seleccionar un cliente"
+"For invoice fiscal type ${fiscal_type.name} it's necessary customer, please "
+"select customer"
+msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "For this sale it is necessary for the customer have ID"
 msgstr "Para este venta es necesario el ID del cliente"
 
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_payment_method.py:0
-#, python-format
 msgid "Identify customer must be true if is credit note is true."
 msgstr ""
 "Identificar cliente debe ser verdadero si es nota de abono es verdadera."
@@ -254,7 +235,6 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Incorrect document (RNC/Cedula)"
 msgstr "RNC/Cédula incorrecto"
 
@@ -266,21 +246,14 @@ msgstr "Es usado en Pedido"
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_payment_method.py:0
-#, python-format
 msgid "Journal must be empty if is credit note is true."
 msgstr "El diario debe estar vacío si la nota de abono es verdadera."
 
 #. module: l10n_do_pos
 #: model:ir.model.fields,field_description:l10n_do_pos.field_pos_config__l10n_do_type_limit_order_history
 #: model:ir.model.fields,field_description:l10n_do_pos.field_res_config_settings__l10n_do_type_limit_order_history
-#: model_terms:ir.ui.view,arch_db:l10n_do_pos.inhertit_res_config_settings_view_form
 msgid "Limit order history"
 msgstr "Historial de órdenes limitadas"
-
-#. module: l10n_do_pos
-#: model_terms:ir.ui.view,arch_db:l10n_do_pos.inhertit_res_config_settings_view_form
-msgid "Max quantity days"
-msgstr "Cantidad máxima días"
 
 #. module: l10n_do_pos
 #. odoo-javascript
@@ -288,9 +261,8 @@ msgstr "Cantidad máxima días"
 #: code:addons/l10n_do_pos/static/src/js/TicketScreen.js:0
 #: code:addons/l10n_do_pos/static/src/xml/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:l10n_do_pos.field_pos_order__ncf
-#, python-format
 msgid "NCF"
-msgstr "NCF"
+msgstr ""
 
 #. module: l10n_do_pos
 #: model:ir.model.fields,field_description:l10n_do_pos.field_pos_order__ncf_expiration_date
@@ -299,24 +271,9 @@ msgstr "Fecha de vencimiento del NCF"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "NCF:"
-msgstr "NCF:"
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/PartnerListScreen.xml:0
-#, python-format
-msgid "Name"
-msgstr "Nombre"
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/PartnerListScreen.xml:0
-#, python-format
-msgid "Name or RNC / Cedula"
-msgstr "Nombre o RNC / Cédula"
+msgstr ""
 
 #. module: l10n_do_pos
 #: model:pos.payment.method,name:l10n_do_pos.credit_note
@@ -325,20 +282,7 @@ msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/js/PartnerListScreen.js:0
-#, python-format
-msgid "Offline"
-msgstr "Desconectado"
-
-#. module: l10n_do_pos
-#: model_terms:ir.ui.view,arch_db:l10n_do_pos.inhertit_res_config_settings_view_form
-msgid "Order history"
-msgstr "Historial de pedidos"
-
-#. module: l10n_do_pos
-#. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/buttons/SetFiscalTypeButton.js:0
-#, python-format
 msgid "Please ensure the RNC has exactly 9 digits or the Cedula has 11 digits"
 msgstr ""
 "Por favor, asegúrese que el RNC tenga exactamente 9 dígitos o la Cédula "
@@ -347,140 +291,112 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Please enter the NCF"
 msgstr "Por favor ingrese el NCF"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Please select a fiscal type"
 msgstr "Por favor selecciones el tipo de posición fiscal"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Configuración del TPV"
+msgstr "Configuración del punto de venta"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Pedidos del TPV"
+msgstr "Órdenes del punto de venta"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Métodos de pago en el punto de venta"
+msgstr "Métodos de pago del punto de venta"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Pagos en puntos de venta"
+msgstr "Pagos en punto de venta"
 
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sesión TPV"
+msgstr "Sesión del punto de venta"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/PartnerListScreen.xml:0
-#, python-format
-msgid "RNC / Cedula"
-msgstr "RNC / Cédula"
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/receipt_header.xml:0
 msgid "RNC / Cedula:"
 msgstr "RNC / Cédula:"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/buttons/SetFiscalTypeButton.js:0
-#, python-format
 msgid "RNC or Cedula"
 msgstr "RNC o Cédula"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Required document (RNC/Cedula)"
 msgstr "Documento requerido (RNC/Cedula:)"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Required fiscal type"
 msgstr "Requiere tipo fiscal"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/xml/TicketScreen.xml:0
-#, python-format
 msgid "Return all products"
 msgstr "Devolver todos los productos"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Sale greater than RD$ 250,000.00"
 msgstr "Venta mayor que RD$ 250,000.00"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Sale in"
 msgstr "Venta en"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "Select Credit Note"
 msgstr "Seleccione Nota de crédito"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/buttons/SetFiscalTypeButton.js:0
-#, python-format
 msgid "Select Fiscal Type"
 msgstr "Seleccionar Tipo Fiscal"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/xml/SetFiscalTypeButton.xml:0
-#, python-format
 msgid "Set Type position"
 msgstr "Establezca la posición fiscal"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/xml/SetFiscalTypeButton.xml:0
-#, python-format
-msgid "Set fiscal Type"
-msgstr "Establezca el tipo fiscal"
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/PartnerListScreen.xml:0
-#, python-format
-msgid "Tax ID"
-msgstr "RNC"
+msgid "Set fiscal Type\""
+msgstr ""
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"The amount of the credit note is less than the amount entered, please "
-"delete the payment of the credit note and enter it again."
+"The amount of the credit note is less than the amount entered, please delete"
+" the payment of the credit note and enter it again."
 msgstr ""
 "El monto de la nota de crédito es menor al monto ingresado, por favor borre "
 "el pago de la nota de crédito e ingréselo nuevamente."
@@ -488,14 +404,12 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "The credit note has already been used in this order"
 msgstr "La nota de crédito ya fue usada en éste pedido"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
 "The credit note has no residual amount, please delete the payment of the "
 "credit note and enter it again."
@@ -506,10 +420,9 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"The customer of the credit note is not the same as the current order, "
-"please select the correct customer."
+"The customer of the credit note is not the same as the current order, please"
+" select the correct customer."
 msgstr ""
 "El cliente de la nota de crédito no es el mismo cliente del pedido actual, "
 "por favor seleccione el cliente correcto."
@@ -517,14 +430,12 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_config.py:0
-#, python-format
 msgid "The days must be greater than 0"
 msgstr "Los días deben ser mayores que 0"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/TicketScreen.js:0
-#, python-format
 msgid ""
 "The fiscal type credit note does not exist. Please activate or configure it."
 msgstr ""
@@ -534,7 +445,6 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
 "The total payment with the card is sufficient to pay the order, please "
 "eliminate the payment in cash or reduce the amount to be paid by card"
@@ -545,17 +455,15 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/TicketScreen.js:0
-#, python-format
 msgid "There are no credit note payment method configured."
 msgstr "No está configurado el método de pago Nota de Crédito."
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"There is an error with the payment of credit note, please delete the "
-"payment of the credit note and enter it again."
+"There is an error with the payment of credit note, please delete the payment"
+" of the credit note and enter it again."
 msgstr ""
 "Hay un error con el pago de la nota de crédito, elimine el pago de la nota "
 "de crédito e ingréselo nuevamente."
@@ -563,10 +471,9 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#, python-format
 msgid ""
-"There is no current active NCF of {}, please create a new fiscal sequence "
-"of type {}."
+"There is no current active NCF of {}, please create a new fiscal sequence of"
+" type {}."
 msgstr ""
 "No hay un NCF activo actual de {}, cree una nueva secuencia fiscal de tipo "
 "{}."
@@ -574,100 +481,67 @@ msgstr ""
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#, python-format
 msgid "This credit note (%s) has been usedreturned_ncf"
 msgstr "Esta de nota de crédito (%s) ha sido usedreturned_ncf"
 
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#, python-format
 msgid "This customer does not have credit notes"
 msgstr "Este cliente no tiene notas de crédito"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/js/models.js:0
-#, python-format
-msgid "This fiscal type not exist."
-msgstr "Este tipo fiscal no existe."
-
-#. module: l10n_do_pos
-#. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/buttons/SetFiscalTypeButton.js:0
-#, python-format
 msgid "This not RNC or Cedula"
 msgstr "Esto no es un RNC o Cédula"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/TicketScreen.js:0
-#, python-format
 msgid "This order has no NCF"
 msgstr "Éste pedido no tiene NCF"
 
 #. module: l10n_do_pos
 #. odoo-python
 #: code:addons/l10n_do_pos/models/pos_order.py:0
-#, python-format
 msgid ""
-"This point of sale not have default customer, please set default customer "
-"in config POS"
+"This point of sale not have default customer, please set default customer in"
+" config POS"
 msgstr ""
-"Este punto de venta no tiene un cliente predeterminado, configure el "
-"cliente predeterminado en la configuración POS"
+"Este punto de venta no tiene un cliente predeterminado, configure el cliente"
+" predeterminado en la configuración POS"
 
 #. module: l10n_do_pos
 #. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/js/PartnerListScreen.js:0
-#, python-format
-msgid "Unable to save changes."
-msgstr "No se pueden guardar los cambios."
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/OrderReceipt.xml:0
-#, python-format
+#: code:addons/l10n_do_pos/static/src/xml/order_receipt.xml:0
 msgid "Value"
 msgstr "Valor"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "You cannot edit a credit note payment line"
 msgstr "No puedes editar una línea de pago con nota de crédito"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid "You cannot make sales in 0, please add a product with value"
 msgstr "No puede realizar ventas en 0, agregue un producto con valor"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/PaymentScreen.js:0
-#, python-format
 msgid ""
-"You cannot pay order of Fiscal Type %s with ITBIS/ISC. Please select "
-"correct fiscal position for remove ITBIS and ISC"
+"You cannot pay order of Fiscal Type ${fiscal_type.name} with ITBIS/ISC. "
+"Please select correct fiscal position for remove ITBIS and ISC"
 msgstr ""
-"No puedes pagar un pedido de tipo fiscal %s con TTBIS/ISC. Por favor, "
-"seleccione la posición fiscal correcta para remover el ITBIS e ISC"
 
 #. module: l10n_do_pos
 #. odoo-javascript
 #: code:addons/l10n_do_pos/static/src/js/buttons/SetFiscalTypeButton.js:0
-#, python-format
 msgid "You need to select a customer with RNC or Cedula for this fiscal type."
 msgstr ""
 "Necesitas seleccionar un cliente con RNC o Cédula para este tipo de "
 "comprobante fiscal."
-
-#. module: l10n_do_pos
-#. odoo-javascript
-#: code:addons/l10n_do_pos/static/src/xml/PartnerListScreen.xml:0
-#, python-format
-msgid "confirm"
-msgstr "confirmar"
