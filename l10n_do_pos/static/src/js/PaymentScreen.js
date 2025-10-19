@@ -33,7 +33,7 @@ patch(PaymentScreen.prototype, {
                 return false;
             }
 
-            if (!current_order.fiscal_type){
+            if (!current_order.fiscal_type) {
                 this.dialog.add(AlertDialog, {
                     title: _t('Required fiscal type'),
                     body: _t('Please select a fiscal type'),
@@ -48,8 +48,8 @@ patch(PaymentScreen.prototype, {
 
                 });
                 return false;
-
             }
+
             if (fiscal_type.requires_document && !client.vat) {
                 this.dialog.add(AlertDialog, {
                     title: _t('Required document (RNC/Cedula)'),
@@ -74,16 +74,17 @@ patch(PaymentScreen.prototype, {
                 return false;
             }
 
-            if (current_order.get_fiscal_type().prefix === 'B14'){
+            if (current_order.get_fiscal_type().prefix === 'B14') {
                 var has_taxes = false;
                 current_order.get_orderlines().forEach(function (orderline) {
                     orderline._getProductTaxesAfterFiscalPosition().forEach(function (tax) {
-                        if ((tax.tax_group_id[1] === 'ITBIS' && tax.amount !== 0) || tax.tax_group_id[1] === 'ISC'){
+                        if ((tax.tax_group_id[1] === 'ITBIS' && tax.amount !== 0) || tax.tax_group_id[1] === 'ISC') {
                             has_taxes = true
                         }
                     });
                 });
-                if(has_taxes){
+
+                if (has_taxes) {
                     this.dialog.add(AlertDialog, {
                         title: _t(`Error with Fiscal Type ${fiscal_type.name}`),
                         body: _t(`You cannot pay order of Fiscal Type ${fiscal_type.name} with ITBIS/ISC. Please select correct fiscal position for remove ITBIS and ISC`),
@@ -91,7 +92,6 @@ patch(PaymentScreen.prototype, {
                     return false;
                 }
             }
-
         }
 
         return await super.validateOrder(...arguments);
@@ -100,6 +100,7 @@ patch(PaymentScreen.prototype, {
     async _finalizeValidation() {
         var current_order = this.pos.get_order();
         if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
+
             try {
                 var fiscal_data = await this.pos.get_fiscal_data(current_order);
                 current_order.ncf = fiscal_data.ncf;
@@ -110,6 +111,7 @@ patch(PaymentScreen.prototype, {
             } catch (error) {
                 throw error;
             }
+
             this.pos.set_order(current_order);
             await super._finalizeValidation(...arguments);
 
@@ -119,10 +121,11 @@ patch(PaymentScreen.prototype, {
 
     },
 
-    async addNewPaymentLine(paymentMethod ) {
-        if(this.pos.config.l10n_do_fiscal_journal && paymentMethod && paymentMethod.is_credit_note){
+    async addNewPaymentLine(paymentMethod) {
+        if (this.pos.config.l10n_do_fiscal_journal && paymentMethod && paymentMethod.is_credit_note) {
             const current_partner = this.currentOrder.get_partner();
             if (current_partner && current_partner.id !== this.pos.config.pos_partner_id.id) {
+
                 try {
                     const credit_notes = await this.pos.get_credit_notes(current_partner.id);
 
@@ -136,12 +139,14 @@ patch(PaymentScreen.prototype, {
                     throw error;
                 }
                 
-            }else{
+            } else {
                 const ncf = await makeAwaitable(this.dialog, TextInputPopup, {
                     title: _t('Please enter the NCF'),
                     placeholder: _t('NCF'),
                 });
-                if(!ncf)  return;
+
+                if (!ncf) return;
+
                 try {
                     var credit_note = await this.pos.get_credit_note(ncf);
                 } catch (error) {
@@ -162,7 +167,7 @@ patch(PaymentScreen.prototype, {
                 }
             }
 
-            if(credit_note.residual_amount <= 0){
+            if (credit_note.residual_amount <= 0) {
                 this.dialog.add(AlertDialog, {
                     title: _t('Error'),
                     body: _t(`Credit note ${credit_note.ncf} has no available amount.`)
@@ -181,14 +186,14 @@ patch(PaymentScreen.prototype, {
             const amount_due_before_payment = this.currentOrder.get_due()
             var newPaymentline = this.currentOrder.add_paymentline(paymentMethod);
 
-            if(newPaymentline){
-                if (!current_partner){
+            if (newPaymentline) {
+                if (!current_partner) {
                     this.currentOrder.set_partner(credit_note_partner[0]);
                 }
 
                 newPaymentline.set_fiscal_data(credit_note.ncf, credit_note.partner_id);
 
-                if(credit_note.residual_amount < amount_due_before_payment){
+                if (credit_note.residual_amount < amount_due_before_payment) {
                     newPaymentline.set_amount(credit_note.residual_amount);
                 }
 
@@ -198,7 +203,6 @@ patch(PaymentScreen.prototype, {
             } else {
                 return false;
             }
-
         }
         return await super.addNewPaymentLine(...arguments);
     },
@@ -206,7 +210,7 @@ patch(PaymentScreen.prototype, {
     updateSelectedPaymentline(amount = false) {
         if (this.selectedPaymentLine &&
             this.selectedPaymentLine.payment_method_id.is_credit_note &&
-            this.pos.config.l10n_do_fiscal_journal){
+            this.pos.config.l10n_do_fiscal_journal) {
             this.dialog.add(AlertDialog, {
                 title: _t('Error'),
                 body: _t('You cannot edit a credit note payment line'),
@@ -242,13 +246,11 @@ patch(PaymentScreen.prototype, {
                             'credit note, please delete the payment of the ' +
                             'credit note and enter it again.'),
                     });
-
                     return false;
                 }
 
                 try {
                     var credit_note = await this.pos.get_credit_note(payment_line.credit_note_ncf);
-
                 } catch (error) {
                     throw error;
                 }
