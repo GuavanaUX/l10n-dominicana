@@ -80,13 +80,14 @@ export class SetFiscalTypeButton extends Component {
                     this.currentOrder.set_partner(partner);
                 } else {
                     // TODO: in future create automatic partner
-                    const { confirmed, payload: newPartner } = await this.pos.showScreen(
-                        'PartnerList',
-                        { partner: this.currentOrder.get_partner()}
-                    );
-                    if (confirmed) {
-                        this.currentOrder.set_partner(newPartner);
-                    }
+                    this.dialog.add(AlertDialog, {
+                        title: _t('There are no partners with this RNC'),
+                        body: _t('Please register the partner to continue with billing.'),
+                        confirm: () => {
+                            this.pos.selectPartner();
+                            return;
+                        },
+                    });
                 }
             }
         }
