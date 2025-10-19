@@ -42,16 +42,16 @@ export class SetFiscalTypeButton extends Component {
         }
 
         const selectedFiscalType = await makeAwaitable(this.dialog, SelectionPopup, {
-                title: _t('Select Fiscal Type'),
-                list: fiscalPosList,
-            }
+            title: _t('Select Fiscal Type'),
+            list: fiscalPosList,
+        }
         );
 
         if (selectedFiscalType) {
             var partner = this.currentOrder.get_partner();
             if (selectedFiscalType.requires_document && (!partner || !partner.vat))
                 await this.open_vat_popup();
-            
+
             this.currentOrder.set_fiscal_type(selectedFiscalType);
         }
     }
