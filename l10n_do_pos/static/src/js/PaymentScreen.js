@@ -99,6 +99,9 @@ patch(PaymentScreen.prototype, {
 
     async _finalizeValidation() {
         var current_order = this.pos.get_order();
+        const current_partner = this.currentOrder.get_partner();
+
+        if (current_partner) {
         if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
 
             try {
@@ -118,7 +121,13 @@ patch(PaymentScreen.prototype, {
         } else {
             await super._finalizeValidation(...arguments);
         }
-
+        }
+        else {
+            this.dialog.add(AlertDialog, {
+                title: _t('Error'),
+                body: _t('Please, select a partner to proceed with billing.'),
+            });
+        }
     },
 
     async addNewPaymentLine(paymentMethod) {
