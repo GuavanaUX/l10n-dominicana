@@ -102,25 +102,25 @@ patch(PaymentScreen.prototype, {
         const current_partner = this.currentOrder.get_partner();
 
         if (current_partner) {
-        if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
+            if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
 
-            try {
-                var fiscal_data = await this.pos.get_fiscal_data(current_order);
-                current_order.ncf = fiscal_data.ncf;
-                current_order.fiscal_type_id = current_order.fiscal_type;
-                current_order.ncf_expiration_date = fiscal_data.ncf_expiration_date;
-                current_order.fiscal_sequence_id = fiscal_data.fiscal_sequence_id;
+                try {
+                    var fiscal_data = await this.pos.get_fiscal_data(current_order);
+                    current_order.ncf = fiscal_data.ncf;
+                    current_order.fiscal_type_id = current_order.fiscal_type;
+                    current_order.ncf_expiration_date = fiscal_data.ncf_expiration_date;
+                    current_order.fiscal_sequence_id = fiscal_data.fiscal_sequence_id;
 
-            } catch (error) {
-                throw error;
+                } catch (error) {
+                    throw error;
+                }
+
+                this.pos.set_order(current_order);
+                await super._finalizeValidation(...arguments);
+
+            } else {
+                await super._finalizeValidation(...arguments);
             }
-
-            this.pos.set_order(current_order);
-            await super._finalizeValidation(...arguments);
-
-        } else {
-            await super._finalizeValidation(...arguments);
-        }
         }
         else {
             this.dialog.add(AlertDialog, {
@@ -139,15 +139,15 @@ patch(PaymentScreen.prototype, {
                     const credit_notes = await this.pos.get_credit_notes(current_partner.id);
 
                     var credit_note = await makeAwaitable(this.dialog, SelectionPopup, {
-                            title: _t('Select Credit Note'),
-                            list: credit_notes,
-                        }
+                        title: _t('Select Credit Note'),
+                        list: credit_notes,
+                    }
                     );
                     if (!credit_note) return;
                 } catch (error) {
                     throw error;
                 }
-                
+
             } else {
                 const ncf = await makeAwaitable(this.dialog, TextInputPopup, {
                     title: _t('Please enter the NCF'),
