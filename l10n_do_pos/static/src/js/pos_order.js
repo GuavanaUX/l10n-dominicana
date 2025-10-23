@@ -26,7 +26,7 @@ patch(PosOrder.prototype, {
     set_fiscal_type(fiscal_type) {
         this.fiscal_type = fiscal_type;
         this.fiscal_type_id = fiscal_type.id;
-        if (fiscal_type && fiscal_type.fiscal_position_id){
+        if (fiscal_type && fiscal_type.fiscal_position_id) {
             const fiscalPosition = this.models["account.fiscal.position"].find(
                 (position) => position.id === fiscal_type.fiscal_position_id?.id
             )
@@ -73,7 +73,7 @@ patch(PosOrder.prototype, {
         return res_fiscal_type;
     },
 
-    set_partner(partner){
+    set_partner(partner) {
         const invoice = this.is_to_invoice();
         super.set_partner(partner);
         this.set_to_invoice(invoice);
