@@ -90,16 +90,21 @@ patch(PosOrder.prototype, {
 
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
+        const partner = this.get_partner();
+
         result.headerData = {
-                ...headerData,
-                l10n_do_fiscal_journal: this.config.l10n_do_fiscal_journal,
-                date: result.date,
-                partner: this.get_partner(),
-                ncf: this.ncf,
-                ncf_origin_out: this.ncf_origin_out,
-                ncf_expiration_date: this.ncf_expiration_date && formatDate(parseUTCString(this.ncf_expiration_date)),
-            }
-        result.fiscal_type = this.get_fiscal_type();
+            ...headerData,
+            l10n_do_fiscal_journal: this.config.l10n_do_fiscal_journal,
+            date: result.date,
+            partner: partner,
+            partner_vat: partner ? partner.vat : '',
+            ncf: this.ncf,
+            ncf_origin_out: this.ncf_origin_out,
+            ncf_expiration_date: this.ncf_expiration_date && formatDate(parseUTCString(this.ncf_expiration_date)),
+        }
+        result.fiscal_type = this.fiscal_sequence_id ? this.fiscal_sequence_id.fiscal_type_id[1] : '';
+        result.is_fiscal_receipt = !!this.config.l10n_do_fiscal_journal;
+
         return result;
     },
 });

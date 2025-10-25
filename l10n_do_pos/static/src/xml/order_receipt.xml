@@ -4,7 +4,7 @@
         <xpath expr="//ReceiptHeader" position="after">
             <t t-if="props.data.headerData.l10n_do_fiscal_journal">
                 <div class="pos-receipt-fiscal-type-name" t-if="props.data.headerData.ncf">
-                    <t t-esc="props.data.fiscal_type.name"/>
+                    <t t-esc="props.data.fiscal_type"/>
                 </div>
                 <div class="pos-receipt-titles">
                     <span>
