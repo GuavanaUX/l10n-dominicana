@@ -2,7 +2,7 @@
     'name': 'Fiscal Accounting (Dominican Republic)',
     'summary': 
     """    
-        Thits module implements the management of fiscal receipts numbers
+        This module implements the management of fiscal receipts numbers
         for compliance with the 06-18 regulation of the Dirección General de 
         Impuestos Internos in the Dominican Republic.
         
