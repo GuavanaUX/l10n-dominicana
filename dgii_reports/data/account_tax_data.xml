@@ -15,7 +15,7 @@
         <field name="isr_retention_type">07</field>
     </record>
 
-    <!-- Pruchase -->
+    <!-- Purchase -->
     <record id="account.1_tax_tip_purch" model="account.tax">
         <field name="l10n_do_tax_type">tip</field>
     </record>
