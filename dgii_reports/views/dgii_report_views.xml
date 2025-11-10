@@ -321,7 +321,8 @@
                                 </group>
                             </group>
                         </page>
-                        <page name="ir17" string="IR-17">
+
+                        <!-- <page name="ir17" string="IR-17">
                             <group string="Withholding Summary (IR-17)">
                                 <group col="3">
                                     <field name="ir17_rentals" readonly="1" />
@@ -350,7 +351,8 @@
                                     <field name="ir17_other_withholdings_total" readonly="1" />
                                 </group>
                             </group>
-                        </page>
+                        </page> -->
+
                     </notebook>
 
                 </sheet>
