@@ -611,7 +611,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Contact" name="invoice_partner_id" domain="[]"
                         context="{'group_by':'invoice_partner_id'}" />
-                    <filter string="Anulation type" name="annulation_type" domain="[]"
+                    <filter string="Annulation type" name="annulation_type" domain="[]"
                         context="{'group_by':'annulation_type'}" />
                 </group>
             </search>
