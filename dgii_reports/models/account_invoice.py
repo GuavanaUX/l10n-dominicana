@@ -78,8 +78,7 @@ class AccountInvoice(models.Model):
         'state',
         'line_ids',
         'line_ids.balance',
-        'line_ids.tax_line_id',
-        'l10n_do_is_subject_to_proportionality'
+        'line_ids.tax_line_id'
     )
     def _compute_taxes_fields(self):
         
@@ -126,7 +125,6 @@ class AccountInvoice(models.Model):
                 #         lambda tax: tax.tax_line_id.l10n_do_tax_type == 'prop').mapped('balance')
                 # ))
                 
-                inv.proportionality_tax = inv.invoiced_itbis if inv.l10n_do_is_subject_to_proportionality else 0
                 inv.advance_itbis = inv.invoiced_itbis - inv.cost_itbis
 
     @api.depends(
@@ -425,25 +423,6 @@ class AccountInvoice(models.Model):
         "* The \'Grey\' status means Has not yet been reported or was partially reported.",
         default='normal'
     )
-    l10n_do_is_subject_to_proportionality = fields.Boolean( 
-        string='Subject to proportionality',
-        help='Indicates if the invoice is subject to proportionality tax.',
-        # default=lambda self: self._default_l10n_do_is_subject_to_proportionality()
-    )
-
-    @api.onchange('move_type')
-    def _default_l10n_do_is_subject_to_proportionality(self):
-        """Determines the default value for the field based on the company and move type."""
-        for record in self:
-            if record.company_id.l10n_do_is_subject_to_proportionality and self.move_type in ('in_invoice', 'out_invoice'):
-                record.l10n_do_is_subject_to_proportionality = True
-
-    @api.constrains('l10n_do_is_subject_to_proportionality')
-    def l10n_do_is_subject_to_proportionality_constrains(self):
-        for inv in self:
-            if inv.fiscal_status == 'done':
-                raise ValidationError(
-                    _('You cannot change the proportionality status of a reported invoice.'))
 
     @api.model
     def norma_recompute(self):
