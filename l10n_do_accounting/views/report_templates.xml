@@ -26,8 +26,7 @@
                     <span t-field="o.l10n_do_ecf_modification_code"/>
                 </t> -->
             </div>
-            <div id="fiscal_exp_date"
-                t-if="o.move_type in ['out_invoice', 'out_refund'] 
+            <div id="fiscal_exp_date" t-if="o.move_type in ['out_invoice', 'out_refund'] 
                     and o.state == 'posted'
                     and o.ref
                     and o.fiscal_type_id
@@ -49,14 +48,14 @@
                     <strong>
                         <t t-esc="company.name" />
                     </strong>
-                    <t t-esc="company.partner_id"
-                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}' />
+                    <t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}' />
                 </div>
                 <div t-else="">
                     <t t-esc="company.company_details" />
                 </div>
                 <div t-if="forced_vat">
-                    <t t-esc="company.country_id.vat_label or 'Tax ID'" />: <span t-esc="forced_vat" />
+                    <t t-esc="company.country_id.vat_label or 'Tax ID'" />
+                    :<span t-esc="forced_vat" />
                 </div>
             </div>
             <t t-call="l10n_do_accounting.fiscal_info" />
@@ -64,6 +63,9 @@
     </template>
 
     <template id="external_layout_standard_inherited" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class,'header')]" position="attributes">
+            <attribute name="t-attf-class" add="first-page" separator=" "/>
+        </xpath>
         <xpath expr="//div[@name='company_address']" position="after">
             <t t-if="l10n_do_fiscal_invoice">
                 <t t-call="l10n_do_accounting.fiscal_info" />
@@ -73,10 +75,9 @@
             <t t-if="l10n_do_fiscal_invoice">
                 <li t-if="not forced_vat and company.vat" class="first-page">
                     <strong>
-                        <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                            t-esc="o.company_id.account_fiscal_country_id.vat_label"
-                            id="company_inv_tax_id_label" />
-                    <t t-else="">Tax ID</t>: </strong>
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="company_inv_tax_id_label" />
+                        <t t-else="">Tax ID</t>: 
+                    </strong>
                     <span t-field="o.company_id.vat" />
                 </li>
                 <li t-if="o.invoice_date" class="first-page">
@@ -88,6 +89,9 @@
     </template>
 
     <template id="external_layout_boxed_inherited" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class,'header')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="first-page"/>
+        </xpath>
         <xpath expr="//div[@name='company_address']" position="attributes">
             <attribute name="t-if">not l10n_do_fiscal_invoice</attribute>
         </xpath>
@@ -96,15 +100,14 @@
                 <div name="company_address" class="float-end mb4 not-first-page-none">
                     <ul class="list-unstyled">
                         <li t-if="company.is_company_details_empty">
-                            <t t-esc="company.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                            <t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
                         </li>
                         <li t-else="">
                             <t t-esc="company.company_details" />
                         </li>
                         <li t-if="forced_vat">
-                            <t t-esc="company.country_id.vat_label or 'Tax ID'" />: <span
-                                t-esc="forced_vat" />
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'" />
+                            :<span t-esc="forced_vat" />
                         </li>
                     </ul>
                 </div>
@@ -118,23 +121,24 @@
     </template>
 
     <template id="external_layout_bold_inherited" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[contains(@t-attf-class,'header')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="t-attf-class"/>
+        </xpath>
         <xpath expr="//div[@name='company_address']" position="attributes">
             <attribute name="t-if">not l10n_do_fiscal_invoice</attribute>
         </xpath>
         <xpath expr="//div[@name='company_address']" position="after">
-            <div class="col-5 offset-1 not-first-page" name="company_address"
-                t-if="l10n_do_fiscal_invoice">
+            <div class="col-5 offset-1 not-first-page" name="company_address" t-if="l10n_do_fiscal_invoice">
                 <ul class="list-unstyled">
                     <li t-if="company.is_company_details_empty">
-                        <t t-esc="company.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                        <t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
                     </li>
                     <li t-else="">
                         <t t-esc="company.company_details" />
                     </li>
                     <li t-if="forced_vat">
-                        <t t-esc="company.country_id.vat_label or 'Tax ID'" />: <span
-                            t-esc="forced_vat" />
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'" />
+                        :<span t-esc="forced_vat" />
                     </li>
                 </ul>
             </div>
@@ -158,6 +162,9 @@
     </template>
 
     <template id="external_layout_striped_inherited" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[contains(@t-attf-class,'header')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="t-attf-class"/>
+        </xpath>
         <xpath expr="//div[hasclass('ms-3')]" position="attributes">
             <attribute name="t-if">not l10n_do_fiscal_invoice</attribute>
         </xpath>
@@ -165,15 +172,14 @@
             <div class="float-start company_address not-first-page" t-if="l10n_do_fiscal_invoice">
                 <ul class="list-unstyled">
                     <li t-if="company.is_company_details_empty">
-                        <t t-esc="company.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                        <t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
                     </li>
                     <li t-else="">
                         <t t-esc="company.company_details" />
                     </li>
                     <li t-if="forced_vat">
-                        <t t-esc="company.country_id.vat_label or 'Tax ID'" />: <span
-                            t-esc="forced_vat" />
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'" />
+                        :<span t-esc="forced_vat" />
                     </li>
                 </ul>
             </div>
