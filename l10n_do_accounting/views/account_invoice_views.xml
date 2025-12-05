@@ -52,7 +52,7 @@
             </xpath>
 
             <xpath expr="//form/sheet/group/group[@id='header_left_group']/field[@name='ref']"
-                pposition="attributes">
+                position="attributes">
                 <attribute name="invisible">
                     is_l10n_do_fiscal_invoice or move_type not in ('in_invoice', 'in_receipt', 'in_refund')
                 </attribute>
