@@ -21,4 +21,8 @@
         <field name="implied_ids" eval="[(4, ref('l10n_do_accounting.credit_note_group'))]"/>
     </record>
 
+    <record id="group_l10n_do_debit_note" model="res.groups">
+        <field name="name">Can create Debit Notes</field>
+    </record>
+
 </odoo>

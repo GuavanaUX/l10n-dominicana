@@ -25,14 +25,13 @@
 
             <xpath expr="//form/header" position="after">
                 <div groups="account.group_account_invoice" class="alert alert-warning" role="alert"
-                    style="margin-bottom:0px;"
-                    invisible="fiscal_sequence_status in ('no_fiscal', 'fiscal_ok', 'no_sequence') or state not in ('draft', 'open')">
-                    Fiscal Sequence almost depleted.
+                     style="margin-bottom:0px;"
+                     invisible="fiscal_sequence_status in ('no_fiscal', 'fiscal_ok', 'no_sequence') or state not in ('draft', 'open')">
+                     Fiscal Sequence almost depleted.
                 </div>
 
                 <!--TODO:
-                Fiscal Sequence depleted do not working correct, The message does not appear when
-                creating a new invoice-->
+                Fiscal Sequence depleted do not working correct, The message does not appear when creating a new invoice-->
                 <div groups="account.group_account_invoice" class="alert alert-danger" role="alert"
                     style="margin-bottom:0px;"
                     invisible="fiscal_sequence_status in ('no_fiscal', 'fiscal_ok', 'almost_no_sequence') or state not in ('draft', 'open')">

@@ -33,16 +33,22 @@
 
                     var operations = {
                         'not-first-page': function (elt) {
-                            elt.style.display = (vars.sitepage === vars.frompage) ? "none" : "inherit";
+                            elt.style.visibility = (vars.sitepage == vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-first-page-none': function (elt) {
+                            elt.style.display = (vars.sitepage == vars.frompage) ? "none" : "inherit";
                         },
                         'not-last-page': function (elt) {
-                            elt.style.display = (vars.sitepage === vars.sitepages) ? "none" : "inherit";
+                            elt.style.visibility = (vars.sitepage == vars.sitepages) ? "hidden" : "visible";
                         },
                         'first-page': function (elt) {
-                             elt.style.display = (vars.sitepage === vars.frompage) ? "inherit" : "none";
+                            elt.style.visibility = (vars.sitepage == vars.frompage) ? "visible" : "hidden";
+                        },
+                        'first-page-none': function (elt) {
+                            elt.style.display = (vars.sitepage == vars.frompage) ? "inherit" : "none";
                         },
                         'last-page': function (elt) {
-                            elt.style.display = (vars.sitepage === vars.sitepages) ? "inherit" : "none";
+                            elt.style.visibility = (vars.sitepage == vars.sitepages) ? "visible" : "hidden";
                         },
                         'single-page': function (elt) {
                             elt.style.display = (vars.sitepages === 1) ? "inherit" : "none";

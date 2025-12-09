@@ -12,14 +12,9 @@
             </xpath>
 
             <xpath expr="//field[@name='reason']" position="after">
-                
                 <field name="is_vendor_refund" invisible="1" />
-
-                <field name="refund_ref" invisible="not is_vendor_refund"
-                    required="is_vendor_refund and is_fiscal_refund" />
-
+                <field name="refund_ref" invisible="not is_vendor_refund" required="is_fiscal_refund and is_vendor_refund" />
                 <field name="ncf_expiration_date" invisible="not is_vendor_refund" />
-
             </xpath>
 
         </field>

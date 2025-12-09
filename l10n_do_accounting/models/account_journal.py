@@ -8,6 +8,7 @@ class AccountJournal(models.Model):
     l10n_do_fiscal_journal = fields.Boolean(
         string="Fiscal Journal"
     )
+
     payment_form = fields.Selection(
         string="Payment Form",
         selection=[
@@ -33,6 +34,7 @@ class AccountJournal(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        'You can not modify the field "Fiscal Journal" if there are validated invoices in this journal!'
+                        'You can not modify the field "Fiscal Journal" if there are '
+                        "validated invoices in this journal!"
                     )
                 )

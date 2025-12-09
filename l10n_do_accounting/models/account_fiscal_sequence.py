@@ -44,7 +44,7 @@ class AccountFiscalSequence(models.Model):
         ).date(),
     )
     fiscal_type_id = fields.Many2one(
-        string='Fiscal type',
+        string="Fiscal type",
         comodel_name="account.fiscal.type",
         required=True,
         readonly=True,
@@ -73,9 +73,15 @@ class AccountFiscalSequence(models.Model):
         compute="_compute_sequence_remaining",
     )
     sequence_id = fields.Many2one(
-        "ir.sequence", string="Internal Sequence", copy=False,
+        "ir.sequence",
+        string="Internal Sequence",
+        copy=False,
     )
-    warning_gap = fields.Integer(compute="_compute_warning_gap",)
+
+    warning_gap = fields.Integer(
+        compute="_compute_warning_gap",
+    )
+
     remaining_percentage = fields.Float(
         default=35,
         required=True,
@@ -87,7 +93,11 @@ class AccountFiscalSequence(models.Model):
         help="Next number of this sequence",
         related="sequence_id.number_next_actual",
     )
-    next_fiscal_number = fields.Char(compute="_compute_next_fiscal_number",)
+
+    next_fiscal_number = fields.Char(
+        compute="_compute_next_fiscal_number",
+    )
+
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -101,7 +111,11 @@ class AccountFiscalSequence(models.Model):
         tracking=True,
         copy=False,
     )
-    can_be_queue = fields.Boolean(compute="_compute_can_be_queue",)
+
+    can_be_queue = fields.Boolean(
+        compute="_compute_can_be_queue",
+    )
+
     company_id = fields.Many2one(
         "res.company",
         default=lambda self: self.env.user.company_id,
@@ -138,10 +152,15 @@ class AccountFiscalSequence(models.Model):
     @api.depends("sequence_end", "sequence_id.number_next")
     def _compute_sequence_remaining(self):
         for rec in self:
-            rec.sequence_remaining = \
-                (rec.sequence_end - rec.sequence_id.number_next_actual + 1) if rec.sequence_id else 0
+            rec.sequence_remaining = (
+                (rec.sequence_end - rec.sequence_id.number_next_actual + 1)
+                if rec.sequence_id
+                else 0
+            )
 
-    @api.depends("fiscal_type_id.prefix", "sequence_id.padding", "sequence_id.number_next_actual")
+    @api.depends(
+        "fiscal_type_id.prefix", "sequence_id.padding", "sequence_id.number_next_actual"
+    )
     def _compute_next_fiscal_number(self):
         for seq in self:
             seq.next_fiscal_number = "%s%s" % (
@@ -184,13 +203,17 @@ class AccountFiscalSequence(models.Model):
                     _("Another sequence is active for this type.")
                 )
 
-    @api.constrains("sequence_start", "sequence_end", "state", "fiscal_type_id", "company_id")
+    @api.constrains(
+        "sequence_start", "sequence_end", "state", "fiscal_type_id", "company_id"
+    )
     def _validate_sequence_range(self):
         for rec in self.filtered(lambda s: s.state != "cancelled"):
             if rec.sequence_start <= 0 or rec.sequence_end <= 0:
                 raise ValidationError(_("Sequence values must be greater than zero."))
             if rec.sequence_start >= rec.sequence_end:
-                raise ValidationError(_("End sequence must be greater than start sequence."))
+                raise ValidationError(
+                    _("End sequence must be greater than start sequence.")
+                )
             domain = [
                 ("id", "!=", rec.id),
                 ("state", "in", ("active", "queue")),
@@ -199,8 +222,9 @@ class AccountFiscalSequence(models.Model):
                 ("sequence_start", ">=", rec.sequence_start),
                 ("sequence_end", "<=", rec.sequence_end),
             ]
-            if self.search_count(domain) > 0:
-                raise ValidationError(_("You cannot use another Fiscal Sequence range."))
+                raise ValidationError(
+                    _("You cannot use another Fiscal Sequence range.")
+                )
 
     def unlink(self):
         for rec in self:
@@ -209,7 +233,7 @@ class AccountFiscalSequence(models.Model):
         return super(AccountFiscalSequence, self).unlink()
 
     def copy(self, default=None):
-        if default != 'etc':
+        if default != "etc":
             raise UserError(_("You cannot duplicate a Fiscal Sequence."))
         return super(AccountFiscalSequence, self).copy(default=default)
 
@@ -238,9 +262,13 @@ class AccountFiscalSequence(models.Model):
             "Are you sure want to confirm this Fiscal Sequence? "
             "Once you confirm this Fiscal Sequence cannot be edited."
         )
-        action = self.sudo().env.ref(
-            "l10n_do_accounting.account_fiscal_sequence_validate_wizard_action"
-        ).read()[0]
+        action = (
+            self.sudo()
+            .env.ref(
+                "l10n_do_accounting.account_fiscal_sequence_validate_wizard_action"
+            )
+            .read()[0]
+        )
         action["context"] = {
             "default_name": msg,
             "default_fiscal_sequence_id": self.id,
@@ -271,9 +299,7 @@ class AccountFiscalSequence(models.Model):
                         "company_id": rec.company_id.id,
                     }
                 )
-                rec.write(
-                    {"state": "active", "sequence_id": sequence_id.id}
-                )
+                rec.write({"state": "active", "sequence_id": sequence_id.id})
 
     def action_cancel(self):
         self.ensure_one()
@@ -362,13 +388,12 @@ class AccountFiscalType(models.Model):
 
     name = fields.Char(
         string="Name",
-        required=True, 
+        required=True,
         copy=False,
     )
-    active = fields.Boolean(
-        string="Active",
-        default=True
-    )
+
+    active = fields.Boolean(string="Active", default=True)
+
     sequence = fields.Integer(
         string="Sequence",
         default=10,
@@ -396,20 +421,15 @@ class AccountFiscalType(models.Model):
     )
     journal_type = fields.Selection(
         string="Journal Type",
-        selection=[
-            ("sale", "Sale"), 
-            ("purchase", "Purchase")
-        ], 
-        compute="_compute_journal_type"
+        selection=[("sale", "Sale"), ("purchase", "Purchase")],
+        compute="_compute_journal_type",
     )
     fiscal_position_id = fields.Many2one(
-        comodel_name="account.fiscal.position",
-        string="Fiscal Position"
+        comodel_name="account.fiscal.position", string="Fiscal Position"
     )
-    journal_id = fields.Many2one(
-        comodel_name="account.journal", 
-        string="Journal"
-    )
+
+    journal_id = fields.Many2one(comodel_name="account.journal", string="Journal")
+
     assigned_sequence = fields.Boolean(
         string="Assigned Sequence",
         help="If checked, this Fiscal Type will use a Fiscal Sequence to generate Fiscal Numbers.",
@@ -444,46 +464,57 @@ class AccountFiscalType(models.Model):
                 "sale" if fiscal_type.type[:3] == "out" else "purchase"
             )
 
-    def check_format_fiscal_number(self, fiscal_number, type=''):
-
+    def check_format_fiscal_number(self, fiscal_number, type=""):
         if not fiscal_number:
-            raise ValidationError(_('Fiscal number can not be blank'))
-        
+            raise ValidationError(_("Fiscal number can not be blank"))
+
         if len(fiscal_number) < 3:
-            raise ValidationError(_('This origin fiscal number must have more than 3 characters'))
-        
-        fiscal_type = self
-        message = ''
-        
-        if not self:
-            fiscal_type = self.search([
-                ('prefix', '=', fiscal_number[0:3]), 
-                ('type', '=', type)
-            ])
-
-        if not fiscal_type:
-            if type in ('in_refund', 'out_refund'):
-                message = _('The fiscal number type (%s) is not a credit note.') % fiscal_number[0:3]
-
             raise ValidationError(
-                _('This document type (%s) does not exist.' % fiscal_number[0:3]) if not message else message
+                _("This origin fiscal number must have more than 3 characters")
             )
 
-        origin_out_padding = len(fiscal_number) - len(fiscal_type.prefix) if fiscal_type.prefix else len(fiscal_number)
-        
+        fiscal_type = self
+        message = ""
+
+        if not self:
+            fiscal_type = self.search(
+                [("prefix", "=", fiscal_number[0:3]), ("type", "=", type)]
+            )
+
+        if not fiscal_type:
+            if type in ("in_refund", "out_refund"):
+                message = (
+                    _("The fiscal number type (%s) is not a credit note.")
+                    % fiscal_number[0:3]
+                )
+
+            raise ValidationError(
+                _("This document type (%s) does not exist." % fiscal_number[0:3])
+                if not message
+                else message
+            )
+
+        origin_out_padding = (
+            len(fiscal_number) - len(fiscal_type.prefix)
+            if fiscal_type.prefix
+            else len(fiscal_number)
+        )
 
         if origin_out_padding != fiscal_type.padding:
             raise ValidationError(
-                _('The document type (%s) has (%s) digits. You are trying to input (%s) digits.') % 
-                (fiscal_type.name, fiscal_type.padding, origin_out_padding)
+                _(
+                    "The document type (%s) has (%s) digits. You are trying to input (%s) digits."
+                )
+                % (fiscal_type.name, fiscal_type.padding, origin_out_padding)
             )
-        
-        if not re.match('^[0-9]+$', fiscal_number[3:]):
+
+        if not re.match("^[0-9]+$", fiscal_number[3:]):
             raise ValidationError(
-                _('After the document type, all characters must be digits from 0 to 9.')
+                _("After the document type, all characters must be digits from 0 to 9.")
             )
         
         if fiscal_type.prefix and fiscal_number[0:3] != fiscal_type.prefix:
             raise ValidationError(
-                _('The document type (%s) must start with (%s)') % (fiscal_type.name, fiscal_type.prefix)
+                _("The document type (%s) must start with (%s)")
+                % (fiscal_type.name, fiscal_type.prefix)
             )
