@@ -131,9 +131,9 @@ class Partner(models.Model):
 
             else:
                 new_fiscal_type = partner.sale_fiscal_type_id
-            
+
             partner.sale_fiscal_type_id = new_fiscal_type
-            
+
             if new_fiscal_type and new_fiscal_type.fiscal_position_id:
                 partner.write(
                     {

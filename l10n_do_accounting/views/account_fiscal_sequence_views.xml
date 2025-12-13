@@ -81,9 +81,7 @@
                 <filter name="depleted" string="Depleted" domain="[('state','=','depleted')]" />
                 <filter name="expired" string="Expired" domain="[('state','=','expired')]" />
                 <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]" />
-
                 <separator />
-
                 <filter name="sale" string="Sale" domain="[('type','=','sale')]" />
                 <filter name="purchase" string="Purchase" domain="[('type','=','purchase')]" />
                 <filter name="credit_note" string="Credit Note" domain="[('type','=','credit_note')]" />

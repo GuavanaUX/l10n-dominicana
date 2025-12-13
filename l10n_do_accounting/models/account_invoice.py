@@ -35,11 +35,13 @@ class AccountInvoice(models.Model):
         comodel_name="account.fiscal.type",
         index=True,
     )
+
     available_fiscal_type_ids = fields.Many2many(
         string="Available Fiscal Type",
         comodel_name="account.fiscal.type",
         compute="_compute_available_fiscal_type",
     )
+
     fiscal_sequence_id = fields.Many2one(
         comodel_name="account.fiscal.sequence",
         string="Fiscal Sequence",
@@ -47,6 +49,7 @@ class AccountInvoice(models.Model):
         compute="_compute_fiscal_sequence",
         store=True,
     )
+
     income_type = fields.Selection(
         string="Income Type",
         selection=[
@@ -60,6 +63,7 @@ class AccountInvoice(models.Model):
         copy=False,
         default=lambda self: self._context.get("income_type", "01"),
     )
+
     expense_type = fields.Selection(
         copy=False,
         selection=[
@@ -77,6 +81,7 @@ class AccountInvoice(models.Model):
         ],
         string="Cost & Expense Type",
     )
+
     annulation_type = fields.Selection(
         string="Annulment Type",
         selection=[
@@ -93,22 +98,27 @@ class AccountInvoice(models.Model):
         ],
         copy=False,
     )
+
     origin_out = fields.Char(
         string="Affects",
         copy=False,
-        help="NCF number that Invoice that was affected by credit note.",
+        help="NCF number of Invoice that was affected by credit note.",
     )
+
     ncf_expiration_date = fields.Date(
         string="Valid until", store=True, copy=False, required=False
     )
+
     is_l10n_do_fiscal_invoice = fields.Boolean(
         string="Is Fiscal Invoice",
         compute="_compute_is_l10n_do_fiscal_invoice",
         store=True,
     )
+
     assigned_sequence = fields.Boolean(
         related="fiscal_type_id.assigned_sequence",
     )
+
     fiscal_sequence_status = fields.Selection(
         selection=[
             ("no_fiscal", "No fiscal"),
@@ -155,13 +165,11 @@ class AccountInvoice(models.Model):
         """
         for inv in self.filtered(lambda i: i.state == "draft"):
             if inv.is_debit_note:
-                
                 debit_map = {"in_invoice": "in_debit", "out_invoice": "out_debit"}
                 fiscal_type = self.env["account.fiscal.type"].search(
                     [("type", "=", debit_map[inv.move_type])], limit=1
                 )
                 inv.fiscal_type_id = fiscal_type.id
-
             else:
                 fiscal_type = inv.fiscal_type_id
 
@@ -170,7 +178,6 @@ class AccountInvoice(models.Model):
                 and fiscal_type
                 and fiscal_type.assigned_sequence
             ):
-
                 inv.assigned_sequence = fiscal_type.assigned_sequence
                 inv.fiscal_position_id = fiscal_type.fiscal_position_id
 
@@ -231,7 +238,7 @@ class AccountInvoice(models.Model):
                     inv.fiscal_sequence_status = "almost_no_sequence"
                 else:
                     inv.fiscal_sequence_status = "no_sequence"
-    
+
     # TODO: Migrate this
     # @api.constrains("state", "tax_line_ids")
     # def validate_special_exempt(self):
@@ -299,6 +306,7 @@ class AccountInvoice(models.Model):
                             "Service sales to oversas customer must have Consumo Fiscal Type"
                         )
                     )
+
     # TODO: MIGRATE THIS
     # @api.constrains("state", "tax_line_ids")
     # def validate_informal_withholding(self):
@@ -366,7 +374,6 @@ class AccountInvoice(models.Model):
                 self.fiscal_type_id = self.partner_id.sale_fiscal_type_id
 
             elif self.partner_id and self.move_type == "in_invoice":
-                
                 self.expense_type = self.partner_id.expense_type
 
                 if self.partner_id.id == self.company_id.partner_id.id:
@@ -402,7 +409,6 @@ class AccountInvoice(models.Model):
         available sequences to be used just before validation
         """
         for inv in self:
-
             if inv.is_l10n_do_fiscal_invoice and inv.is_invoice():
                 if inv.amount_total == 0:
                     raise UserError(
@@ -414,7 +420,7 @@ class AccountInvoice(models.Model):
 
                 if inv.fiscal_type_id and not inv.fiscal_type_id.assigned_sequence:
                     inv.fiscal_type_id.check_format_fiscal_number(inv.ref)
-                        
+
                 # Because a Fiscal Sequence can be depleted while an invoice
                 # is waiting to be validated, compute fiscal_sequence_id again
                 # on invoice validate.
@@ -436,7 +442,6 @@ class AccountInvoice(models.Model):
                         inv.partner_id.sale_fiscal_type_id = inv.fiscal_type_id
 
                 if inv.move_type == "in_invoice":
-
                     if not inv.partner_id.purchase_fiscal_type_id:
                         inv.partner_id.purchase_fiscal_type_id = inv.fiscal_type_id
                     if not inv.partner_id.expense_type:
@@ -467,7 +472,7 @@ class AccountInvoice(models.Model):
                                 u"for make invoice"
                             )
                         )
-                
+
                 # Check refund stuff
                 if inv.origin_out and inv.move_type in ("out_refund", "in_refund"):
                     self.env["account.fiscal.type"].check_format_fiscal_number(
@@ -504,7 +509,7 @@ class AccountInvoice(models.Model):
                                 "The invoice ({}) to which the credit note refers does not exist in the system or is not under the name of {}"
                             ).format(inv.origin_out, inv.partner_id.name)
                         )
-                    
+
                     delta_time = inv.invoice_date - origin_invoice.invoice_date
 
                     if delta_time.days > 30 and inv.line_ids.filtered(
@@ -537,7 +542,6 @@ class AccountInvoice(models.Model):
         return res
 
     def action_invoice_cancel(self):
-
         # if self.journal_id.l10n_do_fiscal_journal:
         fiscal_invoice = self.filtered(
             lambda inv: inv.journal_id.l10n_do_fiscal_journal
@@ -553,22 +557,15 @@ class AccountInvoice(models.Model):
             ).read()[0]
             action["context"] = {"default_invoice_id": fiscal_invoice.id}
             return action
-                
 
     def button_cancel(self, force_cancel=False):
-
         if self.journal_id.l10n_do_fiscal_journal and force_cancel == False:
-
             return self.action_invoice_cancel()
         else:
             return super(AccountInvoice, self).button_cancel()
 
-        
-        
-
     @api.returns("self")
     def refund(self, invoice_date=None, date=None, description=None, journal_id=None):
-
         context = dict(self._context or {})
         refund_type = context.get("refund_type")
         amount = context.get("amount")
@@ -659,9 +656,9 @@ class AccountInvoice(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # Add default fiscal type from sales and purchase orders
-        
+
         res = super(AccountInvoice, self).create(vals_list)
-        
+
         fiscal_invoices = res.filtered(
             lambda i: i.is_l10n_do_fiscal_invoice
             and not i.fiscal_type_id
@@ -672,7 +669,7 @@ class AccountInvoice(models.Model):
             fiscal_invoice.write({"ref": "", "payment_reference": fiscal_invoice.ref})
 
         return res
-    
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_fiscal_invoice(self):
         for invoice in self:

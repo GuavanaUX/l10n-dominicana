@@ -35,6 +35,7 @@ class AccountFiscalSequence(models.Model):
         readonly=True,
         tracking=True,
     )
+
     expiration_date = fields.Date(
         required=True,
         readonly=True,
@@ -43,6 +44,7 @@ class AccountFiscalSequence(models.Model):
             str(int(str(fields.Date.today())[0:4]) + 1) + "-12-31", "%Y-%m-%d"
         ).date(),
     )
+
     fiscal_type_id = fields.Many2one(
         string="Fiscal type",
         comodel_name="account.fiscal.type",
@@ -50,10 +52,12 @@ class AccountFiscalSequence(models.Model):
         readonly=True,
         tracking=True,
     )
+
     type = fields.Selection(
         related="fiscal_type_id.type",
         store=True,
     )
+
     sequence_start = fields.Integer(
         required=True,
         readonly=True,
@@ -61,6 +65,7 @@ class AccountFiscalSequence(models.Model):
         default=1,
         copy=False,
     )
+
     sequence_end = fields.Integer(
         required=True,
         readonly=True,
@@ -68,10 +73,12 @@ class AccountFiscalSequence(models.Model):
         default=1,
         copy=False,
     )
+
     sequence_remaining = fields.Integer(
         string="Remaining",
         compute="_compute_sequence_remaining",
     )
+
     sequence_id = fields.Many2one(
         "ir.sequence",
         string="Internal Sequence",
@@ -88,6 +95,7 @@ class AccountFiscalSequence(models.Model):
         help="Fiscal Sequence remaining percentage to reach to start "
         "warning notifications.",
     )
+
     number_next_actual = fields.Integer(
         string="Next Number",
         help="Next number of this sequence",
@@ -356,7 +364,6 @@ class AccountFiscalSequence(models.Model):
         return fiscal_sequence_id
 
     def get_fiscal_number(self):
-
         if not self.fiscal_type_id.assigned_sequence:
             return False
 
@@ -398,14 +405,17 @@ class AccountFiscalType(models.Model):
         string="Sequence",
         default=10,
     )
+
     prefix = fields.Char(
         string="Prefix",
         copy=False,
     )
+
     padding = fields.Integer(
         string="Padding",
         default=8,
     )
+
     type = fields.Selection(
         string="Type",
         selection=[
@@ -419,11 +429,13 @@ class AccountFiscalType(models.Model):
         required=True,
         default="in_invoice",
     )
+
     journal_type = fields.Selection(
         string="Journal Type",
         selection=[("sale", "Sale"), ("purchase", "Purchase")],
         compute="_compute_journal_type",
     )
+
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position", string="Fiscal Position"
     )
@@ -435,6 +447,7 @@ class AccountFiscalType(models.Model):
         help="If checked, this Fiscal Type will use a Fiscal Sequence to generate Fiscal Numbers.",
         default=True,
     )
+
     requires_document = fields.Boolean(
         string="Requires a document?",
         help="If checked, this Fiscal Type will require a document to be generated.",
@@ -512,7 +525,7 @@ class AccountFiscalType(models.Model):
             raise ValidationError(
                 _("After the document type, all characters must be digits from 0 to 9.")
             )
-        
+
         if fiscal_type.prefix and fiscal_number[0:3] != fiscal_type.prefix:
             raise ValidationError(
                 _("The document type (%s) must start with (%s)")
