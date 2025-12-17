@@ -8,8 +8,7 @@
             <xpath expr="//block[@id='pos_accounting_section']" position="inside">
                 <setting>
                     <field name="l10n_do_fiscal_journal" invisible="1" />
-                    <label string="Default customer" for="pos_partner_id"
-                        options="{'no_create': True}" />
+                    <label for="pos_partner_id" options="{'no_create': True}" />
                     <div>
                         <field name="pos_partner_id" required="l10n_do_fiscal_journal" />
                     </div>
