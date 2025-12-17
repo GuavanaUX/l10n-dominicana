@@ -99,35 +99,35 @@ patch(PaymentScreen.prototype, {
 
     async _finalizeValidation() {
         var current_order = this.pos.get_order();
-        const current_partner = this.currentOrder.get_partner();
+        // const current_partner = this.currentOrder.get_partner();
 
-        if (current_partner) {
-            if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
+        // if (current_partner) {
+        if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
 
-                try {
-                    var fiscal_data = await this.pos.get_fiscal_data(current_order);
-                    current_order.ncf = fiscal_data.ncf;
-                    current_order.fiscal_type_id = current_order.fiscal_type;
-                    current_order.ncf_expiration_date = fiscal_data.ncf_expiration_date;
-                    current_order.fiscal_sequence_id = fiscal_data.fiscal_sequence_id;
+            try {
+                var fiscal_data = await this.pos.get_fiscal_data(current_order);
+                current_order.ncf = fiscal_data.ncf;
+                current_order.fiscal_type_id = current_order.fiscal_type;
+                current_order.ncf_expiration_date = fiscal_data.ncf_expiration_date;
+                current_order.fiscal_sequence_id = fiscal_data.fiscal_sequence_id;
 
-                } catch (error) {
-                    throw error;
-                }
-
-                this.pos.set_order(current_order);
-                await super._finalizeValidation(...arguments);
-
-            } else {
-                await super._finalizeValidation(...arguments);
+            } catch (error) {
+                throw error;
             }
+
+            this.pos.set_order(current_order);
+            await super._finalizeValidation(...arguments);
+
+        } else {
+            await super._finalizeValidation(...arguments);
         }
-        else {
-            this.dialog.add(AlertDialog, {
-                title: _t('Error'),
-                body: _t('Please, select a partner to proceed with billing.'),
-            });
-        }
+        // }
+        // else {
+        //     this.dialog.add(AlertDialog, {
+        //         title: _t('Error'),
+        //         body: _t('Please, select a partner to proceed with billing.'),
+        //     });
+        // }
     },
 
     async addNewPaymentLine(paymentMethod) {
