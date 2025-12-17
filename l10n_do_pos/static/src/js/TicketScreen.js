@@ -1,4 +1,5 @@
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
