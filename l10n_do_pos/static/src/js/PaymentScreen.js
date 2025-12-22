@@ -19,13 +19,14 @@ patch(PaymentScreen.prototype, {
         var total = current_order.get_total_with_tax();
         var fiscal_type = current_order.get_fiscal_type();
 
-        if (total === 0) {
-            this.dialog.add(AlertDialog, {
-                title: _t('Sale in'),
-                body: _t('You cannot make sales in 0, please add a product with value'),
-            });
-            return false;
-        }
+        // TODO: Adjust this to allow payment late
+        // if (total === 0) {
+        //     this.dialog.add(AlertDialog, {
+        //         title: _t('Sale in'),
+        //         body: _t('You cannot make sales in 0, please add a product with value'),
+        //     });
+        //     return false;
+        // }
 
         if (this.pos.config.l10n_do_fiscal_journal) {
 

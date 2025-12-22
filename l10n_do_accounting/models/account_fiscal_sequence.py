@@ -215,9 +215,11 @@ class AccountFiscalSequence(models.Model):
         "sequence_start", "sequence_end", "state", "fiscal_type_id", "company_id"
     )
     def _validate_sequence_range(self):
-        for rec in self.filtered(lambda s: s.state != "cancelled"):
+        for rec in self.filtered(lambda l: l.state != "cancelled"):
+
             if rec.sequence_start <= 0 or rec.sequence_end <= 0:
                 raise ValidationError(_("Sequence values must be greater than zero."))
+
             if rec.sequence_start >= rec.sequence_end:
                 raise ValidationError(
                     _("End sequence must be greater than start sequence.")
@@ -227,11 +229,13 @@ class AccountFiscalSequence(models.Model):
                 ("state", "in", ("active", "queue")),
                 ("fiscal_type_id", "=", rec.fiscal_type_id.id),
                 ("company_id", "=", rec.company_id.id),
-                ("sequence_start", ">=", rec.sequence_start),
-                ("sequence_end", "<=", rec.sequence_end),
+                ("sequence_start", "<=", rec.sequence_end),
+                ("sequence_end", ">=", rec.sequence_start),
             ]
+
+            if self.search_count(domain):
                 raise ValidationError(
-                    _("You cannot use another Fiscal Sequence range.")
+                    _("You cannot use an overlapping Fiscal Sequence range.")
                 )
 
     def unlink(self):

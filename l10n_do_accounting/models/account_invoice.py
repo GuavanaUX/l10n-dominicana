@@ -142,7 +142,10 @@ class AccountInvoice(models.Model):
             )
 
     def _get_fiscal_domain(self):
-        return [('type', '=', self.move_type)]
+        if self.is_debit_note and self.move_type in ["out_invoice"]:
+            return [("type", "=", "out_debit")]
+        else:
+            return [("type", "=", self.move_type)]
 
     @api.depends("state", "journal_id")
     def _compute_is_l10n_do_fiscal_invoice(self):
@@ -413,8 +416,7 @@ class AccountInvoice(models.Model):
                 if inv.amount_total == 0:
                     raise UserError(
                         _(
-                            u"You cannot validate an invoice whose "
-                            u"total amount is equal to 0"
+                            "You cannot validate an invoice whose total amount is equal to 0"
                         )
                     )
 
@@ -466,10 +468,7 @@ class AccountInvoice(models.Model):
                     ):
                         raise UserError(
                             _(
-                                u"if the invoice amount is greater than "
-                                u"RD$250,000.00 "
-                                u"the customer should have RNC or Céd"
-                                u"for make invoice"
+                                "if the invoice amount is greater than RD$250,000.00 the customer should have RNC or Cedula for make invoice"
                             )
                         )
 

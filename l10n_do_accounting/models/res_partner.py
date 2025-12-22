@@ -65,7 +65,7 @@ class Partner(models.Model):
             ("02", "02 - Gastos por Trabajo, Suministros y Servicios"),
             ("03", "03 - Arrendamientos"),
             ("04", "04 - Gastos de Activos Fijos"),
-            ("05", u"05 - Gastos de Representación"),
+            ("05", "05 - Gastos de Representación"),
             ("06", "06 - Otras Deducciones Admitidas"),
             ("07", "07 - Gastos Financieros"),
             ("08", "08 - Gastos Extraordinarios"),
@@ -134,12 +134,12 @@ class Partner(models.Model):
 
             partner.sale_fiscal_type_id = new_fiscal_type
 
-            if new_fiscal_type and new_fiscal_type.fiscal_position_id:
-                partner.write(
-                    {
-                        "property_account_position_id": new_fiscal_type.fiscal_position_id.id
-                    }
-                )
+    @api.model
+    def _get_default_country(self):
+        try:
+            return self.env.ref("base.do")
+        except ValueError:
+            return False
 
     def _inverse_sale_fiscal_type_id(self):
         for partner in self:
@@ -162,14 +162,3 @@ class Partner(models.Model):
             "sale_fiscal_type_list": self.sale_fiscal_type_list,
             "sale_fiscal_type_vat": self.sale_fiscal_type_vat,
         }
-        
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id=view_id, view_type=view_type, **options)
-        
-        if view_type == 'form' and self.env.company.country_id.code == 'DO':
-            for node in arch.xpath("//field[@name='vat']"):
-                node.set('string', 'RNC/Cédula')
-                
-        return arch, view
-    
