@@ -1,6 +1,9 @@
 <odoo>
+    
     <template id="minimal_layout" inherit_id="web.minimal_layout" priority="100">
+        
         <script t-if="subst" position="replace">
+
             <script t-if="subst">
                 function subst() {
                     var vars = {};
@@ -64,6 +67,9 @@
                     }
                 }
             </script>
+
         </script>
+
     </template>
+
 </odoo>

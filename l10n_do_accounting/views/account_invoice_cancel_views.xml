@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    
     <record id="account_invoice_cancel_view" model="ir.ui.view">
         <field name="name">account.invoice.cancel.form</field>
         <field name="model">account.invoice.cancel</field>
@@ -33,4 +34,5 @@
         <field name="act_window_id" ref="project_task_action_to_schedule_fsm"/>
     </record> 
     -->
+
 </odoo>
