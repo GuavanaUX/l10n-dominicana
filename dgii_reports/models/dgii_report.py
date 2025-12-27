@@ -24,6 +24,10 @@ class DgiiReport(models.Model):
     _description = "DGII Report"
     _inherit = ['mail.thread']
 
+    def _company_and_children_ids(self):
+        self.ensure_one()
+        companies = self.company_id | self.company_id.child_ids
+        return companies.ids
     
     def _compute_previous_report_pending(self):
         for report in self:
@@ -560,13 +564,15 @@ class DgiiReport(models.Model):
     def get_date_tuple(date):
         return date.year, date.month
 
+    # TODO: Update to include pending invoices from branches
     def _get_pending_invoices(self, types, states):
         period = dt.strptime(self.name, '%m/%Y')
         invoice_ids = self.env['account.move'].search([
             ('fiscal_status', '=', 'normal'),
             ('payment_state', 'in', ('paid', 'in_payment')),
             ('invoice_date', '<', self.start_date),
-            ('company_id', '=', self.company_id.id),
+            # ('company_id', '=', self.company_id.id), Old
+            ('company_id', 'in', self._company_and_children_ids()), # New
             ('move_type', 'in', types),
             ('state', 'in', states),
             ('is_l10n_do_fiscal_invoice', '=', True)
@@ -574,6 +580,7 @@ class DgiiReport(models.Model):
 
         return invoice_ids
 
+    # TODO: Update to include invoices from branches
     def _get_invoices(self, states, types):
         """
         Given rec and state, return a recordset of invoices
@@ -585,7 +592,8 @@ class DgiiReport(models.Model):
         invoice_ids = self.env['account.move'].search([
             ('invoice_date', '>=', self.start_date),
             ('invoice_date', '<=', self.end_date),
-            ('company_id', '=', self.company_id.id),
+            # ('company_id', '=', self.company_id.id), Old
+            ('company_id', 'in', self._company_and_children_ids()), # New
             ('is_l10n_do_fiscal_invoice', '=', True),
             ('state', 'in', states),
             ('move_type', 'in', types)
@@ -1471,12 +1479,14 @@ class DgiiReport(models.Model):
 
         return report_lines
     
+    # TODO: Update to include data from branches
     def _get_move_lines_it1(self, box):
         domain = [
             ('move_id.state', '=', 'posted'),
             ('date', '>=', self.start_date),
             ('date', '<=', self.end_date),
-            ('balance', '>', 0)
+            ('balance', '>', 0),
+            ('move_id.company_id', 'in', self._company_and_children_ids())
         ]
         domain += [('account_id.box_attachment_a', '=', box)] if 'A' in box else [('account_id.box_it1', '=', box)]
 
