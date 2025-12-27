@@ -40,7 +40,7 @@
         "views/account_fiscal_sequence_views.xml",
         # Odoo 18 uses RNC as default string for the field display name.
         # If you want to add another field, you can uncomment the next line.
-        "views/res_company_views.xml",
+        # "views/res_company_views.xml",
         "views/account_invoice_cancel_views.xml",
         # "views/backend_js.xml",
         "views/report_templates.xml",
