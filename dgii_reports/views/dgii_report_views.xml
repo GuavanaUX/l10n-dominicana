@@ -141,9 +141,9 @@
                                     <field name="name" />
                                     <field name="quantity" />
                                     <field name="amount" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -165,9 +165,9 @@
                                     <field name="sequence" string="Box" />
                                     <field name="name" />
                                     <field name="amount" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -191,9 +191,9 @@
                                     <field name="local_purchase" string="TOTAL INVOICED"
                                         invisible="sequence in ()" />
                                     <field name="amount" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -217,9 +217,9 @@
                                     <field name="name" />
                                     <field name="quantity" />
                                     <field name="amount" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -246,9 +246,9 @@
                                     <field name="amount" string="TOTAL" invisible="sequence == 54" />
                                     <field name="coefficient" style="max-width: 45px !important;"
                                         widget="percentage" invisible="sequence != 54" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -283,9 +283,9 @@
                                     <field name="sequence" string="Box" />
                                     <field name="name" />
                                     <field name="amount" />
-                                    <field name="currency_id" invisible="1" />
-                                    <field name="dgii_report_id" invisible="1" />
-                                    <field name="display_type" invisible="1" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="dgii_report_id" column_invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                 </list>
                                 <form>
                                     <group>
@@ -411,11 +411,11 @@
         <field name="arch" type="xml">
             <list create="false" edit="false">
                 <button name="action_view_invoice" type="object" string="Invoice" icon="fa-eye" />
-                <field name="dgii_report_id" invisible="1" />
+                <field name="dgii_report_id" column_invisible="1" />
                 <field name="line" />
                 <field name="rnc_cedula" widget="dgii_reports_url" />
                 <field name="invoice_partner_id" />
-                <field name="identification_type" />
+                <field name="identification_type" column_invisible="1" />
                 <field name="expense_type" />
                 <field name="fiscal_invoice_number" widget="dgii_reports_url" />
                 <field name="modified_invoice_number" widget="dgii_reports_url" />
@@ -450,11 +450,11 @@
             <list create="false" edit="false"
                 decoration-muted="(invoiced_amount &lt; 250000) and (identification_type == '2')">
                 <button name="action_view_invoice" type="object" string="Invoice" icon="fa-eye" />
-                <field name="dgii_report_id" invisible="1" />
+                <field name="dgii_report_id" column_invisible="1" />
                 <field name="line" />
                 <field name="rnc_cedula" widget="dgii_reports_url" />
                 <field name="invoice_partner_id" />
-                <field name="identification_type" />
+                <field name="identification_type" column_invisible="1" />
                 <field name="fiscal_invoice_number" widget="dgii_reports_url" />
                 <field name="modified_invoice_number" widget="dgii_reports_url" />
                 <field name="company_name" />
@@ -488,7 +488,7 @@
         <field name="arch" type="xml">
             <list create="false" edit="false">
                 <button name="action_view_invoice" type="object" string="Invoice" icon="fa-eye" />
-                <field name="dgii_report_id" invisible="1" />
+                <field name="dgii_report_id" column_invisible="1" />
                 <field name="line" />
                 <field name="invoice_partner_id" />
                 <field name="fiscal_invoice_number" widget="dgii_reports_url" />
@@ -505,7 +505,7 @@
         <field name="arch" type="xml">
             <list create="false" edit="false">
                 <button name="action_view_invoice" type="object" string="Invoice" icon="fa-eye" />
-                <field name="dgii_report_id" invisible="1" />
+                <field name="dgii_report_id" column_invisible="1" />
                 <field name="line" />
                 <field name="legal_name" />
                 <field name="tax_id_type" />
