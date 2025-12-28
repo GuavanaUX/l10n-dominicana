@@ -1,4 +1,4 @@
-# Part of Domincana Premium.
+# Part of Dominicana Premium.
 # See LICENSE file for full copyright and licensing details.
 # © 2018 José López <jlopez@indexa.do>
 # © 2018 Gustavo Valverde <gustavo@iterativo.do>
@@ -583,7 +583,7 @@ class DgiiReport(models.Model):
     # TODO: Update to include invoices from branches
     def _get_invoices(self, states, types):
         """
-        Given rec and state, return a recordset of invoices
+        Given rec and state, return a set of records of invoices
         :param state: a list of invoice state
         :param type: a list of invoice type
         :return: filtered invoices
