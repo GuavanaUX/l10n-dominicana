@@ -419,6 +419,7 @@
                 <field name="expense_type" />
                 <field name="fiscal_invoice_number" widget="dgii_reports_url" />
                 <field name="modified_invoice_number" widget="dgii_reports_url" />
+                <field name="company_name" />
                 <field name="invoice_date" />
                 <field name="payment_date" />
                 <field name="service_total_amount" sum="Total" />
@@ -456,6 +457,7 @@
                 <field name="identification_type" />
                 <field name="fiscal_invoice_number" widget="dgii_reports_url" />
                 <field name="modified_invoice_number" widget="dgii_reports_url" />
+                <field name="company_name" />
                 <field name="income_type" />
                 <field name="invoice_date" />
                 <field name="withholding_date" />
