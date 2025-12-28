@@ -743,8 +743,8 @@ class DgiiReport(models.Model):
                     'proportionality_tax': inv.proportionality_tax,
                     'cost_itbis': inv.cost_itbis,
                     'advance_itbis': inv.advance_itbis,
-                    'purchase_perceived_itbis': 0,  # Falta computar en la fact
-                    'purchase_perceived_isr': 0,  # Falta computarlo en la fact
+                    'purchase_perceived_itbis': 0,  # TODO: Falta computarlo en la fact
+                    'purchase_perceived_isr': 0,  # TODO: Falta computarlo en la fact
                     'isr_withholding_type': inv.isr_withholding_type,
                     'withholded_itbis': inv.withholding_itbis if
                     show_payment_date else 0,

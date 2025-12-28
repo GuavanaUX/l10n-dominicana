@@ -12,6 +12,8 @@ class PaymentTerm(models.Model):
             (2, _("Credit")),
         ]
 
+    # TODO: Verify this WARNING on logs:
+    # odoo.fields: Field account.payment.term.payment_type: unknown parameter 'selection', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it
     payment_type = fields.Integer(
         string="Payment Type",
         help="Payment type to client according days of payment term",
