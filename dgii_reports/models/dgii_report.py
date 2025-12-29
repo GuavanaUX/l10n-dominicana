@@ -626,6 +626,7 @@ class DgiiReport(models.Model):
 
         return str('{:.2f}'.format(abs(amount))).ljust(12)
 
+    # Function to generate txt report lines
     def process_606_report_data(self, values):
 
         RNC = str(values['rnc_cedula'] if values['rnc_cedula'] else "").strip()
@@ -634,7 +635,6 @@ class DgiiReport(models.Model):
             values['expense_type'] if values['expense_type'] else "").strip()
         NCF = str(values['fiscal_invoice_number']).strip()
         NCM = str(values['modified_invoice_number'] if values['modified_invoice_number'] else "").strip()
-        CM = str(values['company_name'] if values['company_name'] else "").strip()
         INV_DATE = str(self._get_formatted_date( values['invoice_date'])).strip()
         PAY_DATE = str(self._get_formatted_date(values['payment_date'])).strip()
         SERV_AMOUNT = self._get_formatted_amount(values['service_total_amount']).strip()
@@ -656,7 +656,7 @@ class DgiiReport(models.Model):
             values['payment_type'] if values['payment_type'] else "").strip()
 
         return "|".join([
-            RNC, ID_TYPE, EXP_TYPE, NCF, NCM, CM, INV_DATE, PAY_DATE, SERV_AMOUNT,
+            RNC, ID_TYPE, EXP_TYPE, NCF, NCM, INV_DATE, PAY_DATE, SERV_AMOUNT,
             GOOD_AMOUNT, INV_AMOUNT, INV_ITBIS, WH_ITBIS, PROP_ITBIS,
             COST_ITBIS, ADV_ITBIS, PP_ITBIS, WH_TYPE, INC_WH, PP_ISR, ISC,
             OTHR, LEG_TIP, PAY_FORM
@@ -837,13 +837,13 @@ class DgiiReport(models.Model):
             income_dict[invoice.income_type] += abs(invoice.amount_untaxed_signed)
         return income_dict
 
+    # Function to generate txt report lines
     def process_607_report_data(self, values):
 
         RNC = str(values['rnc_cedula'] if values['rnc_cedula'] else "").strip()
         ID_TYPE = str(values['identification_type'] if values['identification_type'] else "").strip()
         NCF = str(values['fiscal_invoice_number']).strip()
         NCM = str(values['modified_invoice_number'] if values['modified_invoice_number'] else "").strip()
-        CM = str(values['company_name'] if values['company_name'] else "").strip()
         INCOME_TYPE = str(values['income_type']).strip()
         INV_DATE = str(self._get_formatted_date(values['invoice_date'])).strip()
         WH_DATE = str(self._get_formatted_date(values['withholding_date'])).strip()
@@ -865,7 +865,7 @@ class DgiiReport(models.Model):
         OTHR = self._get_formatted_amount(values['others']).strip()
 
         return "|".join([
-            RNC, ID_TYPE, NCF, NCM, CM, INCOME_TYPE, INV_DATE, WH_DATE, INV_AMOUNT,
+            RNC, ID_TYPE, NCF, NCM, INCOME_TYPE, INV_DATE, WH_DATE, INV_AMOUNT,
             INV_ITBIS, WH_ITBIS, PRC_ITBIS, WH_ISR, PCR_ISR, ISC, OTH_TAX,
             LEG_TIP, CASH, BANK, CARD, CRED, SWAP, BOND, OTHR
         ])
