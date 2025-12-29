@@ -23,6 +23,26 @@ patch(PosOrder.prototype, {
         }
     },
 
+    updatePricelistAndFiscalPosition(newPartner) {
+        if (this.takeaway) {
+            let newPartnerPricelist;
+            if (newPartner) {
+                newPartnerPricelist =
+                    this.models["product.pricelist"].find(
+                        (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
+                    ) || this.config.pricelist_id;
+            } else {
+                newPartnerPricelist = this.config.pricelist_id;
+            }
+
+            this.set_pricelist(newPartnerPricelist);
+
+            return;
+        }
+
+        return super.updatePricelistAndFiscalPosition(newPartner);
+    },
+
     set_fiscal_type(fiscal_type) {
         this.fiscal_type = fiscal_type;
         this.fiscal_type_id = fiscal_type.id;
