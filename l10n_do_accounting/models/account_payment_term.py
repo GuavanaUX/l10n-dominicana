@@ -6,30 +6,22 @@ from odoo.tools.float_utils import float_compare
 class PaymentTerm(models.Model):
     _inherit = "account.payment.term"
 
-    def _get_payment_type_selection(self):
-        return [
-            (1, _("Counted")),
-            (2, _("Credit")),
-        ]
-
-    # TODO: Verify this WARNING on logs:
-    # odoo.fields: Field account.payment.term.payment_type: unknown parameter 'selection', if this is an actual parameter you may want to override the method _valid_field_parameter on the relevant model in order to allow it
-    payment_type = fields.Integer(
+    payment_type = fields.Selection(
+        selection=[
+            ("01", _("Counted")),
+            ("02", _("Credit")),
+        ],
         string="Payment Type",
-        help="Payment type to client according days of payment term",
-        selection="_get_payment_type_selection",
+        help="Payment type according to payment term definition",
         compute="_compute_payment_type",
         store=True,
         readonly=True,
     )
 
-    payment_type_name = fields.Char(
-        store=True,
-        readonly=True,
-    )
-
     @api.depends(
-        "line_ids.nb_days", "line_ids.value_amount", "line_ids.delay_type", "line_ids"
+        "line_ids.nb_days",
+        "line_ids.value_amount",
+        "line_ids.delay_type",
     )
     def _compute_payment_type(self):
         for term in self:
@@ -49,9 +41,4 @@ class PaymentTerm(models.Model):
                 line_is_counted(line) for line in term.line_ids
             )
 
-            if all_lines_counted:
-                term.payment_type = 1
-                term.payment_type_name = "counted"
-            else:
-                term.payment_type = 2
-                term.payment_type_name = "credit"
+            term.payment_type = "01" if all_lines_counted else "02"
