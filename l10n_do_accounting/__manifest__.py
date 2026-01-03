@@ -34,7 +34,7 @@
         "wizard/account_invoice_debit_views.xml",
         # "views/account_report.xml",
         "views/account_invoice_views.xml",
-        "views/account_payment_term.xml",
+        # "views/account_payment_term.xml",
         "views/account_journal_views.xml",
         "views/res_partner_views.xml",
         "views/account_fiscal_sequence_views.xml",
