@@ -100,10 +100,9 @@ patch(PaymentScreen.prototype, {
 
     async _finalizeValidation() {
         var current_order = this.pos.get_order();
-        // const current_partner = this.currentOrder.get_partner();
+        var total = current_order.get_total_with_tax();
 
-        // if (current_partner) {
-        if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf) {
+        if (this.pos.config.l10n_do_fiscal_journal && !current_order.to_invoice && !current_order.ncf && total > 0) {
 
             try {
                 var fiscal_data = await this.pos.get_fiscal_data(current_order);
@@ -120,15 +119,10 @@ patch(PaymentScreen.prototype, {
             await super._finalizeValidation(...arguments);
 
         } else {
+            current_order.is_payment_receivable = true;
+            this.pos.set_order(current_order);
             await super._finalizeValidation(...arguments);
         }
-        // }
-        // else {
-        //     this.dialog.add(AlertDialog, {
-        //         title: _t('Error'),
-        //         body: _t('Please, select a partner to proceed with billing.'),
-        //     });
-        // }
     },
 
     async addNewPaymentLine(paymentMethod) {
