@@ -30,7 +30,6 @@ class PosOrder(models.Model):
     is_used_in_order = fields.Boolean(
         default=False
     )
-    is_payment_receivable = fields.Boolean(default=False)
 
     def _prepare_invoice_vals(self):
         """
@@ -104,66 +103,6 @@ class PosOrder(models.Model):
 
                 order._generate_pos_order_invoice()
             
-            if order.is_payment_receivable:
-
-                if not order.partner_id:
-                    if not order.config_id.pos_partner_id:
-                        raise UserError(_('This point of sale not have default customer, please set default customer in config POS'))
-
-                    order.write({
-                        'partner_id': order.config_id.pos_partner_id.id
-                    })
-
-                invoice = self.env['account.move'].search([
-                    ('partner_id', '=', order.partner_id.id),
-                    ('move_type', '=', 'out_invoice'),
-                    ('state', '=', 'posted'),
-                    ('payment_state', '!=', 'paid'),
-                    ('company_id', '=', order.company_id.id),
-                ], order='invoice_date desc, id desc', limit=1)
-
-                if not invoice:
-                    raise UserError(
-                        _('No pending invoice found for customer %s.') %
-                        order.partner_id.display_name
-                    )
-
-                order.account_move = invoice
-                order.state = 'invoiced'
-
-                order._apply_invoice_payments(
-                    order.session_id.state == 'closed'
-                )
-
-                # payment_moves = self.env['account.move']
-
-                # for pos_payment in order.payment_ids.filtered(lambda p: p.amount > 0):
-                    
-                #     account_payment = self.env['account.payment'].create({
-                #         'amount': pos_payment.amount,
-                #         'payment_type': 'inbound',
-                #         'date': fields.Date.context_today(self),
-                #         'partner_id': pos_payment.partner_id.id,
-                #         'currency_id': pos_payment.currency_id.id,
-                #         'pos_session_id': pos_payment.session_id.id,
-                #         'payment_reference': _('%s POS payments from %s') % (pos_payment.payment_method_id.name, order.name),
-                #         'pos_payment_method_id': pos_payment.payment_method_id.id,
-                #         'journal_id': pos_payment.session_id.config_id.invoice_journal_id.id,
-                #     })
-                #     account_payment.action_post()
-
-                #     payment_moves |= account_payment.move_id
-
-                # lines_to_reconcile = (
-                #     invoice.line_ids +
-                #     payment_moves.line_ids
-                # ).filtered(
-                #     lambda l: l.account_id.internal_type == 'receivable'
-                #     and not l.reconciled
-                # )
-
-                # lines_to_reconcile.reconcile()
-
         return pos_data
 
     def get_next_fiscal_sequence(self, fiscal_type_id, company_id, payments):
