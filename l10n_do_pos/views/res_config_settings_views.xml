@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="inhertit_res_config_settings_view_form" model="ir.ui.view">
+    <record id="inherit_res_config_settings_view_form" model="ir.ui.view">
         <field name="name">l10n.do.pos.config.view.form</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
@@ -21,6 +21,9 @@
                     <field name="allow_empty_orders" />
                 </setting>
             </xpath>
+
+            <xpath expr="//block[@id='pos_inventory_section']" position="after">
+                <block title="Technical" id="pos_technical_section">
                     <setting id="update_quantities_stock_setting" groups="base.group_no_one">
                         <span class="o_form_label">Order history</span>
                         <div class="text-muted">
@@ -29,12 +32,13 @@
                         <field name="l10n_do_type_limit_order_history" colspan="4"
                             nolabel="1" widget="radio" />
                         <div class="row" invisible="l10n_do_type_limit_order_history != 'days'">
-                            <label for="l10n_do_type_limit_order_history_days" string="Max quantity days" class="col-lg-3 o_light_label" />
+                            <label for="l10n_do_type_limit_order_history_days"
+                                string="Max quantity days" class="col-lg-3 o_light_label" />
                             <field name="l10n_do_type_limit_order_history_days" class="oe_inline" />
                         </div>
                     </setting>
                 </block>
-            </xpath> -->
+            </xpath>
         </field>
     </record>
 </odoo>
