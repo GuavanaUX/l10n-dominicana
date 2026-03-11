@@ -15,8 +15,12 @@
                 </setting>
             </xpath>
 
-            <!-- <xpath expr="//block[@id='pos_inventory_section']" position="after">
-                <block title="Technicle" id="pos_technicle_section">
+            <xpath expr="//setting[@id='order_edit_tracking']" position="after">
+                <setting
+                    help="If checked, the PoS will allow to validate orders with no products. For example, to pay for pending orders at the PoS">
+                    <field name="allow_empty_orders" />
+                </setting>
+            </xpath>
                     <setting id="update_quantities_stock_setting" groups="base.group_no_one">
                         <span class="o_form_label">Order history</span>
                         <div class="text-muted">

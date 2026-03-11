@@ -20,3 +20,7 @@ class ResConfigSettings(models.TransientModel):
         related='pos_config_id.l10n_do_type_limit_order_history_days',
         readonly=False
     )
+    allow_empty_orders = fields.Boolean(
+        related='pos_config_id.allow_empty_orders',
+        readonly=False
+    )

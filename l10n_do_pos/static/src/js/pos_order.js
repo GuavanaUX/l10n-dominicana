@@ -14,7 +14,6 @@ patch(PosOrder.prototype, {
             this.ncf_expiration_date = this.ncf_expiration_date || false;
             this.fiscal_type_id = this.fiscal_type_id || false;
             this.fiscal_sequence_id = this.fiscal_sequence_id || false;
-            this.is_payment_receivable = this.is_payment_receivable || false;
             var partner = this.get_partner();
             if (partner && partner.sale_fiscal_type_id) {
                 this.set_fiscal_type(this.get_fiscal_type_by_id(partner.sale_fiscal_type_id.id));
