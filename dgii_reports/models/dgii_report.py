@@ -28,6 +28,12 @@ class DgiiReport(models.Model):
         self.ensure_one()
         companies = self.company_id | self.company_id.child_ids
         return companies.ids
+
+    @api.constrains('name', 'company_id')
+    def _validate_company(self):
+        for company in self.env.company:
+            if company.parent_id:
+                raise ValidationError(_('You should generate the report for the parent company of the group.'))
     
     def _compute_previous_report_pending(self):
         for report in self:
