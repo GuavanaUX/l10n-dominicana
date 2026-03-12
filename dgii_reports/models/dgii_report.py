@@ -133,11 +133,12 @@ class DgiiReport(models.Model):
                 duplicates = self.env['dgii.reports'].search_count([
                     ('name', '=', rec.name),
                     ('company_id', '=', rec.company_id.id),
+                    ('active', '=', True),
                     ('id', '!=', rec.id)
                 ])
                 if duplicates > 0:
                     raise ValidationError(
-                        _('You cannot have more than one report per period.')
+                        _('You cannot have more than one report active per period.')
                     )
 
 
@@ -1909,7 +1910,8 @@ class DgiiReport(models.Model):
         reports_without_sent = self.env['dgii.reports'].search([
             ('state', '!=', 'sent'),
             ('company_id', '=', self.company_id.id),
-            ('end_date', '<', self.end_date)
+            ('end_date', '<', self.end_date),
+            ('active', '=', True)
         ])
 
         if reports_without_sent:
