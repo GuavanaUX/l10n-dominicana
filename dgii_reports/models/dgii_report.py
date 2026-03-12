@@ -91,6 +91,7 @@ class DgiiReport(models.Model):
         string='End Date',
         store=True
     )
+    active = fields.Boolean(string='Active', default=True)
     
     @api.depends('name')
     def _compute_dates(self):
