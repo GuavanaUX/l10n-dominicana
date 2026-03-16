@@ -26,7 +26,7 @@ class DgiiReport(models.Model):
 
     def _company_and_children_ids(self):
         self.ensure_one()
-        companies = self.company_id | self.company_id.child_ids
+        companies = self.env['res.company'].search([('id', 'child_of', self.company_id.id)])
         return companies.ids
 
     @api.constrains('name', 'company_id')
@@ -572,15 +572,14 @@ class DgiiReport(models.Model):
     def get_date_tuple(date):
         return date.year, date.month
 
-    # TODO: Update to include pending invoices from branches
     def _get_pending_invoices(self, types, states):
         period = dt.strptime(self.name, '%m/%Y')
+        company_ids = self._company_and_children_ids()
         invoice_ids = self.env['account.move'].search([
             ('fiscal_status', '=', 'normal'),
             ('payment_state', 'in', ('paid', 'in_payment')),
             ('invoice_date', '<', self.start_date),
-            # ('company_id', '=', self.company_id.id), Old
-            ('company_id', 'in', self._company_and_children_ids()), # New
+            ('company_id', 'in', company_ids),
             ('move_type', 'in', types),
             ('state', 'in', states),
             ('is_l10n_do_fiscal_invoice', '=', True)
@@ -588,7 +587,6 @@ class DgiiReport(models.Model):
 
         return invoice_ids
 
-    # TODO: Update to include invoices from branches
     def _get_invoices(self, states, types):
         """
         Given rec and state, return a set of records of invoices
@@ -596,12 +594,11 @@ class DgiiReport(models.Model):
         :param type: a list of invoice type
         :return: filtered invoices
         """
-
+        company_ids = self._company_and_children_ids()
         invoice_ids = self.env['account.move'].search([
             ('invoice_date', '>=', self.start_date),
             ('invoice_date', '<=', self.end_date),
-            # ('company_id', '=', self.company_id.id), Old
-            ('company_id', 'in', self._company_and_children_ids()), # New
+            ('company_id', 'in', company_ids),
             ('is_l10n_do_fiscal_invoice', '=', True),
             ('state', 'in', states),
             ('move_type', 'in', types)
@@ -1491,14 +1488,14 @@ class DgiiReport(models.Model):
 
         return report_lines
     
-    # TODO: Update to include data from branches
     def _get_move_lines_it1(self, box):
+        company_ids = self._company_and_children_ids()
         domain = [
             ('move_id.state', '=', 'posted'),
             ('date', '>=', self.start_date),
             ('date', '<=', self.end_date),
             ('balance', '>', 0),
-            ('move_id.company_id', 'in', self._company_and_children_ids())
+            ('move_id.company_id', 'in', company_ids)
         ]
         domain += [('account_id.box_attachment_a', '=', box)] if 'A' in box else [('account_id.box_it1', '=', box)]
 
