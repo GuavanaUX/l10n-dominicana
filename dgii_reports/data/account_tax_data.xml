@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo noupdate="0">
+<odoo noupdate="1">
     <!-- Sales -->
     <record id="account.1_tax_18_sale" model="account.tax">
         <field name="l10n_do_tax_type">itbis</field>
@@ -13,6 +13,21 @@
     <record id="account.1_ret_5_income_gov" model="account.tax">
         <field name="l10n_do_tax_type">isr</field>
         <field name="isr_retention_type">07</field>
+    </record>
+    <record id="1_tax_0_sale_ecf" model="account.tax">
+        <field name="name">ITBIS 0% Sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="l10n_do_tax_type">itbis</field>
+        <field name="description">ITBIS 0% Sale</field>
+        <field name="invoice_label">ITBIS 0% Sale</field>
+    </record>
+    <record id="account.1_tax_0_sale" model="account.tax">
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_0" />
     </record>
 
     <!-- Purchase -->
@@ -46,11 +61,11 @@
     </record>
     <record id="account.1_ret_100_tax_person" model="account.tax">
         <field name="l10n_do_tax_type">ritbis</field>
-        <field name="tax_group_id" ref="account.1_tax_group_itbis_18"/>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_18" />
     </record>
     <record id="account.1_ret_100_tax_security" model="account.tax">
         <field name="l10n_do_tax_type">ritbis</field>
-        <field name="tax_group_id" ref="account.1_tax_group_itbis_18"/>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_18" />
     </record>
     <record id="account.1_tax_18_serv_cost" model="account.tax">
         <field name="l10n_do_tax_type">itbis_cost</field>
@@ -85,18 +100,34 @@
     </record>
     <record id="account.1_ret_100_tax_nonprofit" model="account.tax">
         <field name="l10n_do_tax_type">ritbis</field>
-        <field name="tax_group_id" ref="account.1_tax_group_itbis_18"/>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_18" />
     </record>
     <record id="account.1_ret_30_tax_moral" model="account.tax">
         <field name="l10n_do_tax_type">ritbis</field>
-        <field name="tax_group_id" ref="account.1_tax_group_itbis_retencion_30"/>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_retencion_30" />
     </record>
     <record id="account.1_ret_75_tax_nonformal" model="account.tax">
         <field name="l10n_do_tax_type">ritbis</field>
-        <field name="tax_group_id" ref="account.1_tax_group_ret"/>
+        <field name="tax_group_id" ref="account.1_tax_group_ret" />
     </record>
     <record id="account.1_ret_27_income_remittance" model="account.tax">
         <field name="l10n_do_tax_type">isr</field>
         <field name="isr_retention_type">03</field>
     </record>
+    <record id="1_tax_0_purchase_ecf" model="account.tax">
+        <field name="name">ITBIS 0% Purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="l10n_do_tax_type">itbis</field>
+        <field name="description">ITBIS 0% Purchase</field>
+        <field name="invoice_label">ITBIS 0% Purchase</field>
+    </record>
+    <record id="account.1_tax_0_purch" model="account.tax">
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="account.1_tax_group_itbis_0" />
+    </record>
+
 </odoo>
