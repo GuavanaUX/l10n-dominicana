@@ -42,54 +42,31 @@
       </div>
     </xpath>
 
-    <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
-      <div class="col-6" name="address_same_as_shipping">
-        <t t-set="address">
-          <div class="d-flex justify-content-between">
-            <div style="flex: 1;">
-              <address class="mb-0" t-field="o.partner_id"
-                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-              <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
-                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                  t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label" />
-                <t
-                  t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
-              </div>
-            </div>
+    <xpath expr="//div[@name='address_same_as_shipping']" position="replace" />
+    <xpath expr="//div[@name='no_shipping']" position="replace" />
 
+    <xpath expr="//div[hasclass('clearfix')]" position="before">
+      <t t-if="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
+        <div class="row mt-4 mb-4">
+          <div class="col-6">
+            <address class="mb-0" t-field="o.partner_id"
+              t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+            <div t-if="o.partner_id.vat">
+              <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                t-out="o.company_id.account_fiscal_country_id.vat_label" />
+                    <t t-else="">Tax ID</t>: <span
+                t-field="o.partner_id.vat" />
+            </div>
+          </div>
+
+          <div class="col-6 text-end">
             <div
-              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence"
-              class="ps-3" style="flex: 1;">
+              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence">
               <t t-call="l10n_do_accounting.fiscal_info" />
             </div>
           </div>
-        </t>
-      </div>
-    </xpath>
-
-    <xpath expr="//div[@name='no_shipping']" position="replace">
-      <div class="col-6" name="no_shipping">
-        <t t-set="address">
-          <div class="d-flex justify-content-between">
-            <div style="flex: 1;">
-              <address class="mb-0" t-field="o.partner_id"
-                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-              <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
-                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                  t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label" />
-                <t
-                  t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
-              </div>
-            </div>
-
-            <div
-              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence"
-              class="ps-3" style="flex: 1;">
-              <t t-call="l10n_do_accounting.fiscal_info" />
-            </div>
-          </div>
-        </t>
-      </div>
+        </div>
+      </t>
     </xpath>
 
     <xpath expr="//div[@name='reference']" position="attributes">
