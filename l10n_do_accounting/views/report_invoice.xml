@@ -1,72 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <template id="receiver_fiscal_info">
-        <div t-if="o.partner_id.vat">
-            <strong>
-                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                <t t-else="">Tax ID</t><span t-if="o.move_type in ('out_invoice', 'out_refund')"> Customer: </span><span t-else=""> Vendor: </span> </strong><span t-field="o.partner_id.vat"/>
-        </div>                        
-        <strong>Name or Corporate Name:</strong> <span t-field="o.partner_id.name"/>
-        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
-    </template>
+  <template id="fiscal_info">
+    <div class="first-page">
+      <h5 t-if="o.fiscal_type_id">
+        <t t-if="o.fiscal_type_id.prefix == 'B13'">
+          <span t-field="o.fiscal_type_id.name" />
+        </t>
+        <t t-else=""> Invoice of <span t-field="o.fiscal_type_id.name" />
+        </t>
+      </h5>
+      <div t-if="o.ref">
+        <strong>
+          <t t-if="'E' in o.fiscal_type_id.prefix">e-NCF:</t>
+          <t t-else="">NCF:</t>
+        </strong>
+        <span t-field="o.ref" />
+      </div>
+      <div t-if="o.move_type in ['in_refund', 'out_refund'] and o.origin_out">
+        <strong>NCF modified:</strong>
+        <span t-field="o.origin_out" />
+      </div>
+      <div id="fiscal_exp_date"
+        t-if="o.move_type in ['out_invoice','out_refund'] and o.state == 'posted' and o.ref 
+                 and o.fiscal_type_id and o.fiscal_type_id.prefix[1:] not in ('32','34','02') 
+                 and o.ncf_expiration_date">
+        <strong>
+          <t t-if="ecf_representation">Expiration e-NCF:</t>
+          <t t-else="">Valid until:</t>
+        </strong>
+        <span t-field="o.ncf_expiration_date" />
+      </div>
+      <h5></h5>
+    </div>
+  </template>
 
-    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+  <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+    <xpath expr="//div[hasclass('row')][1]" position="before">
+      <t t-set="is_l10n_do_fiscal_invoice"
+        t-value="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence" />
+      <t t-if="is_l10n_do_fiscal_invoice">
+        <t t-call="l10n_do_accounting.fiscal_info" />
+      </t>
+    </xpath>
 
-        <xpath expr="//div[hasclass('row')][1]" position="attributes">
-            <attribute name="t-if">not (o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence)</attribute>
-        </xpath>
-        
-        <xpath expr="//div[@name='invoice_date']" position="attributes">
-            <attribute name="t-if">not l10n_do_fiscal_invoice</attribute>
-        </xpath>
+    <xpath expr="//div[@name='reference']" position="attributes">
+      <attribute name="t-if">not is_l10n_do_fiscal_invoice</attribute>
+    </xpath>
 
-        <xpath expr="//div[@name='reference']" position="attributes">
-            <attribute name="t-if">not l10n_do_fiscal_invoice</attribute>
-        </xpath>
-
-        <xpath expr="//div[hasclass('row')][1]" position="after">
-            <t t-set="l10n_do_fiscal_invoice" t-value="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence"/>
-            <t t-if="l10n_do_fiscal_invoice">
-                <div class="col-6" t-if="o.company_id.external_report_layout_id and o.company_id.external_report_layout_id.xml_id != 'web.external_layout_standard'">
-                    <br/>
-                    <div t-if="not forced_vat">
-                        <t t-if="o.company_id.vat">
-                            <strong>
-                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="company_inv_tax_id_label"/>
-                            <t t-else="">Tax ID</t>: </strong><span t-field="o.company_id.vat"/>
-                        </t>
-                    </div>
-                    <div t-if="o.invoice_date">
-                        <strong>Date:</strong> <span t-field="o.invoice_date"/>
-                    </div>
-                </div>
-                <div class="row pt-2">
-                    <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
-                        <div class="col-6" name="fiscal_address_not_same_as_shipping">
-                            <t t-call="l10n_do_accounting.receiver_fiscal_info"/>
-                        </div>
-                        <div class="col-6">
-                            <div groups="account.group_delivery_invoice_address">
-                                <strong>Shipping Address:</strong>
-                                <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-elif="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
-                        <div class="col-6" name="fiscal_address_same_as_shipping">
-                            <t t-call="l10n_do_accounting.receiver_fiscal_info"/>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <div class="col-6" name="fiscal_no_shipping">
-                            <t t-call="l10n_do_accounting.receiver_fiscal_info"/>
-                        </div>
-                    </t>
-                </div>
-            </t>
-        </xpath>
-
-    </template>
+  </template>
 
 </odoo>
