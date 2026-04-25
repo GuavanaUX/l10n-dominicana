@@ -2,50 +2,98 @@
 <odoo>
 
   <template id="fiscal_info">
-    <div class="first-page">
-      <h5 t-if="o.fiscal_type_id">
-        <t t-if="o.fiscal_type_id.prefix == 'B13'">
-          <span t-field="o.fiscal_type_id.name" />
-        </t>
-        <t t-else=""> Invoice of <span t-field="o.fiscal_type_id.name" />
-        </t>
-      </h5>
-      <div t-if="o.ref">
-        <strong>
-          <t t-if="'E' in o.fiscal_type_id.prefix">e-NCF:</t>
-          <t t-else="">NCF:</t>
-        </strong>
-        <span t-field="o.ref" />
-      </div>
-      <div t-if="o.move_type in ['in_refund', 'out_refund'] and o.origin_out">
-        <strong>NCF modified:</strong>
-        <span t-field="o.origin_out" />
-      </div>
-      <div id="fiscal_exp_date"
-        t-if="o.move_type in ['out_invoice','out_refund'] and o.state == 'posted' and o.ref 
+    <h5 t-if="o.fiscal_type_id">
+      <t t-if="o.fiscal_type_id.prefix == 'B13'">
+        <span t-field="o.fiscal_type_id.name" />
+      </t>
+      <t t-else="">Invoice of <span t-field="o.fiscal_type_id.name" />
+      </t>
+    </h5>
+    <div t-if="o.ref">
+      <strong>
+        <t t-if="'E' in o.fiscal_type_id.prefix">e-NCF:</t>
+        <t t-else="">NCF:</t>
+      </strong>
+      <span t-field="o.ref" />
+    </div>
+    <div t-if="o.move_type in ['in_refund', 'out_refund'] and o.origin_out">
+      <strong>NCF modified:</strong>
+      <span t-field="o.origin_out" />
+    </div>
+    <div id="fiscal_exp_date"
+      t-if="o.move_type in ['out_invoice','out_refund'] and o.state == 'posted' and o.ref 
                  and o.fiscal_type_id and o.fiscal_type_id.prefix[1:] not in ('32','34','02') 
                  and o.ncf_expiration_date">
-        <strong>
-          <t t-if="ecf_representation">Expiration e-NCF:</t>
-          <t t-else="">Valid until:</t>
-        </strong>
-        <span t-field="o.ncf_expiration_date" />
-      </div>
-      <h5></h5>
+      <strong>
+        <t t-if="ecf_representation">Expiration e-NCF:</t>
+        <t t-else="">Valid until:</t>
+      </strong>
+      <span t-field="o.ncf_expiration_date" />
     </div>
+    <h5></h5>
   </template>
 
   <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
-    <xpath expr="//div[hasclass('row')][1]" position="before">
-      <t t-set="is_l10n_do_fiscal_invoice"
-        t-value="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence" />
-      <t t-if="is_l10n_do_fiscal_invoice">
+
+    <xpath expr="//div[@name='address_not_same_as_shipping']//address" position="before">
+      <div
+        t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence">
         <t t-call="l10n_do_accounting.fiscal_info" />
-      </t>
+      </div>
+    </xpath>
+
+    <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+      <div class="col-6" name="address_same_as_shipping">
+        <t t-set="address">
+          <div class="d-flex justify-content-between">
+            <div style="flex: 1;">
+              <address class="mb-0" t-field="o.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+              <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
+                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                  t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label" />
+                <t
+                  t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
+              </div>
+            </div>
+
+            <div
+              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence"
+              class="ps-3" style="flex: 1;">
+              <t t-call="l10n_do_accounting.fiscal_info" />
+            </div>
+          </div>
+        </t>
+      </div>
+    </xpath>
+
+    <xpath expr="//div[@name='no_shipping']" position="replace">
+      <div class="col-6" name="no_shipping">
+        <t t-set="address">
+          <div class="d-flex justify-content-between">
+            <div style="flex: 1;">
+              <address class="mb-0" t-field="o.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+              <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
+                <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                  t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label" />
+                <t
+                  t-else="">Tax ID</t>: <span t-field="o.partner_id.vat" />
+              </div>
+            </div>
+
+            <div
+              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence"
+              class="ps-3" style="flex: 1;">
+              <t t-call="l10n_do_accounting.fiscal_info" />
+            </div>
+          </div>
+        </t>
+      </div>
     </xpath>
 
     <xpath expr="//div[@name='reference']" position="attributes">
-      <attribute name="t-if">not is_l10n_do_fiscal_invoice</attribute>
+      <attribute name="t-if">not o.is_l10n_do_fiscal_invoice</attribute>
     </xpath>
 
   </template>
