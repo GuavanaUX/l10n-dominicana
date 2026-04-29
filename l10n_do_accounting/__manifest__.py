@@ -43,8 +43,8 @@
         # "views/res_company_views.xml",
         "views/account_invoice_cancel_views.xml",
         # "views/backend_js.xml",
-        #"views/report_templates.xml",
-         "views/report_invoice.xml",
+        "views/report_templates.xml",
+        "views/report_invoice.xml",
         "views/layouts.xml",
     ],
     # only loaded in demonstration mode

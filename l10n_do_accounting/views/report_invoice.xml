@@ -1,77 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-  <template id="fiscal_info">
-    <h5 t-if="o.fiscal_type_id">
-      <t t-if="o.fiscal_type_id.prefix == 'B13'">
-        <span t-field="o.fiscal_type_id.name" />
-      </t>
-      <t t-else="">Invoice of <span t-field="o.fiscal_type_id.name" />
-      </t>
-    </h5>
-    <div t-if="o.ref">
-      <strong>
-        <t t-if="'E' in o.fiscal_type_id.prefix">e-NCF:</t>
-        <t t-else="">NCF:</t>
-      </strong>
-      <span t-field="o.ref" />
-    </div>
-    <div t-if="o.move_type in ['in_refund', 'out_refund'] and o.origin_out">
-      <strong>NCF modified:</strong>
-      <span t-field="o.origin_out" />
-    </div>
-    <div id="fiscal_exp_date"
-      t-if="o.move_type in ['out_invoice','out_refund'] and o.state == 'posted' and o.ref 
-                 and o.fiscal_type_id and o.fiscal_type_id.prefix[1:] not in ('32','34','02') 
-                 and o.ncf_expiration_date">
-      <strong>
-        <t t-if="ecf_representation">Expiration e-NCF:</t>
-        <t t-else="">Valid until:</t>
-      </strong>
-      <span t-field="o.ncf_expiration_date" />
-    </div>
-    <h5></h5>
-  </template>
-
   <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-    <xpath expr="//div[@name='address_not_same_as_shipping']//address" position="before">
-      <div
-        t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence">
-        <t t-call="l10n_do_accounting.fiscal_info" />
-      </div>
-    </xpath>
-
-    <xpath expr="//div[@name='address_same_as_shipping']" position="replace" />
-    <xpath expr="//div[@name='no_shipping']" position="replace" />
+    <xpath expr="//div[hasclass('row')]" position="replace" />
 
     <xpath expr="//div[hasclass('clearfix')]" position="before">
-      <t t-if="o.partner_shipping_id and (o.partner_shipping_id == o.partner_id)">
-        <div class="row mt-4 mb-4">
-          <div class="col-6">
-            <address class="mb-0" t-field="o.partner_id"
-              t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <div t-if="o.partner_id.vat">
-              <t t-if="o.company_id.account_fiscal_country_id.vat_label"
-                t-out="o.company_id.account_fiscal_country_id.vat_label" />
-                    <t t-else="">Tax ID</t>: <span
-                t-field="o.partner_id.vat" />
+      <div class="row">
+        <div class="col-6">
+          <t t-set="information_block">
+            <div>
+              <strong>Cliente:</strong>
+              <span t-field="o.partner_id.name" />
             </div>
-          </div>
 
-          <div class="col-6 text-end">
-            <div
-              t-if="o.is_l10n_do_fiscal_invoice and o.is_invoice() and o.fiscal_type_id and o.fiscal_type_id.assigned_sequence">
-              <t t-call="l10n_do_accounting.fiscal_info" />
+            <div t-if="o.partner_id.vat">
+              <strong>RNC:</strong>
+              <span t-field="o.partner_id.vat" />
             </div>
-          </div>
+          </t>
         </div>
-      </t>
+        <t t-set="address">
+          <div class="col-6">
+
+          </div>
+        </t>
+      </div>
     </xpath>
 
     <xpath expr="//div[@name='reference']" position="attributes">
       <attribute name="t-if">not o.is_l10n_do_fiscal_invoice</attribute>
     </xpath>
+
+    <xpath expr="//div[@name='invoice_date']" position="attributes">
+      <attribute name="t-if">not o.is_l10n_do_fiscal_invoice</attribute>
+    </xpath>
+
+    <xpath expr="//div[@name='due_date']" position="attributes">
+      <attribute name="t-if">not o.is_l10n_do_fiscal_invoice</attribute>
+    </xpath>
+
+    <!-- TABLE -->
+
+    <xpath expr="//t[@t-set='current_total']" position="after">
+      <t t-set="line_tax" t-value="0" />
+    </xpath>
+
+    <!-- FOREACH -->
+
+    <xpath expr="//t[@t-foreach]/t[@t-set='current_total']" position="after">
+      <t t-set="line_tax" t-value="line.price_total - line.price_subtotal" />
+    </xpath>
+
+    <!-- Quantity -->
+
+    <xpath expr="//th[@name='th_quantity']" position="replace" />
+    <xpath expr="//td[@name='td_quantity']" position="replace" />
+
+    <xpath expr="//th[@name='th_description']" position="before">
+      <th name="th_quantity" class="text-center">
+        <span>Cantidad</span>
+      </th>
+    </xpath>
+
+    <xpath expr="//td[@name='account_invoice_line_name']" position="before">
+      <td name="td_quantity" class="o_td_quantity text-center">
+        <span t-field="line.quantity" class="text-nowrap">3.00</span>
+      </td>
+    </xpath>
+
+    <!-- Description -->
+
+    <xpath expr="//th[@name='th_description']" position="attributes">
+      <attribute name="class">text-center</attribute>
+    </xpath>
+
+    <!-- Measure unit -->
+
+    <xpath expr="//th[@name='th_description']" position="after">
+      <th name="th_measure_unit" class="text-center">
+        <span>Unidad de medida</span>
+      </th>
+    </xpath>
+    <xpath expr="//td[@name='account_invoice_line_name']" position="after">
+      <td name="td_measure_unit" class="text-center">
+        <span t-field="line.product_uom_id" class="text-center"></span>
+      </td>
+    </xpath>
+
+    <!-- Price Unit -->
+
+    <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+      <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+    </xpath>
+
+    <!-- Taxes -->
+
+    <xpath expr="//th[@name='th_taxes']" position="replace">
+      <th name="th_taxes"
+        t-attf-class="text-center {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+        <span>ITBIS</span>
+      </th>
+    </xpath>
+
+    <xpath expr="//td[@name='td_taxes']" position="replace">
+      <td name="tax_line" class="text-end o_price_total">
+        <span class="text-nowrap" t-out="line_tax"
+          t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+      </td>
+    </xpath>
+
+    <!-- Price Total -->
+
+    <xpath expr="//th[@name='th_subtotal']" position="replace">
+      <th name="th_subtotal" class="text-end">
+        <span>Valor</span>
+      </th>
+    </xpath>
+
+    <xpath expr="//td[@name='td_subtotal']" position="replace">
+      <td name="td_subtotal" class="text-end o_price_total">
+        <span class="text-nowrap" t-field="line.price_total">27.00</span>
+      </td>
+    </xpath>
+
+    <!-- SUBTOTAL -->
+
+    <xpath expr="//strong[hasclass('mr16')]" position="replace">
+      <strong class="mr16">Subtotal Engraved</strong>
+    </xpath>
+
+    <xpath expr="//p[@name='payment_communication']" position="replace" />
 
   </template>
 
