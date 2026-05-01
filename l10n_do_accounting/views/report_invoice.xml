@@ -44,12 +44,17 @@
 
     <xpath expr="//t[@t-set='current_total']" position="after">
       <t t-set="line_tax" t-value="0" />
+      <t t-set="exempt_total" t-value="0" />
     </xpath>
 
     <!-- FOREACH -->
 
     <xpath expr="//t[@t-foreach]/t[@t-set='current_total']" position="after">
-      <t t-set="line_tax" t-value="line.price_total - line.price_subtotal" />
+      <t t-set="line_tax_exempt" t-value="not any(t.amount > 0 for t in line.tax_ids)" />
+      <t t-set="line_tax"
+        t-value="line.price_subtotal * sum(t.amount / 100.0 for t in line.tax_ids if t.amount > 0)" />
+      <t t-set="exempt_total"
+        t-value="exempt_total + (line.price_subtotal if line_tax_exempt and line.display_type == 'product' else 0)" />
     </xpath>
 
     <!-- Quantity -->
@@ -105,8 +110,13 @@
 
     <xpath expr="//td[@name='td_taxes']" position="replace">
       <td name="tax_line" class="text-end o_price_total">
-        <span class="text-nowrap" t-out="line_tax"
-          t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+        <t t-if="line_tax_exempt">
+          <span class="text-nowrap">E</span>
+        </t>
+        <t t-else="">
+          <span class="text-nowrap" t-out="line_tax"
+            t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+        </t>
       </td>
     </xpath>
 
