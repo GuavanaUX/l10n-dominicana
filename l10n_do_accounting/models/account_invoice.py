@@ -511,16 +511,23 @@ class AccountInvoice(models.Model):
                             ).format(inv.origin_out, inv.partner_id.name)
                         )
 
-                    delta_time = inv.invoice_date - origin_invoice.invoice_date
+                    inv_date = inv.invoice_date or inv.date
+                    origin_date = origin_invoice.invoice_date or origin_invoice.date
 
-                    if delta_time.days > 30 and inv.line_ids.filtered(
-                        lambda l: l.tax_line_id
-                        and "itbis" in l.tax_line_id.name.lower()
+                    if not inv_date or not origin_date:
+                        raise UserError(
+                            _("Unable to validate dates: one of the invoices has no date assigned.")
+                        )
+
+                    delta_time = (inv_date - origin_date).days
+
+                    if delta_time > 30 and inv.line_ids.filtered(
+                        lambda l: l.tax_line_id and "itbis" in l.tax_line_id.name.lower()
                     ):
                         raise UserError(
                             _(
-                                "The invoice ({}) to which this credit note refers is more than 30 days old ({}), therefore the ITBIS tax must be removed."
-                            ).format(inv.origin_out, delta_time.days)
+                                "The invoice ({}) to which this credit note refers is more than 30 days old ({} days), therefore the ITBIS tax must be removed."
+                            ).format(inv.origin_out, delta_time)
                         )
 
         res = super(AccountInvoice, self)._post(soft)
