@@ -88,9 +88,6 @@ class AccountMoveReversal(models.TransientModel):
                         )
                     )
 
-                date = wizard.date or False
-                description = wizard.description or inv.name
-                refund_ref = wizard.refund_ref
                 action_map = {
                     "out_invoice": "action_invoice_out_refund",
                     "out_refund": "action_invoice_tree1",

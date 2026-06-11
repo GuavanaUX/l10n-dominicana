@@ -372,7 +372,6 @@ class AccountInvoice(models.Model):
         invoice, making it a fiscal invoice for l10n_do.
         """
         if self.is_l10n_do_fiscal_invoice:
-            
             fiscal_type_object = self.env["account.fiscal.type"]
             if (
                 self.partner_id
