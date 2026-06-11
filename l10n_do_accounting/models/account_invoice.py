@@ -410,7 +410,7 @@ class AccountInvoice(models.Model):
     def _post(self, soft=True):
         """
         Before an invoice is changed to the 'open' state, validate that all
-        informations are valid regarding Norma 05-19 and if there are
+        information are valid regarding Norma 05-19 and if there are
         available sequences to be used just before validation
         """
         for inv in self:
