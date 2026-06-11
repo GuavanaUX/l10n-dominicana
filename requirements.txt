@@ -5,3 +5,4 @@ simplejson
 # python-stdnum
 # python-stdnum @ git+https://github.com/arthurdejong/python-stdnum.git@6cbb9bc
 pycountry
+# debugpy
