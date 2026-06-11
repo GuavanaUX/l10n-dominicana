@@ -137,9 +137,11 @@ class AccountInvoice(models.Model):
         for inv in self.filtered(
             lambda x: x.journal_id and x.is_l10n_do_fiscal_invoice and x.partner_id
         ):
-            inv.available_fiscal_type_ids = self.env["account.fiscal.type"].search(
-                inv._get_fiscal_domain()
-            )
+
+            domain = inv._get_fiscal_domain()
+            domain.append(("active", "=", True))
+
+            inv.available_fiscal_type_ids = self.env["account.fiscal.type"].search(domain)
 
     def _get_fiscal_domain(self):
         if self.is_debit_note and self.move_type in ["out_invoice"]:
