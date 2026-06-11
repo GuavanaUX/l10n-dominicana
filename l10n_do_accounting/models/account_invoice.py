@@ -374,9 +374,23 @@ class AccountInvoice(models.Model):
         if self.is_l10n_do_fiscal_invoice:
             
             fiscal_type_object = self.env["account.fiscal.type"]
-            if self.partner_id and self.move_type == "out_invoice" and not self.fiscal_type_id:
-                
-                self.fiscal_type_id = self.partner_id.sale_fiscal_type_id
+            if (
+                self.partner_id
+                and self.move_type == "out_invoice"
+                and not self.fiscal_type_id
+            ):
+                if (
+                    self.partner_id
+                    and self.move_type == "out_invoice"
+                    and not self.fiscal_type_id
+                    and self.is_debit_note
+                ):
+                    fiscal_refund = fiscal_type_object.search(
+                        [("type", "=", "out_debit")]
+                    )
+                    self.fiscal_type_id = fiscal_refund[0] if fiscal_refund else False
+                else:
+                    self.fiscal_type_id = self.partner_id.sale_fiscal_type_id
 
             elif self.partner_id and self.move_type == "in_invoice":
                 self.expense_type = self.partner_id.expense_type
