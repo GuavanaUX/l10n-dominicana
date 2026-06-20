@@ -210,19 +210,17 @@ class PosOrder(models.Model):
             ]).ids
 
             custom_filters = [
-                ('config_id', 'in', config_ids), 
+                ('config_id', 'in', config_ids),
                 ('ncf', '!=', False),
                 ('amount_total', '>', 0),
             ]
+
             if pos_config.l10n_do_type_limit_order_history == 'days':
-                custom_filters.append((
-                    'create_date',
-                    '>=',
-                    fields.Datetime.to_string(
-                        fields.Datetime.now() - timedelta(days=pos_config.l10n_do_type_limit_order_history_days)
-                    )
-                ))
+                days_limit = pos_config.l10n_do_type_limit_order_history_days
+                date_start = fields.Datetime.now() - timedelta(days=days_limit)
+                custom_filters.append(('create_date', '>=', fields.Datetime.to_string(date_start)))
 
-            domain = AND([domain or [], custom_filters])
+            domain = list(domain) if isinstance(domain, list) else []
+            domain += custom_filters
 
-        return super(PosOrder, self).search_paid_order_ids(config_id, domain, limit, offset)
+        return super().search_paid_order_ids(config_id, domain, limit, offset)
