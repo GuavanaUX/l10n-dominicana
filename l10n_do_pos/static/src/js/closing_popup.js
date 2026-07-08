@@ -76,7 +76,7 @@ patch(ClosePosPopup.prototype, {
                 return this.handleClosingError(response);
             }
             localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
-            this.pos.redirectToBackend();
+            window.location = `/pos/ui?config_id=${this.pos.config.id}`;
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 throw error;
