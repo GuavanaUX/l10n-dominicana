@@ -20,7 +20,7 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_do_pos.field_res_config_settings__l10n_do_type_limit_order_history
 msgid ""
 "\n"
-"        This field allows you to limit the number of orders that are showed in the POS:\n"
+"        This field allows you to limit the number of orders that are showed in the PoS:\n"
 "            - All orders: All orders will be showed.\n"
 "            - Days: Only the orders of the amount of day will be showed.\n"
 "        "
@@ -177,7 +177,7 @@ msgstr "Diario fiscal"
 
 #. module: l10n_do_pos
 #: model:ir.model.fields,field_description:l10n_do_pos.field_pos_config__l10n_do_fiscal_journal
-msgid "Fiscal POS"
+msgid "Fiscal PoS"
 msgstr "Punto de Venta Fiscal"
 
 #. module: l10n_do_pos
@@ -310,7 +310,7 @@ msgstr "NCF"
 
 #. module: l10n_do_pos
 #: model:pos.payment.method,name:l10n_do_pos.credit_note
-msgid "Nota de Crédito"
+msgid "Credit Note"
 msgstr "Nota de Crédito"
 
 #. module: l10n_do_pos
@@ -362,7 +362,7 @@ msgstr "Pagos en punto de venta"
 #. module: l10n_do_pos
 #: model:ir.model,name:l10n_do_pos.model_pos_session
 msgid "Point of Sale Session"
-msgstr "Sesión de punto de venta"
+msgstr "Sesión del Punto de venta"
 
 #. module: l10n_do_pos
 #. odoo-javascript
@@ -557,10 +557,10 @@ msgstr "Éste pedido no tiene NCF"
 #: code:addons/l10n_do_pos/models/pos_order.py:0
 msgid ""
 "This point of sale not have default customer, please set default customer in"
-" config POS"
+" config PoS"
 msgstr ""
-"Este punto de venta no tiene un cliente predeterminado, configure el cliente"
-" predeterminado en la configuración POS"
+"Este punto de venta no tiene un cliente predeterminado. Por favor configure "
+"un cliente predeterminado en la configuración del PdV."
 
 #. module: l10n_do_pos
 #. odoo-javascript

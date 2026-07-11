@@ -6,7 +6,7 @@
         </record>
 
         <record model="pos.payment.method" id="credit_note">
-            <field name="name">Nota de Crédito</field>
+            <field name="name">Credit Note</field>
             <field name="split_transactions">True</field>
             <field name="is_credit_note">True</field>
         </record>
