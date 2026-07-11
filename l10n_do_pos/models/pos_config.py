@@ -11,7 +11,7 @@ class PosConfig(models.Model):
         default=lambda self: self.env.ref('l10n_do_pos.default_pos_partner', raise_if_not_found=False),
     )
     l10n_do_fiscal_journal = fields.Boolean(
-        string='Fiscal POS',
+        string='Fiscal PoS',
         related='invoice_journal_id.l10n_do_fiscal_journal',
     )
     l10n_do_type_limit_order_history = fields.Selection(
@@ -22,7 +22,7 @@ class PosConfig(models.Model):
         string='Limit order history',
         default='all',
         help="""
-        This field allows you to limit the number of orders that are showed in the POS:
+        This field allows you to limit the number of orders that are showed in the PoS:
             - All orders: All orders will be showed.
             - Days: Only the orders of the amount of day will be showed.
         """,

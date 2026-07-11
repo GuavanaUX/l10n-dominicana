@@ -95,7 +95,7 @@ class PosOrder(models.Model):
 
                 if not order.partner_id:
                     if not order.config_id.pos_partner_id:
-                        raise UserError(_('This point of sale not have default customer, please set default customer in config POS'))
+                        raise UserError(_('This point of sale not have default customer, please set default customer in config PoS'))
                     
                     order.write({
                         'partner_id': order.config_id.pos_partner_id.id

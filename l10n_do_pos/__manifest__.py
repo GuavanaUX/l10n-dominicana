@@ -1,8 +1,8 @@
 {
-    'name': "Fiscal POS (Dominican Republic)",
+    'name': "Fiscal PoS (Dominican Republic)",
     'summary': 
     """
-        This module adds NCF invoicing functionalities to the POS.
+        This module adds NCF invoicing functionalities to the PoS.
     """,
     'author': "Guavana, Indexa, Iterativo SRL, UnlimitSoft",
     'license': 'LGPL-3',
