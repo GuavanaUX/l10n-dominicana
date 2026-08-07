@@ -138,7 +138,8 @@ class PosOrder(models.Model):
                         'partner_id': order.config_id.pos_partner_id.id
                     })
 
-                order._generate_pos_order_invoice()
+                # Use action_pos_order_invoice (not _generate_pos_order_invoice alone)
+                order.action_pos_order_invoice()
 
         return order_ids
 
